@@ -5,13 +5,10 @@ from .forms import LoginForm, RegisterForm
 
 def sign_up(request):
     if request.method == 'GET':
-        print("sign up get")
-
         form = RegisterForm()
         return render(request, 'users/register.html', {'form': form})    
    
     if request.method == 'POST':
-        print("sign up post")
         form = RegisterForm(request.POST) 
         if form.is_valid():
             user = form.save(commit=False)
