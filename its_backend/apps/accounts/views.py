@@ -91,6 +91,7 @@ class RetrieveUserView(generics.GenericAPIView):
             return Response(data={"message": e.detail}, status=status.HTTP_400_BAD_REQUEST)
 
 class ChangePasswordView(views.APIView):
+    permission_classes = [IsAuthenticated,]
     def post(self, request):
         '''
         Example request:
@@ -99,7 +100,7 @@ class ChangePasswordView(views.APIView):
             "new_password": "sampleNewPassword456"
         }
         '''
-        
+
         # Get current user and payload data
         user: CustomUser = request.user
         old_password = request.data.get('old_password')
