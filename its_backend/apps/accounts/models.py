@@ -72,3 +72,63 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
             return f"Manager: {self.email}"
         else: 
             return f"User: {self.email}"
+
+
+class TeachesManager(models.Manager):
+    '''
+    Adds (tutor_id, student_id) pair to Teaches table
+    Returns whether operation was a success or not along with the error message
+            if operation failed
+    '''
+    def add_teaching_relationship(self, tutor_id, student_id):
+        # Retrieve users from CustomUser relation
+        try:
+            tutor = CustomUser.objects.get(pk=tutor_id)
+            student = CustomUser.objects.get(pk=student_id)
+        except ObjectDoesNotExist as e:
+            return False, str(e)
+        
+        # Perform check
+        if not tutor.is_tutor:
+            return False, 'Tutor is not a tutor'
+        if not student.is_student:
+            return False, 'Student is not a student'
+
+        try:
+            self.create(tutor_id=tutor_id, student_id=student_id)
+            return True, None
+        except IntegrityError as e:
+            return False, str(e)
+
+    '''
+    Removes (tutor_id, student_id) pair from Teaches table
+    Returns whether operation was a success or not along with the error message
+            if operation failed
+    '''
+    def remove_teaching_relationship(self, tutor_id, student_id):
+        try:
+            relationship: Teaches = self.get(tutor_id=tutor_id, student_id=student_id)
+            relationship.delete()
+            return True, None
+        except Teaches.DoesNotExist:
+            return False, 'The teaching relationship does not exist'
+        
+    def get_students_by_tutor_id(self, tutor_id):
+        return self.filter(tutor_id=tutor_id).values_list('student_id', flat=True)
+    
+    def get_tutors_by_student_id(self, student_id):
+        return self.filter(student_id=student_id).values_list('tutor_id', flat=True)
+
+class Teaches(models.Model):
+    tutor = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='tutor_relationships')
+    student = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='student_relationships')
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['tutor', 'student'],
+                name='unique_tutor_student_constraint'
+            )
+        ]
+    
+    objects = TeachesManager()
