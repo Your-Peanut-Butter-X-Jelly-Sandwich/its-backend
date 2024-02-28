@@ -37,6 +37,24 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_student = models.BooleanField(blank=True, default=True)
     is_manager = models.BooleanField(blank=True, default=False)
 
+    class Meta:
+        '''
+        A CustomUser can be either
+            1. a superuser
+            2. a manager/admin (managers can be tutors and/or students)
+            3. EITHER a tutor OR a student
+        '''
+        constraints = [
+            models.CheckConstraint(
+                check=(
+                    models.Q(is_superuser=True) |
+                    models.Q(is_manager=True) |
+                    (models.Q(is_tutor=True) ^ models.Q(is_student=True))
+                ),
+                name='user_role_constraint'
+            )
+        ]
+
     # The `USERNAME_FIELD` property tells us which field we will use to log in.
     # In this case, we want that to be the email field.
     USERNAME_FIELD = 'email'
