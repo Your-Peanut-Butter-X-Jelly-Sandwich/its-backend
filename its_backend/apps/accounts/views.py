@@ -89,3 +89,33 @@ class RetrieveUserView(generics.GenericAPIView):
             }, status=status.HTTP_200_OK)
         except serializers.ValidationError as e:
             return Response(data={"message": e.detail}, status=status.HTTP_400_BAD_REQUEST)
+
+class ChangePasswordView(views.APIView):
+    def post(self, request):
+        '''
+        Example request:
+        {
+            "old_password": "sampleOldPassword123",
+            "new_password": "sampleNewPassword456"
+        }
+        '''
+        
+        # Get current user and payload data
+        user: CustomUser = request.user
+        old_password = request.data.get('old_password')
+        new_password = request.data.get('new_password')
+
+        # Check if old_password and new_password are provided in request data
+        if not old_password or not new_password:
+            return Response({'error': 'Old password and new password are required'},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        # Verify old password
+        if not user.check_password(old_password):
+            return Response({'error': 'Invalid old password'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Set new password
+        user.set_password(new_password)
+        user.save()
+
+        return Response({'message': 'Password updated successfully'}, status=status.HTTP_200_OK)
