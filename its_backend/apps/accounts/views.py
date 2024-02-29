@@ -1,14 +1,16 @@
+from django.contrib.auth import logout
 from django.db import IntegrityError
 from django.http import HttpResponsePermanentRedirect
-from django.contrib.auth import logout
-from rest_framework.response import Response
-from rest_framework import generics, views
-from rest_framework import status
-from rest_framework import serializers
-from .serializers import SignUpSerializer, SignInSerializer, SocialCallbackSerializer, RetrieveUserSerializer
+from rest_framework import generics, serializers, status, views
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from .models import CustomUser
+from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
+
+from .models import CustomUser
+from .serializers import (RetrieveUserSerializer, SignInSerializer,
+                          SignUpSerializer, SocialCallbackSerializer)
+
+
 def generate_tokens_for_user(user):
     refresh = RefreshToken.for_user(user)
     return {
@@ -36,7 +38,7 @@ class LoginView(views.APIView):
     permission_classes = [AllowAny,]
     serializer_class = SignInSerializer
     
-    def get(self, request):
+    def post(self, request):
         serializer = self.serializer_class(data=request.data)
         try:
             serializer.is_valid(raise_exception=True)
