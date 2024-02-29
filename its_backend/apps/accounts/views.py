@@ -439,8 +439,10 @@ class AddTutorStudentRelationshipView(views.APIView):
         for s_id in student_ids:
             ok, error_msg = Teaches.objects.add_teaching_relationship(tutor_id, s_id)
             if ok:
+                # e.g., "Added [tutor_id=10, s_id=1]"
                 messages.append(f'Added [{tutor_id=}, {s_id=}]')
             else:
+                # e.g., "[tutor_id=10, s_id=1]: UNIQUE constraint failed: R.tutor_id, R.student_id"
                 errors.append(f'[{tutor_id=}, {s_id=}]: {error_msg}')
 
         response = {}
