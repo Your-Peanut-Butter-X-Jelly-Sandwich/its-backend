@@ -2,7 +2,8 @@ from django.urls import include, path
 from rest_framework_simplejwt.views import TokenRefreshView
 
 from .views import (ChangePasswordView, LoginView, LogoutView,
-                    RetrieveUserView, SignUpView, SocialCallbackView)
+                    RetrieveStudentsView, RetrieveTutorsView, RetrieveUserView,
+                    SignUpView, SocialCallbackView)
 
 urlpatterns = [
     path('auth/login', LoginView.as_view() , name='login'),
@@ -13,4 +14,7 @@ urlpatterns = [
     path('auth/user', RetrieveUserView.as_view(), name='retrieve_user'),
     path('auth/change-password', ChangePasswordView.as_view(), name='change_password'),
     path('auth/', include('allauth.urls')),
+
+    # TODO: update API paths
+    path('students/', RetrieveStudentsView.as_view(), name='retrieve_students'),
 ]
