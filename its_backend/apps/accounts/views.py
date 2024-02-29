@@ -1,12 +1,13 @@
 from django.contrib.auth import logout
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
-from django.http import HttpResponsePermanentRedirect, HttpRequest
+from django.http import HttpRequest, HttpResponsePermanentRedirect
 from rest_framework import generics, serializers, status, views
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from ..permission_classes import IsManager, IsTutor
 from .models import CustomUser, Teaches
 from .serializers import (RetrieveUserSerializer, SignInSerializer,
                           SignUpSerializer, SocialCallbackSerializer)
@@ -405,3 +406,47 @@ class RetrieveTutorsView(views.APIView):
         
         return Response({'error': 'No student or tutor ids provided'},
                         status=status.HTTP_400_BAD_REQUEST)
+
+class AddTutorStudentRelationshipView(views.APIView):
+    permission_classes = [IsManager, IsTutor,]
+    
+    def post(self, request: HttpRequest):
+        '''
+        Example payload
+        {
+            "tutor_id": 10,
+            "student_ids": [1, 2, 3]
+        }
+        '''
+        payload = request.data
+        tutor_id = payload.get('tutor_id')
+        student_ids = payload.get('student_ids')
+
+        if not tutor_id or not student_ids:
+            return Response({
+                'error': 'Tutor ID and student ID(s) must be provided'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        if (not isinstance(tutor_id, int)
+                or not isinstance(student_ids, list)
+                or any(not isinstance(s_id, int) for s_id in student_ids)):
+            return Response({
+                'error': 'Tutor ID and student ID(s) must be integers'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        messages = []  # students successfully added
+        errors = []  # students not successfully added
+        for s_id in student_ids:
+            ok, error_msg = Teaches.objects.add_teaching_relationship(tutor_id, s_id)
+            if ok:
+                messages.append(f'Added [{tutor_id=}, {s_id=}]')
+            else:
+                errors.append(f'[{tutor_id=}, {s_id=}]: {error_msg}')
+
+        response = {}
+        if messages:
+            response |= {'message': messages}
+        if errors:
+            response |= {'error': errors}
+
+        return Response(response, status=status.HTTP_200_OK)
