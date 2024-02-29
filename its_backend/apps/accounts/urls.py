@@ -17,4 +17,5 @@ urlpatterns = [
 
     # TODO: update API paths
     path('students/', RetrieveStudentsView.as_view(), name='retrieve_students'),
+    path('tutors/', RetrieveTutorsView.as_view(), name='retrieve_tutors'),
 ]
