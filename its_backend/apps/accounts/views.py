@@ -61,7 +61,7 @@ class LogoutView(views.APIView):
             refersh_token.blacklist()
             logout(request)
             return Response({'message': 'User successfully logged out'}, status=status.HTTP_200_OK)
-        except Exception as e:
+        except Exception as e:  
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class CustomRedirect(HttpResponsePermanentRedirect):

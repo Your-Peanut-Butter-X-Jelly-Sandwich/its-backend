@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     # its apps
     'its_backend.apps.accounts',
+    'its_backend.apps.submissions'
 ]
 
 MIDDLEWARE = [
