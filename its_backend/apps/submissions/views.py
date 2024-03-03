@@ -5,6 +5,15 @@ from rest_framework import status
 from .models import Submissiondata
 from .serializers import RetrieveSubmissionSerializer, CreateSubmissionSerializer
 from django.contrib.auth.decorators import login_required
+from .its_system import its_request_parser_fncs_value, its_request_parser, its_request_feedback_fix
+
+# reference solution for testing purpose:
+reference_program = "def is_odd(x):\n\tif x % 2 == 0:\n\t\treturn False\n\telse:\n\t\treturn True"
+reference_program_language = "py"
+reference_solution = its_request_parser(reference_program_language, reference_program)
+function = "is_odd"
+inputs = []
+args = ""
 
 # @login_required
 class SubmissionHistoryView(viewsets.ModelViewSet):
@@ -12,25 +21,25 @@ class SubmissionHistoryView(viewsets.ModelViewSet):
     queryset = Submissiondata.objects.all()
     serializer_class = RetrieveSubmissionSerializer
     
+# @login_required
 class CreateSubmissionView(views.APIView):
     serializer_class = CreateSubmissionSerializer
 
-    def generate_its_feedback(self):
-        # write retrival of feedback from iTS
-        return "feedback from ITS"
-    
     def post(self, request, qn_id):
-        # if not self.request.session.exits(self.request.session.session_key):
-        #     self.request.session.create()
+        language = request.data.get('language')
+        program = request.data.get('program')
         mutable_data = request.data.copy()
+        student_solution = its_request_parser(language, program)
+        report = its_request_feedback_fix(language, reference_solution, student_solution, function, inputs, args)
+
         mutable_data['qn_id'] = qn_id
-        mutable_data['feedback'] = self.generate_its_feedback()
-        print(mutable_data)
+        mutable_data['program'] = program
+        mutable_data['report'] = report
         serializer = self.serializer_class(data=mutable_data)
 
         if serializer.is_valid():
             try:
-                serializer.save(qn_id=qn_id)
+                serializer.save(qn_id=qn_id, program=program, report=report)
             except Exception as e:
                 return Response(data={"message": e.args}, status=status.HTTP_400_BAD_REQUEST)
             return Response(serializer.data, status=status.HTTP_201_CREATED)

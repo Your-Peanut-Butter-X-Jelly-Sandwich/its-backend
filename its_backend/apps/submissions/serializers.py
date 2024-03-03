@@ -10,7 +10,7 @@ class RetrieveSubmissionSerializer(serializers.ModelSerializer):
 class CreateSubmissionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Submissiondata
-        fields = ['id', 'language', 'submisson_date', 'program', 'feedback', 'report']
+        fields = ['id', 'language', 'submisson_date', 'program']
 
 class CreateFeedbackSerializer(serializers.ModelSerializer):
     class Meta:

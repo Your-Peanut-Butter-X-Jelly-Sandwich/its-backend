@@ -8,6 +8,7 @@ class Submissiondata(models.Model):
     # foreign key to students and problem
     # problem = models.ForeignKey
     # student = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+
     qn_id = models.IntegerField()
     language = models.CharField(max_length=30, default = 'py')
     submisson_date = models.DateTimeField(auto_now_add=True)
