@@ -40,13 +40,13 @@ class SignInSerializer(serializers.ModelSerializer):
 
         return user
     
-class SocialCallbackSerializer(serializers.ModelSerializer):
+# class SocialCallbackSerializer(serializers.ModelSerializer):
     
-    email = serializers.EmailField(required=True)
+#     email = serializers.EmailField(required=True)
 
-    class Meta:
-        model = CustomUser
-        fields = ['email', 'organisation', 'username', 'is_student', 'is_tutor', 'is_manager']
+#     class Meta:
+#         model = CustomUser
+#         fields = ['email', 'organisation', 'username', 'is_student', 'is_tutor', 'is_manager']
         
     
 class RetrieveUserSerializer(serializers.ModelSerializer):

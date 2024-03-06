@@ -1,4 +1,9 @@
 from django.contrib.auth import logout
+from rest_framework.response import Response
+from rest_framework import generics, views
+from rest_framework import status
+from rest_framework import serializers
+from .serializers import SignUpSerializer, SignInSerializer, RetrieveUserSerializer
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
 from django.http import HttpRequest, HttpResponsePermanentRedirect
@@ -6,7 +11,7 @@ from rest_framework import generics, serializers, status, views
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
-
+from allauth.socialaccount.views import SignupView as AllauthSignupView
 from ..permission_classes import IsManager, IsTutor
 from .models import CustomUser, Teaches
 from .serializers import (RetrieveUserSerializer, SignInSerializer,
@@ -71,9 +76,27 @@ class LogoutView(views.APIView):
 class CustomRedirect(HttpResponsePermanentRedirect):
     allowed_schemes = ['http', 'https']
 
+''' 
+Override allauth social signup view such that when a user attempts to third party signup with an existing email,
+they gets logged in directly and redirected back to frontend
+'''
+class CustomSignupView(AllauthSignupView):
+    http_method_names = ['get']
+    
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        social_login_email = self.sociallogin.user.email
+        if CustomUser.objects.filter(email=social_login_email).exists():
+            user = CustomUser.objects.get(email=social_login_email)
+            tokens = generate_tokens_for_user(user)
+            redirect_url = f'http://localhost:3000/en/auth/post-social-auth?access={tokens["access"]}&refresh={tokens["refresh"]}'
+            return CustomRedirect(redirect_url) 
+    
 class SocialCallbackView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated,]
-    serializer_class = SocialCallbackSerializer
+
     def get(self, request):
         user = request.user
         tokens = generate_tokens_for_user(user)
