@@ -1,14 +1,14 @@
 POST http://127.0.0.1:8000/auth/signup
 Content-Type: application/json
 
-{"email": "e077sa6@u.nus.edu", "password": "ABCD12345" }
+{"email": "student3@student.com", "password": "12345678" }
 
 ###
 
-GET http://127.0.0.1:8000/auth/login
+POST http://127.0.0.1:8000/auth/login
 Content-Type: application/json
 
-{"email": "e077sa6@u.nus.edu", "password": "ABCD12345"}
+{"email": "tutor1@tutor.com", "password": "12345678"}
 
 
 ###
