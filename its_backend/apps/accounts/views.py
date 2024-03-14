@@ -7,15 +7,17 @@ from .serializers import SignUpSerializer, SignInSerializer, RetrieveUserSeriali
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
 from django.http import HttpRequest, HttpResponsePermanentRedirect
-from rest_framework import generics, serializers, status, views
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from allauth.socialaccount.views import SignupView as AllauthSignupView
 from ..permission_classes import IsManager, IsTutor
 from .models import CustomUser, Teaches
+<<<<<<< HEAD
 from .serializers import (RetrieveUserSerializer, SignInSerializer,
                           SignUpSerializer)
+=======
+# from .serializers import (SocialCallbackSerializer)
+>>>>>>> 28b5f5cac722d1f7eb2d81c8ac0c345feb680e69
 
 
 def generate_tokens_for_user(user):
@@ -93,7 +95,9 @@ class CustomSignupView(AllauthSignupView):
             user = CustomUser.objects.get(email=social_login_email)
             tokens = generate_tokens_for_user(user)
             redirect_url = f'http://localhost:3000/en/auth/post-social-auth?access={tokens["access"]}&refresh={tokens["refresh"]}'
-            return CustomRedirect(redirect_url) 
+            return CustomRedirect(redirect_url)
+        # TODO: What to do here?
+        raise Exception()
     
 class SocialCallbackView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated,]
