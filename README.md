@@ -38,6 +38,8 @@ It is suggested to have a dedicated virtual environment for each Django project,
 - Create migrations by running `python manage.py makemigrations`
 - Sometimes Django might now detect the changes in individual apps, in that case, do `python manage.py makemigrations --empty [APP_NAME]
 - Run migrations  `python manage.py migrate`
+- You might encounter this issue: `django.db.migrations.exceptions.InconsistentMigrationHistory: Migration accounts.0001_initial is applied before its dependency auth.0012_alter_user_first_name_max_length on database 'default'.`
+  - refer to this [post](https://stackoverflow.com/questions/65562875/migration-admin-0001-initial-is-applied-before-its-dependency-app-0001-initial-o) for solution
 
 ## Set up third party login
 
@@ -48,13 +50,14 @@ It is suggested to have a dedicated virtual environment for each Django project,
 
 ### Google
 
-- Navigate to Google Cloud Console
+- Navigate to [Google Cloud Console](https://console.cloud.google.com)
 - Create new project
 - Authorized redirect URIs = `http://127.0.0.1:8000/auth/google/login/callback/`
 - Authorized JavaScript origins = `http://127.0.0.1:8000` and `http://localhost:3000`
 - Naviage to `http://127.0.0.1:8000/admin`
-- Use the client ID and client secret generated to create a database entry in the `Social application` table with `Provider`: Google
+- Use the `client ID` and `client secret` generated to create a database entry in the `Social application` table with `Provider`: Google
 - Select `http://127.0.0.1:8000/` into the `Chosen sites`
+- To see a list of all OAuth Apps created: open the console left side menu and select APIs & services -> `Credentials`
 
 ### Github
 
@@ -64,7 +67,20 @@ It is suggested to have a dedicated virtual environment for each Django project,
 - Authorization callback URL: `http://localhost:8000/auth/social/callback`
 - Use the client ID and client secret generated to create another entry in the `Social application` table with `Provider`: Github
 - Select `http://127.0.0.1:8000/` into the `Chosen sites`
+- To see a list of all OAuth Apps created: `settings` -> `<> Developer settings` -> `OAuth Apps`
 
 ## Start Application
 
 - Start server by running `python manage.py runserver`
+
+## View all urls created
+
+run `python manage.py show_urls`
+
+## Debug
+
+- set `DEBUG=TRUE` in `settings.py`
+
+- The typical usage to break into the debugger is to insert
+  - `import pdb; pdb.set_trace()` or
+  - `breakpoint()`
