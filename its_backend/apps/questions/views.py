@@ -1,19 +1,16 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404
+from rest_framework import mixins, serializers, status, viewsets
 from rest_framework.response import Response
-from rest_framework import mixins, viewsets
-from rest_framework import serializers
-from .models import Question
+
 from ...apps.accounts.models import Teaches
 from ..permission_classes import IsStudent, IsTutor
-from rest_framework import status
-from .serializers import (
-    StudentQuestionDetailSerializer,
-    StudentQuestionListSerializer,
-    TutorCreateUpdateQuestionSerializer,
-    TutorQuestionDetailSerializer,
-    TutorQuestionListSerializer,
-)
+from .models import Question
+from .serializers import (StudentQuestionDetailSerializer,
+                          StudentQuestionListSerializer,
+                          TutorCreateUpdateQuestionSerializer,
+                          TutorQuestionDetailSerializer,
+                          TutorQuestionListSerializer)
 
 # Comment unused imports for now
 # from .models import TestCase
