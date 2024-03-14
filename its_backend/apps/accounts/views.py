@@ -430,7 +430,7 @@ class RetrieveTutorsView(views.APIView):
                         status=status.HTTP_400_BAD_REQUEST)
 
 class AddTutorStudentRelationshipView(views.APIView):
-    permission_classes = [IsManager, IsTutor,]
+    permission_classes = [IsManager | IsTutor]
     
     def post(self, request: HttpRequest):
         '''
