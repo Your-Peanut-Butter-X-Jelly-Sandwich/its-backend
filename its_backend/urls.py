@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
+
 """
 URL configuration for its_backend project.
 
@@ -18,6 +19,6 @@ Including another URLconf
 """
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('',include('its_backend.apps.urls')),
+    path("admin/", admin.site.urls),
+    path("", include("its_backend.apps.urls")),
 ]
