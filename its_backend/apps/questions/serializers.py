@@ -1,8 +1,6 @@
-from django.db.models import fields
 from rest_framework import serializers
 from .models import Question, TestCase
 from ..accounts.serializers import RetrieveUserSerializer
-import pdb
 
 
 class StudentQuestionListSerializer(serializers.ModelSerializer):
@@ -89,7 +87,7 @@ class TutorCreateUpdateQuestionSerializer(serializers.ModelSerializer):
                 print(e)
                 pass
         instance.save()
-        if test_cases_data != None:
+        if test_cases_data is not None:
             TestCase.objects.filter(question=instance).delete()
             for test_case_data in test_cases_data:
                 TestCase.objects.create(question=instance, **test_case_data)

@@ -3,9 +3,8 @@ from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework import mixins, viewsets
 from rest_framework import serializers
-from .models import Question, TestCase
+from .models import Question
 from ...apps.accounts.models import Teaches
-from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from ..permission_classes import IsStudent, IsTutor
 from rest_framework import status
 from .serializers import (
@@ -15,6 +14,10 @@ from .serializers import (
     TutorQuestionDetailSerializer,
     TutorQuestionListSerializer,
 )
+
+# Comment unused imports for now
+# from .models import TestCase
+# from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 
 
 class TutorQuestionViewSet(
@@ -110,7 +113,7 @@ class TutorQuestionViewSet(
                 data={"message": f"question {pk} deleted"},
                 status=status.HTTP_204_NO_CONTENT,
             )
-        except ObjectDoesNotExist as e:
+        except ObjectDoesNotExist:
             return Response(
                 data={"message": f"question {pk} not found"},
                 status=status.HTTP_404_NOT_FOUND,
@@ -140,8 +143,8 @@ class StudentQuestionViewSet(
         queryset = self.get_queryset()
         offset = request.query_params.get("offset", 0)
         limit = request.query_params.get("limit", 10)
-        student = request.user
-        tutors = Teaches.objects.filter(student=student)
+        # student = request.user
+        # tutors = Teaches.objects.filter(student=student)
         questions = queryset.order_by("-pub_date")[offset : offset + limit]
         serializer = self.get_serializer_class()(questions, many=True)
         return Response(data={"questions": serializer.data}, status=status.HTTP_200_OK)
