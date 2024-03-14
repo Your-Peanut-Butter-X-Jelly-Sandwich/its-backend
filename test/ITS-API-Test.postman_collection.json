@@ -385,1008 +385,1013 @@
 			]
 		},
 		{
-			"name": "[03] Test change password",
+			"name": "[03] Test accounts app",
 			"item": [
 				{
-					"name": "[01] Change password - wrong password",
-					"event": [
+					"name": "[01] Test change password",
+					"item": [
 						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"// Parse the response body as JSON",
-									"var responseBody = pm.response.json();",
-									"",
-									"// Check if the status code is 400 BAD REQUEST",
-									"pm.test(\"Status code is 400 BAD REQUEST\", function () {",
-									"    pm.response.to.have.status(400);",
-									"});",
-									"",
-									"// Check if the response contains the expected message",
-									"pm.test(\"Response message is correct\", function () {",
-									"    pm.expect(responseBody.error).to.eql(\"Invalid old password\");",
-									"});",
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
+							"name": "[01] Change password - wrong password",
+							"event": [
 								{
-									"key": "token",
-									"value": "{{student_bearer}}",
-									"type": "string"
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 400 BAD REQUEST",
+											"pm.test(\"Status code is 400 BAD REQUEST\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Response message is correct\", function () {",
+											"    pm.expect(responseBody.error).to.eql(\"Invalid old password\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
 								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"old_password\": \"wrong_password\",\n    \"new_password\": \"newpassword\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/auth/change-password",
-							"host": [
-								"{{base_url}}"
 							],
-							"path": [
-								"auth",
-								"change-password"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "[02] Change password - Sucess",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"// Parse the response body as JSON",
-									"var responseBody = pm.response.json();",
-									"",
-									"// Check if the status code is 200 OK",
-									"pm.test(\"Status code is 200 OK\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"",
-									"// Check if the response contains the expected message",
-									"pm.test(\"Response message is correct\", function () {",
-									"    pm.expect(responseBody.message).to.eql(\"Password updated successfully\");",
-									"});",
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{student_bearer}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"old_password\": \"CS3213ITS\",\n    \"new_password\": \"newpassword\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/auth/change-password",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"auth",
-								"change-password"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "[04] Test student retrieval",
-			"item": [
-				{
-					"name": "[01] Get one student - Success Copy 2",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"// Parse the response body as JSON",
-									"var responseBody = pm.response.json();",
-									"",
-									"// Check if the status code is 200 OK",
-									"pm.test(\"Status code is 200 OK\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"",
-									"// Check if the response contains the expected message",
-									"var expectedResponseUser = {",
-									"    \"email\": \"stu01@student.com\",",
-									"    \"organisation\": \"\",",
-									"    \"username\": \"\",",
-									"    \"is_student\": true,",
-									"    \"is_tutor\": false,",
-									"    \"is_manager\": false",
-									"};",
-									"pm.test(\"Retrieved student is correct\", function () {",
-									"    pm.expect(responseBody.user).to.eql(expectedResponseUser);",
-									"});",
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/students?student_id=1",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"students"
-							],
-							"query": [
-								{
-									"key": "student_id",
-									"value": "1"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "[02] Get one student - Fail (is tutor)",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"// Parse the response body as JSON",
-									"var responseBody = pm.response.json();",
-									"",
-									"// Check if the status code is 400 BAD REQUEST",
-									"pm.test(\"Status code is 400 BAD REQUEST\", function () {",
-									"    pm.response.to.have.status(400);",
-									"});",
-									"",
-									"// Check if the response contains the expected message",
-									"pm.test(\"Retrieved response error is correct\", function () {",
-									"    pm.expect(responseBody.error).to.eql(\"User with id 11 is not a student\");",
-									"});",
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/students?student_id=11",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"students"
-							],
-							"query": [
-								{
-									"key": "student_id",
-									"value": "11"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "[03] Get one student - Fail (does not exist)",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"// Parse the response body as JSON",
-									"var responseBody = pm.response.json();",
-									"",
-									"// Check if the status code is 404 NOT FOUND",
-									"pm.test(\"Status code is 404 NOT FOUND\", function () {",
-									"    pm.response.to.have.status(404);",
-									"});",
-									"",
-									"// Check if the response contains the expected message",
-									"pm.test(\"Retrieved response error is correct\", function () {",
-									"    pm.expect(responseBody.error).to.eql(\"Student with id 20 does not exist\");",
-									"});",
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/students?student_id=20",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"students"
-							],
-							"query": [
-								{
-									"key": "student_id",
-									"value": "20"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "[04] Bulk get students - Success",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"// Parse the response body as JSON",
-									"var responseBody = pm.response.json();",
-									"",
-									"// Check if the status code is 200 OK",
-									"pm.test(\"Status code is 200 OK\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"",
-									"// Check if the response contains the expected message",
-									"var expectedResponseUsers = [",
-									"    {",
-									"        \"email\": \"stu01@student.com\",",
-									"        \"organisation\": \"\",",
-									"        \"username\": \"\",",
-									"        \"is_student\": true,",
-									"        \"is_tutor\": false,",
-									"        \"is_manager\": false",
-									"    },",
-									"    {",
-									"        \"email\": \"stu02@student.com\",",
-									"        \"organisation\": \"\",",
-									"        \"username\": \"\",",
-									"        \"is_student\": true,",
-									"        \"is_tutor\": false,",
-									"        \"is_manager\": false",
-									"    },",
-									"    {",
-									"        \"email\": \"stu03@student.com\",",
-									"        \"organisation\": \"\",",
-									"        \"username\": \"\",",
-									"        \"is_student\": true,",
-									"        \"is_tutor\": false,",
-									"        \"is_manager\": false",
-									"    }",
-									"];",
-									"pm.test(\"Retrieved students are correct\", function () {",
-									"    pm.expect(responseBody.user).to.eql(expectedResponseUsers);",
-									"});",
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/students?student_ids=1,2,3",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"students"
-							],
-							"query": [
-								{
-									"key": "student_ids",
-									"value": "1,2,3"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "[05] Bulk get students - Partial Success",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"// Parse the response body as JSON",
-									"var responseBody = pm.response.json();",
-									"",
-									"// Check if the status code is 200 OK",
-									"pm.test(\"Status code is 200 OK\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"",
-									"// Check if the response contains the expected message",
-									"var expectedResponseUsers = [",
-									"    {",
-									"        \"email\": \"stu01@student.com\",",
-									"        \"organisation\": \"\",",
-									"        \"username\": \"\",",
-									"        \"is_student\": true,",
-									"        \"is_tutor\": false,",
-									"        \"is_manager\": false",
-									"    }",
-									"];",
-									"pm.test(\"Retrieved student is correct\", function () {",
-									"    pm.expect(responseBody.user).to.eql(expectedResponseUsers);",
-									"});",
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/students?student_ids=1,11,20",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"students"
-							],
-							"query": [
-								{
-									"key": "student_ids",
-									"value": "1,11,20"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "[06] Get students taught by Tutor 11 - Success",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"// Parse the response body as JSON",
-									"var responseBody = pm.response.json();",
-									"",
-									"// Check if the status code is 200 OK",
-									"pm.test(\"Status code is 200 OK\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"",
-									"// Check if the response contains the expected message",
-									"var expectedResponseUsers = [",
-									"    {",
-									"        \"email\": \"stu01@student.com\",",
-									"        \"organisation\": \"\",",
-									"        \"username\": \"\",",
-									"        \"is_student\": true,",
-									"        \"is_tutor\": false,",
-									"        \"is_manager\": false",
-									"    },",
-									"    {",
-									"        \"email\": \"stu02@student.com\",",
-									"        \"organisation\": \"\",",
-									"        \"username\": \"\",",
-									"        \"is_student\": true,",
-									"        \"is_tutor\": false,",
-									"        \"is_manager\": false",
-									"    },",
-									"    {",
-									"        \"email\": \"stu03@student.com\",",
-									"        \"organisation\": \"\",",
-									"        \"username\": \"\",",
-									"        \"is_student\": true,",
-									"        \"is_tutor\": false,",
-									"        \"is_manager\": false",
-									"    },",
-									"    {",
-									"        \"email\": \"stu04@student.com\",",
-									"        \"organisation\": \"\",",
-									"        \"username\": \"\",",
-									"        \"is_student\": true,",
-									"        \"is_tutor\": false,",
-									"        \"is_manager\": false",
-									"    },",
-									"    {",
-									"        \"email\": \"stu05@student.com\",",
-									"        \"organisation\": \"\",",
-									"        \"username\": \"\",",
-									"        \"is_student\": true,",
-									"        \"is_tutor\": false,",
-									"        \"is_manager\": false",
-									"    }",
-									"];",
-									"pm.test(\"Retrieved students are correct\", function () {",
-									"    pm.expect(responseBody.user).to.eql(expectedResponseUsers);",
-									"});",
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/students?tutor_id=11",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"students"
-							],
-							"query": [
-								{
-									"key": "tutor_id",
-									"value": "11"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "[07] Get students NOT taught by Tutor 11 - Success",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"// Parse the response body as JSON",
-									"var responseBody = pm.response.json();",
-									"",
-									"// Check if the status code is 200 OK",
-									"pm.test(\"Status code is 200 OK\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"",
-									"// Check if the response contains the expected message",
-									"var expectedResponseUsers = [",
-									"    {",
-									"        \"email\": \"stu06@student.com\",",
-									"        \"organisation\": \"\",",
-									"        \"username\": \"\",",
-									"        \"is_student\": true,",
-									"        \"is_tutor\": false,",
-									"        \"is_manager\": false",
-									"    },",
-									"    {",
-									"        \"email\": \"stu07@student.com\",",
-									"        \"organisation\": \"\",",
-									"        \"username\": \"\",",
-									"        \"is_student\": true,",
-									"        \"is_tutor\": false,",
-									"        \"is_manager\": false",
-									"    },",
-									"    {",
-									"        \"email\": \"stu08@student.com\",",
-									"        \"organisation\": \"\",",
-									"        \"username\": \"\",",
-									"        \"is_student\": true,",
-									"        \"is_tutor\": false,",
-									"        \"is_manager\": false",
-									"    },",
-									"    {",
-									"        \"email\": \"stu09@student.com\",",
-									"        \"organisation\": \"\",",
-									"        \"username\": \"\",",
-									"        \"is_student\": true,",
-									"        \"is_tutor\": false,",
-									"        \"is_manager\": false",
-									"    },",
-									"    {",
-									"        \"email\": \"stu10@student.com\",",
-									"        \"organisation\": \"\",",
-									"        \"username\": \"\",",
-									"        \"is_student\": true,",
-									"        \"is_tutor\": false,",
-									"        \"is_manager\": false",
-									"    }",
-									"];",
-									"pm.test(\"Retrieved students are correct\", function () {",
-									"    pm.expect(responseBody.user).to.eql(expectedResponseUsers);",
-									"});",
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/students?tutor_id=11&invert=true",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"students"
-							],
-							"query": [
-								{
-									"key": "tutor_id",
-									"value": "11"
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{student_bearer}}",
+											"type": "string"
+										}
+									]
 								},
-								{
-									"key": "invert",
-									"value": "true"
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"old_password\": \"wrong_password\",\n    \"new_password\": \"newpassword\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/auth/change-password",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"change-password"
+									]
 								}
-							]
+							},
+							"response": []
+						},
+						{
+							"name": "[02] Change password - Sucess",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Response message is correct\", function () {",
+											"    pm.expect(responseBody.message).to.eql(\"Password updated successfully\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{student_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"old_password\": \"CS3213ITS\",\n    \"new_password\": \"newpassword\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/auth/change-password",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"change-password"
+									]
+								}
+							},
+							"response": []
 						}
-					},
-					"response": []
-				}
-			],
-			"auth": {
-				"type": "bearer",
-				"bearer": [
-					{
-						"key": "token",
-						"value": "{{student_bearer}}",
-						"type": "string"
-					}
-				]
-			},
-			"event": [
+					]
+				},
 				{
-					"listen": "prerequest",
-					"script": {
-						"type": "text/javascript",
-						"packages": {},
-						"exec": [
-							""
+					"name": "[02] Test student retrieval",
+					"item": [
+						{
+							"name": "[01] Get one student - Success Copy 2",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"var expectedResponseUser = {",
+											"    \"email\": \"stu01@student.com\",",
+											"    \"organisation\": \"\",",
+											"    \"username\": \"\",",
+											"    \"is_student\": true,",
+											"    \"is_tutor\": false,",
+											"    \"is_manager\": false",
+											"};",
+											"pm.test(\"Retrieved student is correct\", function () {",
+											"    pm.expect(responseBody.user).to.eql(expectedResponseUser);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/students?student_id=1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"students"
+									],
+									"query": [
+										{
+											"key": "student_id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[02] Get one student - Fail (is tutor)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 400 BAD REQUEST",
+											"pm.test(\"Status code is 400 BAD REQUEST\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Retrieved response error is correct\", function () {",
+											"    pm.expect(responseBody.error).to.eql(\"User with id 11 is not a student\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/students?student_id=11",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"students"
+									],
+									"query": [
+										{
+											"key": "student_id",
+											"value": "11"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[03] Get one student - Fail (does not exist)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 404 NOT FOUND",
+											"pm.test(\"Status code is 404 NOT FOUND\", function () {",
+											"    pm.response.to.have.status(404);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Retrieved response error is correct\", function () {",
+											"    pm.expect(responseBody.error).to.eql(\"Student with id 20 does not exist\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/students?student_id=20",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"students"
+									],
+									"query": [
+										{
+											"key": "student_id",
+											"value": "20"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[04] Bulk get students - Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"var expectedResponseUsers = [",
+											"    {",
+											"        \"email\": \"stu01@student.com\",",
+											"        \"organisation\": \"\",",
+											"        \"username\": \"\",",
+											"        \"is_student\": true,",
+											"        \"is_tutor\": false,",
+											"        \"is_manager\": false",
+											"    },",
+											"    {",
+											"        \"email\": \"stu02@student.com\",",
+											"        \"organisation\": \"\",",
+											"        \"username\": \"\",",
+											"        \"is_student\": true,",
+											"        \"is_tutor\": false,",
+											"        \"is_manager\": false",
+											"    },",
+											"    {",
+											"        \"email\": \"stu03@student.com\",",
+											"        \"organisation\": \"\",",
+											"        \"username\": \"\",",
+											"        \"is_student\": true,",
+											"        \"is_tutor\": false,",
+											"        \"is_manager\": false",
+											"    }",
+											"];",
+											"pm.test(\"Retrieved students are correct\", function () {",
+											"    pm.expect(responseBody.user).to.eql(expectedResponseUsers);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/students?student_ids=1,2,3",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"students"
+									],
+									"query": [
+										{
+											"key": "student_ids",
+											"value": "1,2,3"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[05] Bulk get students - Partial Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"var expectedResponseUsers = [",
+											"    {",
+											"        \"email\": \"stu01@student.com\",",
+											"        \"organisation\": \"\",",
+											"        \"username\": \"\",",
+											"        \"is_student\": true,",
+											"        \"is_tutor\": false,",
+											"        \"is_manager\": false",
+											"    }",
+											"];",
+											"pm.test(\"Retrieved student is correct\", function () {",
+											"    pm.expect(responseBody.user).to.eql(expectedResponseUsers);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/students?student_ids=1,11,20",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"students"
+									],
+									"query": [
+										{
+											"key": "student_ids",
+											"value": "1,11,20"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[06] Get students taught by Tutor 11 - Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"var expectedResponseUsers = [",
+											"    {",
+											"        \"email\": \"stu01@student.com\",",
+											"        \"organisation\": \"\",",
+											"        \"username\": \"\",",
+											"        \"is_student\": true,",
+											"        \"is_tutor\": false,",
+											"        \"is_manager\": false",
+											"    },",
+											"    {",
+											"        \"email\": \"stu02@student.com\",",
+											"        \"organisation\": \"\",",
+											"        \"username\": \"\",",
+											"        \"is_student\": true,",
+											"        \"is_tutor\": false,",
+											"        \"is_manager\": false",
+											"    },",
+											"    {",
+											"        \"email\": \"stu03@student.com\",",
+											"        \"organisation\": \"\",",
+											"        \"username\": \"\",",
+											"        \"is_student\": true,",
+											"        \"is_tutor\": false,",
+											"        \"is_manager\": false",
+											"    },",
+											"    {",
+											"        \"email\": \"stu04@student.com\",",
+											"        \"organisation\": \"\",",
+											"        \"username\": \"\",",
+											"        \"is_student\": true,",
+											"        \"is_tutor\": false,",
+											"        \"is_manager\": false",
+											"    },",
+											"    {",
+											"        \"email\": \"stu05@student.com\",",
+											"        \"organisation\": \"\",",
+											"        \"username\": \"\",",
+											"        \"is_student\": true,",
+											"        \"is_tutor\": false,",
+											"        \"is_manager\": false",
+											"    }",
+											"];",
+											"pm.test(\"Retrieved students are correct\", function () {",
+											"    pm.expect(responseBody.user).to.eql(expectedResponseUsers);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/students?tutor_id=11",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"students"
+									],
+									"query": [
+										{
+											"key": "tutor_id",
+											"value": "11"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[07] Get students NOT taught by Tutor 11 - Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"var expectedResponseUsers = [",
+											"    {",
+											"        \"email\": \"stu06@student.com\",",
+											"        \"organisation\": \"\",",
+											"        \"username\": \"\",",
+											"        \"is_student\": true,",
+											"        \"is_tutor\": false,",
+											"        \"is_manager\": false",
+											"    },",
+											"    {",
+											"        \"email\": \"stu07@student.com\",",
+											"        \"organisation\": \"\",",
+											"        \"username\": \"\",",
+											"        \"is_student\": true,",
+											"        \"is_tutor\": false,",
+											"        \"is_manager\": false",
+											"    },",
+											"    {",
+											"        \"email\": \"stu08@student.com\",",
+											"        \"organisation\": \"\",",
+											"        \"username\": \"\",",
+											"        \"is_student\": true,",
+											"        \"is_tutor\": false,",
+											"        \"is_manager\": false",
+											"    },",
+											"    {",
+											"        \"email\": \"stu09@student.com\",",
+											"        \"organisation\": \"\",",
+											"        \"username\": \"\",",
+											"        \"is_student\": true,",
+											"        \"is_tutor\": false,",
+											"        \"is_manager\": false",
+											"    },",
+											"    {",
+											"        \"email\": \"stu10@student.com\",",
+											"        \"organisation\": \"\",",
+											"        \"username\": \"\",",
+											"        \"is_student\": true,",
+											"        \"is_tutor\": false,",
+											"        \"is_manager\": false",
+											"    }",
+											"];",
+											"pm.test(\"Retrieved students are correct\", function () {",
+											"    pm.expect(responseBody.user).to.eql(expectedResponseUsers);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/students?tutor_id=11&invert=true",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"students"
+									],
+									"query": [
+										{
+											"key": "tutor_id",
+											"value": "11"
+										},
+										{
+											"key": "invert",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{student_bearer}}",
+								"type": "string"
+							}
 						]
-					}
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
 				},
 				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"packages": {},
-						"exec": [
-							""
+					"name": "[03] Test tutor retrieval",
+					"item": [
+						{
+							"name": "[01] Get one tutor - Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"var expectedResponseUser = {",
+											"    \"email\": \"tut11@tutor.com\",",
+											"    \"organisation\": \"\",",
+											"    \"username\": \"\",",
+											"    \"is_student\": false,",
+											"    \"is_tutor\": true,",
+											"    \"is_manager\": false",
+											"};",
+											"pm.test(\"Retrieved tutor is correct\", function () {",
+											"    pm.expect(responseBody.user).to.eql(expectedResponseUser);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/tutors?tutor_id=11",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutors"
+									],
+									"query": [
+										{
+											"key": "tutor_id",
+											"value": "11"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[02] Get one tutor - Fail (is student)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 400 BAD REQUEST",
+											"pm.test(\"Status code is 400 BAD REQUEST\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Retrieved response error is correct\", function () {",
+											"    pm.expect(responseBody.error).to.eql(\"User with id 1 is not a tutor\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/tutors?tutor_id=1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutors"
+									],
+									"query": [
+										{
+											"key": "tutor_id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[03] Get one tutor - Fail (does not exist)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 404 NOT FOUND",
+											"pm.test(\"Status code is 404 NOT FOUND\", function () {",
+											"    pm.response.to.have.status(404);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Retrieved response error is correct\", function () {",
+											"    pm.expect(responseBody.error).to.eql(\"Tutor with id 20 does not exist\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/tutors?tutor_id=20",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutors"
+									],
+									"query": [
+										{
+											"key": "tutor_id",
+											"value": "20"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[04] Bulk get tutors - Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"var expectedResponseUsers = [",
+											"    {",
+											"        \"email\": \"tut11@tutor.com\",",
+											"        \"organisation\": \"\",",
+											"        \"username\": \"\",",
+											"        \"is_student\": false,",
+											"        \"is_tutor\": true,",
+											"        \"is_manager\": false",
+											"    },",
+											"    {",
+											"        \"email\": \"tut12@tutor.com\",",
+											"        \"organisation\": \"\",",
+											"        \"username\": \"\",",
+											"        \"is_student\": false,",
+											"        \"is_tutor\": true,",
+											"        \"is_manager\": false",
+											"    },",
+											"    {",
+											"        \"email\": \"tut13@tutor.com\",",
+											"        \"organisation\": \"\",",
+											"        \"username\": \"\",",
+											"        \"is_student\": false,",
+											"        \"is_tutor\": true,",
+											"        \"is_manager\": false",
+											"    }",
+											"];",
+											"pm.test(\"Retrieved tutors are correct\", function () {",
+											"    pm.expect(responseBody.user).to.eql(expectedResponseUsers);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/tutors?tutor_ids=11,12,13",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutors"
+									],
+									"query": [
+										{
+											"key": "tutor_ids",
+											"value": "11,12,13"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[05] Bulk get tutors - Partial Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"var expectedResponseUsers = [",
+											"    {",
+											"        \"email\": \"tut11@tutor.com\",",
+											"        \"organisation\": \"\",",
+											"        \"username\": \"\",",
+											"        \"is_student\": false,",
+											"        \"is_tutor\": true,",
+											"        \"is_manager\": false",
+											"    }",
+											"];",
+											"pm.test(\"Retrieved tutor is correct\", function () {",
+											"    pm.expect(responseBody.user).to.eql(expectedResponseUsers);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/tutors?tutor_ids=1,11,20",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutors"
+									],
+									"query": [
+										{
+											"key": "tutor_ids",
+											"value": "1,11,20"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[06] Get tutors that teach Student 1 - Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"var expectedResponseUsers = [",
+											"    {",
+											"        \"email\": \"tut11@tutor.com\",",
+											"        \"organisation\": \"\",",
+											"        \"username\": \"\",",
+											"        \"is_student\": false,",
+											"        \"is_tutor\": true,",
+											"        \"is_manager\": false",
+											"    },",
+											"    {",
+											"        \"email\": \"tut12@tutor.com\",",
+											"        \"organisation\": \"\",",
+											"        \"username\": \"\",",
+											"        \"is_student\": false,",
+											"        \"is_tutor\": true,",
+											"        \"is_manager\": false",
+											"    }",
+											"];",
+											"pm.test(\"Retrieved tutors are correct\", function () {",
+											"    pm.expect(responseBody.user).to.eql(expectedResponseUsers);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/tutors?student_id=1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutors"
+									],
+									"query": [
+										{
+											"key": "student_id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{tutor_bearer}}",
+								"type": "string"
+							}
 						]
-					}
-				}
-			]
-		},
-		{
-			"name": "[05] Test tutor retrieval",
-			"item": [
-				{
-					"name": "[01] Get one tutor - Success",
+					},
 					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						},
 						{
 							"listen": "test",
 							"script": {
-								"exec": [
-									"// Parse the response body as JSON",
-									"var responseBody = pm.response.json();",
-									"",
-									"// Check if the status code is 200 OK",
-									"pm.test(\"Status code is 200 OK\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"",
-									"// Check if the response contains the expected message",
-									"var expectedResponseUser = {",
-									"    \"email\": \"tut11@tutor.com\",",
-									"    \"organisation\": \"\",",
-									"    \"username\": \"\",",
-									"    \"is_student\": false,",
-									"    \"is_tutor\": true,",
-									"    \"is_manager\": false",
-									"};",
-									"pm.test(\"Retrieved tutor is correct\", function () {",
-									"    pm.expect(responseBody.user).to.eql(expectedResponseUser);",
-									"});",
-									""
-								],
 								"type": "text/javascript",
-								"packages": {}
+								"packages": {},
+								"exec": [
+									""
+								]
 							}
 						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/tutors?tutor_id=11",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"tutors"
-							],
-							"query": [
-								{
-									"key": "tutor_id",
-									"value": "11"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "[02] Get one tutor - Fail (is student)",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"// Parse the response body as JSON",
-									"var responseBody = pm.response.json();",
-									"",
-									"// Check if the status code is 400 BAD REQUEST",
-									"pm.test(\"Status code is 400 BAD REQUEST\", function () {",
-									"    pm.response.to.have.status(400);",
-									"});",
-									"",
-									"// Check if the response contains the expected message",
-									"pm.test(\"Retrieved response error is correct\", function () {",
-									"    pm.expect(responseBody.error).to.eql(\"User with id 1 is not a tutor\");",
-									"});",
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/tutors?tutor_id=1",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"tutors"
-							],
-							"query": [
-								{
-									"key": "tutor_id",
-									"value": "1"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "[03] Get one tutor - Fail (does not exist)",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"// Parse the response body as JSON",
-									"var responseBody = pm.response.json();",
-									"",
-									"// Check if the status code is 404 NOT FOUND",
-									"pm.test(\"Status code is 404 NOT FOUND\", function () {",
-									"    pm.response.to.have.status(404);",
-									"});",
-									"",
-									"// Check if the response contains the expected message",
-									"pm.test(\"Retrieved response error is correct\", function () {",
-									"    pm.expect(responseBody.error).to.eql(\"Tutor with id 20 does not exist\");",
-									"});",
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/tutors?tutor_id=20",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"tutors"
-							],
-							"query": [
-								{
-									"key": "tutor_id",
-									"value": "20"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "[04] Bulk get tutors - Success",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"// Parse the response body as JSON",
-									"var responseBody = pm.response.json();",
-									"",
-									"// Check if the status code is 200 OK",
-									"pm.test(\"Status code is 200 OK\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"",
-									"// Check if the response contains the expected message",
-									"var expectedResponseUsers = [",
-									"    {",
-									"        \"email\": \"tut11@tutor.com\",",
-									"        \"organisation\": \"\",",
-									"        \"username\": \"\",",
-									"        \"is_student\": false,",
-									"        \"is_tutor\": true,",
-									"        \"is_manager\": false",
-									"    },",
-									"    {",
-									"        \"email\": \"tut12@tutor.com\",",
-									"        \"organisation\": \"\",",
-									"        \"username\": \"\",",
-									"        \"is_student\": false,",
-									"        \"is_tutor\": true,",
-									"        \"is_manager\": false",
-									"    },",
-									"    {",
-									"        \"email\": \"tut13@tutor.com\",",
-									"        \"organisation\": \"\",",
-									"        \"username\": \"\",",
-									"        \"is_student\": false,",
-									"        \"is_tutor\": true,",
-									"        \"is_manager\": false",
-									"    }",
-									"];",
-									"pm.test(\"Retrieved tutors are correct\", function () {",
-									"    pm.expect(responseBody.user).to.eql(expectedResponseUsers);",
-									"});",
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/tutors?tutor_ids=11,12,13",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"tutors"
-							],
-							"query": [
-								{
-									"key": "tutor_ids",
-									"value": "11,12,13"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "[05] Bulk get tutors - Partial Success",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"// Parse the response body as JSON",
-									"var responseBody = pm.response.json();",
-									"",
-									"// Check if the status code is 200 OK",
-									"pm.test(\"Status code is 200 OK\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"",
-									"// Check if the response contains the expected message",
-									"var expectedResponseUsers = [",
-									"    {",
-									"        \"email\": \"tut11@tutor.com\",",
-									"        \"organisation\": \"\",",
-									"        \"username\": \"\",",
-									"        \"is_student\": false,",
-									"        \"is_tutor\": true,",
-									"        \"is_manager\": false",
-									"    }",
-									"];",
-									"pm.test(\"Retrieved tutor is correct\", function () {",
-									"    pm.expect(responseBody.user).to.eql(expectedResponseUsers);",
-									"});",
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/tutors?tutor_ids=1,11,20",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"tutors"
-							],
-							"query": [
-								{
-									"key": "tutor_ids",
-									"value": "1,11,20"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "[06] Get tutors that teach Student 1 - Success",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"// Parse the response body as JSON",
-									"var responseBody = pm.response.json();",
-									"",
-									"// Check if the status code is 200 OK",
-									"pm.test(\"Status code is 200 OK\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"",
-									"// Check if the response contains the expected message",
-									"var expectedResponseUsers = [",
-									"    {",
-									"        \"email\": \"tut11@tutor.com\",",
-									"        \"organisation\": \"\",",
-									"        \"username\": \"\",",
-									"        \"is_student\": false,",
-									"        \"is_tutor\": true,",
-									"        \"is_manager\": false",
-									"    },",
-									"    {",
-									"        \"email\": \"tut12@tutor.com\",",
-									"        \"organisation\": \"\",",
-									"        \"username\": \"\",",
-									"        \"is_student\": false,",
-									"        \"is_tutor\": true,",
-									"        \"is_manager\": false",
-									"    }",
-									"];",
-									"pm.test(\"Retrieved tutors are correct\", function () {",
-									"    pm.expect(responseBody.user).to.eql(expectedResponseUsers);",
-									"});",
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/tutors?student_id=1",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"tutors"
-							],
-							"query": [
-								{
-									"key": "student_id",
-									"value": "1"
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			],
-			"auth": {
-				"type": "bearer",
-				"bearer": [
-					{
-						"key": "token",
-						"value": "{{tutor_bearer}}",
-						"type": "string"
-					}
-				]
-			},
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"type": "text/javascript",
-						"packages": {},
-						"exec": [
-							""
-						]
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"packages": {},
-						"exec": [
-							""
-						]
-					}
+					]
 				}
 			]
 		}
