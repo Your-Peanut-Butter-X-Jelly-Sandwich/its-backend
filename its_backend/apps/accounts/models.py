@@ -64,14 +64,13 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         if self.is_superuser:
             return f"Superuser: {self.email}"
-        elif self.is_tutor:
+        if self.is_tutor:
             return f"Tutor: {self.email}"
-        elif self.is_student:
+        if self.is_student:
             return f"Student: {self.email}"
-        elif self.is_manager:
+        if self.is_manager:
             return f"Manager: {self.email}"
-        else: 
-            return f"User: {self.email}"
+        return f"User: {self.email}"
 
 
 class TeachesManager(models.Manager):
@@ -123,6 +122,8 @@ class Teaches(models.Model):
     tutor = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='tutor_relationships')
     student = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='student_relationships')
 
+    objects = TeachesManager()
+
     class Meta:
         constraints = [
             models.UniqueConstraint(
@@ -131,4 +132,6 @@ class Teaches(models.Model):
             )
         ]
     
-    objects = TeachesManager()
+    def __str__(self):
+        return f'Teacher: {self.tutor}, Student: {self.student}'
+    

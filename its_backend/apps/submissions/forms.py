@@ -1,6 +1,2 @@
-from .models import Submissiondata
-from django import forms
-
-
-
-
+# from .models import Submissiondata
+# from django import forms

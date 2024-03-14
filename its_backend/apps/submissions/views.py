@@ -1,11 +1,16 @@
-from rest_framework import generics, views, viewsets
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework import views, viewsets
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Submissiondata
 from .serializers import RetrieveSubmissionSerializer, CreateSubmissionSerializer
-from django.contrib.auth.decorators import login_required
-from .its_system import its_request_parser_fncs_value, its_request_parser, its_request_feedback_fix
+from .its_system import its_request_parser, its_request_feedback_fix
+
+# Uncomment unused imports for now
+# from rest_framework import generics
+# from rest_framework.permissions import AllowAny
+# from django.contrib.auth.decorators import login_required
+# from .its_system import its_request_parser_fncs_value
 
 # reference solution for testing purpose:
 reference_program = "def is_odd(x):\n\tif x % 2 == 0:\n\t\treturn False\n\telse:\n\t\treturn True"

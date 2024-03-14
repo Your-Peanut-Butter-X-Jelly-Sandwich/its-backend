@@ -1,10 +1,7 @@
 from django.db import models
-from its_backend.apps.accounts.models import CustomUser
+# from its_backend.apps.accounts.models import CustomUser
 
 class Submissiondata(models.Model):
-    def __str__(self) -> str:
-        return super().__str__()
-    
     # foreign key to students and problem
     # problem = models.ForeignKey
     # student = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
@@ -17,3 +14,7 @@ class Submissiondata(models.Model):
     # The null=True parameter allows these fields to have a NULL value in the database.
     feedback = models.CharField(max_length=10000, blank=True, null=True)   
     report = models.CharField(max_length=10000, blank=True, null=True)
+    
+    def __str__(self) -> str:
+        return super().__str__()
+    
