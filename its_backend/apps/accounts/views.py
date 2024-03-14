@@ -15,7 +15,7 @@ from allauth.socialaccount.views import SignupView as AllauthSignupView
 from ..permission_classes import IsManager, IsTutor
 from .models import CustomUser, Teaches
 from .serializers import (RetrieveUserSerializer, SignInSerializer,
-                          SignUpSerializer, SocialCallbackSerializer)
+                          SignUpSerializer)
 
 
 def generate_tokens_for_user(user):
@@ -30,6 +30,7 @@ class SignUpView(generics.CreateAPIView):
     serializer_class = SignUpSerializer
     
     def post(self, request):
+        print(request)
         serializer = self.serializer_class(data=request.data)
         try:
             serializer.is_valid(raise_exception=True)

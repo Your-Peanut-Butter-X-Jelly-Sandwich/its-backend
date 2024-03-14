@@ -1,47 +1,72 @@
-from rest_framework import generics, views, viewsets
+from rest_framework import generics, views, viewsets,  mixins
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Submissiondata
-from .serializers import RetrieveSubmissionSerializer, CreateSubmissionSerializer
+from .serializers import RetrieveSubmissionDetailsSerializer, RetrieveAllSubmissionSerializer, CreateSubmissionSerializer
 from django.contrib.auth.decorators import login_required
-from .its_system import its_request_parser_fncs_value, its_request_parser, its_request_feedback_fix
+from .its_utils import its_request_parser_fncs_value, its_request_parser, its_request_feedback_fix
+from ..permission_classes import IsStudent, IsTutor
+from rest_framework import serializers
+from .utils import process_submission_request
+from django.shortcuts import get_object_or_404
 
-# reference solution for testing purpose:
-reference_program = "def is_odd(x):\n\tif x % 2 == 0:\n\t\treturn False\n\telse:\n\t\treturn True"
-reference_program_language = "py"
-reference_solution = its_request_parser(reference_program_language, reference_program)
-function = "is_odd"
-inputs = []
-args = ""
-
-# @login_required
-class SubmissionHistoryView(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated, ]
+class StudentSubmissionViewSet(
+    mixins.ListModelMixin, 
+    mixins.RetrieveModelMixin, 
+    mixins.CreateModelMixin,
+    viewsets.GenericViewSet
+):
     queryset = Submissiondata.objects.all()
-    serializer_class = RetrieveSubmissionSerializer
-    
-# @login_required
-class CreateSubmissionView(views.APIView):
-    serializer_class = CreateSubmissionSerializer
+    permission_classes = (IsStudent,)
+    serializer_class = {
+        "list": RetrieveAllSubmissionSerializer,
+        "retrieve": RetrieveSubmissionDetailsSerializer,
+        "create": CreateSubmissionSerializer,
+    }
 
-    def post(self, request, qn_id):
-        language = request.data.get('language')
-        program = request.data.get('program')
-        mutable_data = request.data.copy()
-        student_solution = its_request_parser(language, program)
-        report = its_request_feedback_fix(language, reference_solution, student_solution, function, inputs, args)
+    def get_serializer_class(self):
+        return self.serializer_class.get(self.action)
 
-        mutable_data['qn_id'] = qn_id
-        mutable_data['program'] = program
-        mutable_data['report'] = report
-        serializer = self.serializer_class(data=mutable_data)
+    def get_queryset(self):
+        return self.queryset.filter(submitted_by=self.request.user)
 
-        if serializer.is_valid():
-            try:
-                serializer.save(qn_id=qn_id, program=program, report=report)
-            except Exception as e:
-                return Response(data={"message": e.args}, status=status.HTTP_400_BAD_REQUEST)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response({'Bad Request': 'Invalid data...'}, status=status.HTTP_400_BAD_REQUEST)
+    def create(self, request):
+        try:
+            its_processed_request = process_submission_request(request)
+            serializer = self.get_serializer_class()(
+                data=its_processed_request,
+                context={"user": request.user},
+            )
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+        except serializers.ValidationError as e:
+            return Response(
+                data={"message": e.detail}, status=status.HTTP_400_BAD_REQUEST
+            )
+        
+    def list(self, request):
+        print('in list')
+        qn_id = request.data.get('qn_id')
+        # offset = request.query_params.get("offset", 0)
+        # limit = request.query_params.get("limit", 10)
+        queryset = self.get_queryset().filter(qn_id=qn_id)
+        submissions = queryset.order_by("submission_number")
+        serializer = self.get_serializer_class()(submissions, many=True)
+        return Response(data={"submissions": serializer.data}, status=status.HTTP_200_OK)
+
+    def retrieve(self, request, pk):
+        queryset = self.get_queryset()
+        submission = get_object_or_404(queryset, pk=pk)
+        serializer = self.get_serializer_class()(submission, data=request.data)
+        try:
+            serializer.is_valid(raise_exception=True)
+        except serializers.ValidationError as e:
+            return Response(
+                data={"message": e.detail}, status=status.HTTP_400_BAD_REQUEST
+            )
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
 
