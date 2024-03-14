@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 from rest_framework import generics, views, viewsets,  mixins
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
@@ -11,21 +10,6 @@ from ..permission_classes import IsStudent, IsTutor
 from rest_framework import serializers
 from .utils import process_submission_request
 from django.shortcuts import get_object_or_404
-=======
-from rest_framework import views, viewsets
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from rest_framework import status
-from .models import Submissiondata
-from .serializers import RetrieveSubmissionSerializer, CreateSubmissionSerializer
-from .its_system import its_request_parser, its_request_feedback_fix
-
-# Uncomment unused imports for now
-# from rest_framework import generics
-# from rest_framework.permissions import AllowAny
-# from django.contrib.auth.decorators import login_required
-# from .its_system import its_request_parser_fncs_value
->>>>>>> 28b5f5cac722d1f7eb2d81c8ac0c345feb680e69
 
 class StudentSubmissionViewSet(
     mixins.ListModelMixin, 
