@@ -66,8 +66,6 @@ def its_request_feedback_fix(
         "inputs": inputs,
         "args": args,
     }
-    print(data)
-
     response = requests.post(feedback_fix_url, headers=headers, json=data)
 
     if response.status_code == 200:
@@ -75,9 +73,35 @@ def its_request_feedback_fix(
         json_response = response.json()
         # Process the JSON response as needed
         # print(json_response)
-        repair_strings = data[0]["repairStrings"]
-        return repair_strings
+        # repair_strings = data[0]["repairStrings"]
+        # return repair_strings
+        feedback_array = json_response
+        return feedback_array
     else:
         # API call failed
         print(f"Error: {response.status_code}, {response.text}")
-        return "error generating Feedback"
+        return "error generating feedback for tutor"
+
+
+def its_request_feedback_hint(
+    language, reference_solution, student_solution, function, inputs, args
+):
+    feedback_hint_url = url + "feedback_error"
+    data = {
+        "language": language,
+        "reference_solution": reference_solution,
+        "student_solution": student_solution,
+        "function": function,
+        "inputs": inputs,
+        "args": args,
+    }
+    breakpoint()
+    response = requests.post(feedback_hint_url, headers=headers, json=data)
+    if response.status_code == 200:
+        json_response = response.json()
+        repair_array = json_response
+        return repair_array
+    else:
+        # API call failed
+        print(f"Error: {response.status_code}, {response.text}")
+        return "error generating feedback hint for student"
