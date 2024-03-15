@@ -35,6 +35,7 @@ def compute_score(qn_id, language, student_solution, function):
     test_cases = TestCase.objects.filter(question_id=qn_id)
     total_score = test_cases.count()
     score = 0
+    failed_test_cases = []
     breakpoint()
     for test_case in test_cases:
         inputs = ""
@@ -47,7 +48,9 @@ def compute_score(qn_id, language, student_solution, function):
         result = str(result)
         if result == test_case.output:
             score += 1
-    return total_score, score
+        else:
+            failed_test_cases.append(test_case.pk)
+    return total_score, score, failed_test_cases
 
 
 def get_submission_number(user, qn_id):
@@ -56,12 +59,30 @@ def get_submission_number(user, qn_id):
     return submission_number
 
 
-def get_feedback_for_tutor(language, parsed_ref_program, parsed_stu_program, function):
+def get_failed_test_case_arg(failed_test_cases):
+    sample_test_case = TestCase.objects.filter(pk__in=failed_test_cases)[0]
+    return sample_test_case.input
+
+
+def process_feedback_params(
+    language, parsed_ref_program, parsed_stu_program, failed_test_cases
+):
     input = "[]"
-    arguments = "[2]"
+    arguments = "[" + str(get_failed_test_case_arg(failed_test_cases)) + "]"
     language = language if language.lower() != "python" else "py"
     parsed_ref_program = json.dumps(parsed_ref_program)
     parsed_stu_program = json.dumps(parsed_stu_program)
+    return input, arguments, language, parsed_ref_program, parsed_stu_program
+
+
+def get_feedback_for_tutor(
+    language, parsed_ref_program, parsed_stu_program, function, failed_test_cases
+):
+    input, arguments, language, parsed_ref_program, parsed_stu_program = (
+        process_feedback_params(
+            language, parsed_ref_program, parsed_stu_program, failed_test_cases
+        )
+    )
     feedback_fix_array = its_request_feedback_fix(
         language, parsed_ref_program, parsed_stu_program, function, input, arguments
     )
@@ -70,13 +91,13 @@ def get_feedback_for_tutor(language, parsed_ref_program, parsed_stu_program, fun
 
 
 def get_feedback_for_student(
-    language, parsed_ref_program, parsed_stu_program, function
+    language, parsed_ref_program, parsed_stu_program, function, failed_test_cases
 ):
-    input = "[]"
-    arguments = "[2]"
-    language = language if language.lower() != "python" else "py"
-    parsed_ref_program = json.dumps(parsed_ref_program)
-    parsed_stu_program = json.dumps(parsed_stu_program)
+    input, arguments, language, parsed_ref_program, parsed_stu_program = (
+        process_feedback_params(
+            language, parsed_ref_program, parsed_stu_program, failed_test_cases
+        )
+    )
     feedback_hint_array = its_request_feedback_hint(
         language, parsed_ref_program, parsed_stu_program, function, input, arguments
     )
@@ -103,13 +124,15 @@ def process_submission_request(request):
     function = next(iter(parsed_stu_program["fncs"].keys()))
 
     # number of test cases passed
-    total_score, score = compute_score(qn_id, language, parsed_stu_program, function)
+    total_score, score, failed_test_cases = compute_score(
+        qn_id, language, parsed_stu_program, function
+    )
 
     its_feedback_fix_tutor = get_feedback_for_tutor(
-        language, parsed_ref_program, parsed_stu_program, function
+        language, parsed_ref_program, parsed_stu_program, function, failed_test_cases
     )
     its_feedback_hint_student = get_feedback_for_student(
-        language, parsed_ref_program, parsed_stu_program, function
+        language, parsed_ref_program, parsed_stu_program, function, failed_test_cases
     )
 
     # feedback_fix = its_request_feedback_fix(language, parsed_ref_program, student_solution, function, inputs, args)
