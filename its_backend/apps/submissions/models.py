@@ -3,9 +3,6 @@ from django.db import models
 # from django.contrib.postgres.fields import ArrayField
 
 class Submissiondata(models.Model):
-    def __str__(self) -> str:
-        return super().__str__()
-    
     qn_id = models.IntegerField()
     language = models.CharField(max_length=30, default = 'py')
     submission_number = models.IntegerField()
@@ -18,8 +15,11 @@ class Submissiondata(models.Model):
     submitted_by = models.ForeignKey(
         "accounts.CustomUser", blank=True, on_delete=models.CASCADE
     )
+
+    def __str__(self) -> str:
+        return super().__str__()
     
-class ITS_Feedback(models.Model):
+class ITSFeedback(models.Model):
     submission = models.ForeignKey(Submissiondata, on_delete=models.CASCADE)
     line = models.IntegerField(null = True)
     feedback = models.CharField(max_length=10000)

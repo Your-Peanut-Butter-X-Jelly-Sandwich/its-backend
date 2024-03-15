@@ -1,6 +1,7 @@
 from django.contrib import admin
-from .models import Submissiondata, ITS_Feedback
+
+from .models import ITSFeedback, Submissiondata
 
 # Register your models here.
 admin.site.register(Submissiondata)
-admin.site.register(ITS_Feedback)
+admin.site.register(ITSFeedback)
