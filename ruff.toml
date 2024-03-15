@@ -3,7 +3,7 @@ target-version = "py311"
 
 [lint]
 # Enable flake8-bugbear (`B`) rules, in addition to the defaults.
-select = ["E4", "E7", "E9", "F", "A", "B", "N", "DJ", "RET"]
+select = ["E4", "E7", "E9", "F", "I", "N", "B", "A", "DJ", "RET"]
 exclude = ["**/tests.py"]
 ignore = ["DJ001"]
 

@@ -147,6 +147,33 @@ To test endpoints that require authorization (student, tutor, or manager), you c
 
 Add one of the above in your request's `Authorization` tab with type `Bearer token`.
 
+## Ruff Linter
+
+Our project uses [`ruff`](https://docs.astral.sh/ruff/) to lint our code and maintain a clean codebase.
+
+### Lint Rules used in ITS Backend
+
+Currently, the lint rules used are as follows:
+
+- `Pyflakes` (F)
+- Subset of `pycodestyle` errors (E)
+- `isort` (I)
+- `pep8-naming` (N)
+- `flake8-bugbear` (B)
+- `flake8-builtins` (A)
+- Subset of `flake8-django` (DJ)
+- `flake8-return` (RET)
+
+You can see the documentation of each [here](https://docs.astral.sh/ruff/rules/).
+
+### Configure `ruff` Behavior
+
+`ruff` configuration is laid out inside the [`ruff.toml`](./ruff.toml) file.
+
+To add more lint errors, you can add full rule codes (e.g., `F401`) or any valid prefix (e.g., `F`) to the end of the `select` list.
+
+You can find out more configurations [here](https://docs.astral.sh/ruff/configuration/).
+
 ## Debug
 
 - set `DEBUG=TRUE` in `settings.py`
