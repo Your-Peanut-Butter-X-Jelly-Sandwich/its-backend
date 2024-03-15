@@ -36,7 +36,6 @@ def compute_score(qn_id, language, student_solution, function):
     total_score = test_cases.count()
     score = 0
     failed_test_cases = []
-    breakpoint()
     for test_case in test_cases:
         inputs = ""
         arguments = "[" + str(test_case.input) + "]"
