@@ -7,13 +7,15 @@ from .models import Submissiondata
 class RetrieveAllSubmissionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Submissiondata
-        fields = ['pk', 'submission_number', 'score', 'total_score', 'submission_date']
+        fields = ["pk", "submission_number", "score", "total_score", "submission_date"]
+
 
 # class CreateITSFeedbackSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = ITSFeedback
 #         fields = ['pk','line', 'feedback']
-        
+
+
 class RetrieveSubmissionDetailsSerializer(serializers.ModelSerializer):
     # its_feedback = CreateITSFeedbackSerializer(many=True, read_only=True, required=False)
     qn_id = serializers.IntegerField(read_only=True)
@@ -27,54 +29,54 @@ class RetrieveSubmissionDetailsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Submissiondata
-        fields = ['pk',
-                    'qn_id',
-                    'submission_number',
-                    'language',
-                    'submission_date',
-                    'program',
-                    'its_feedback_hint_student',
-                    'its_feedback_fix_tutor',
-                    'tutor_feedback',
-                    'report',
-                    'total_score',
-                    'score',
-                    ]
+        fields = [
+            "pk",
+            "qn_id",
+            "submission_number",
+            "language",
+            "submission_date",
+            "program",
+            "its_feedback_hint_student",
+            "its_feedback_fix_tutor",
+            "tutor_feedback",
+            "report",
+            "total_score",
+            "score",
+        ]
 
     # def to_representation(self, data):
     #     obj = super().to_representation(data)
     #     # its_feedback = data.its_feedback_set.all()  # Access related ITS_Feedback instances through the reverse relation
     #     its_feedback = data.its_feedback_set.all()  # Access related ITS_Feedback instances through the reverse relation
-        
+
     #     obj["its_feedback"] = CreateITSFeedbackSerializer(its_feedback, many=True, required=False).data
     #     return obj
 
 
 class CreateSubmissionSerializer(serializers.ModelSerializer):
     # its_feedback = CreateITSFeedbackSerializer(many=True, write_only=True, required=False)
-    submitted_by = RetrieveUserSerializer(write_only=True)
+    submitted_by = RetrieveUserSerializer(read_only=True)
+
     class Meta:
         model = Submissiondata
-        fields = ['pk', 
-            'qn_id',
-            'submission_number',
-            'language', 
-            'submission_date', 
-            'program',
-            'its_feedback_hint_student',
-            'its_feedback_fix_tutor',
-            'tutor_feedback',   
-            'report',
-            'total_score',
-            'score',
-            'submitted_by',
+        fields = [
+            "pk",
+            "qn_id",
+            "submission_number",
+            "language",
+            "submission_date",
+            "program",
+            "its_feedback_hint_student",
+            "its_feedback_fix_tutor",
+            "tutor_feedback",
+            "report",
+            "total_score",
+            "score",
+            "submitted_by",
         ]
 
     def create(self, validated_data):
-        print("validated ", validated_data)
-
         submissiondata = Submissiondata.objects.create(
             **validated_data, submitted_by=self.context["user"]
         )
-        print(submissiondata)
         return submissiondata

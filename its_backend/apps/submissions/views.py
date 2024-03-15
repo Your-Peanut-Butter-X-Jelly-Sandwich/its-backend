@@ -23,11 +23,12 @@ from .utils import process_submission_request
 #     its_request_parser_fncs_value,
 # )
 
+
 class StudentSubmissionViewSet(
-    mixins.ListModelMixin, 
-    mixins.RetrieveModelMixin, 
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
     mixins.CreateModelMixin,
-    viewsets.GenericViewSet
+    viewsets.GenericViewSet,
 ):
     queryset = Submissiondata.objects.all()
     permission_classes = (IsStudent,)
@@ -50,25 +51,25 @@ class StudentSubmissionViewSet(
                 data=its_processed_request,
                 context={"user": request.user},
             )
-            breakpoint()
             serializer.is_valid(raise_exception=True)
-            print("================================REACHING THIS LINE============================================")
             serializer.save()
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
         except serializers.ValidationError as e:
             return Response(
                 data={"message": e.detail}, status=status.HTTP_400_BAD_REQUEST
             )
-        
+
     def list(self, request):
-        print('in list')
-        qn_id = request.data.get('qn_id')
+        print("in list")
+        qn_id = request.data.get("qn_id")
         # offset = request.query_params.get("offset", 0)
         # limit = request.query_params.get("limit", 10)
         queryset = self.get_queryset().filter(qn_id=qn_id)
         submissions = queryset.order_by("submission_number")
         serializer = self.get_serializer_class()(submissions, many=True)
-        return Response(data={"submissions": serializer.data}, status=status.HTTP_200_OK)
+        return Response(
+            data={"submissions": serializer.data}, status=status.HTTP_200_OK
+        )
 
     def retrieve(self, request, pk):
         queryset = self.get_queryset()
@@ -81,4 +82,3 @@ class StudentSubmissionViewSet(
                 data={"message": e.detail}, status=status.HTTP_400_BAD_REQUEST
             )
         return Response(data=serializer.data, status=status.HTTP_200_OK)
-
