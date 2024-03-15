@@ -1,6 +1,7 @@
-from django.urls import path, include
-from .views import StudentSubmissionViewSet
+from django.urls import include, path
 from rest_framework import routers
+
+from .views import StudentSubmissionViewSet
 
 # urlpatterns = [
 #     path('student/question/<int:qn_id>/', CreateSubmissionView.as_view(), name='create_submission'),

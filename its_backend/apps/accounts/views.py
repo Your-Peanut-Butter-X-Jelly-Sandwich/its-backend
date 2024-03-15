@@ -1,19 +1,18 @@
+from allauth.socialaccount.views import SignupView as AllauthSignupView
 from django.contrib.auth import logout
-from rest_framework.response import Response
-from rest_framework import generics, views
-from rest_framework import status
-from rest_framework import serializers
-from .serializers import SignUpSerializer, SignInSerializer, RetrieveUserSerializer
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
 from django.http import HttpRequest, HttpResponsePermanentRedirect
+from rest_framework import generics, serializers, status, views
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
-from allauth.socialaccount.views import SignupView as AllauthSignupView
+
 from ..permission_classes import IsManager, IsTutor
 from .models import CustomUser, Teaches
-from .serializers import (RetrieveUserSerializer, SignInSerializer,
-                        SignUpSerializer)
+from .serializers import RetrieveUserSerializer, SignInSerializer, SignUpSerializer
+
+# from .serializers import (SocialCallbackSerializer)
 
 
 def generate_tokens_for_user(user):
@@ -432,7 +431,7 @@ class RetrieveTutorsView(views.APIView):
                         status=status.HTTP_400_BAD_REQUEST)
 
 class AddTutorStudentRelationshipView(views.APIView):
-    permission_classes = [IsManager, IsTutor,]
+    permission_classes = [IsManager | IsTutor]
     
     def post(self, request: HttpRequest):
         '''

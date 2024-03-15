@@ -1,6 +1,8 @@
 from rest_framework import serializers
-from .models import Submissiondata, ITS_Feedback
+
 from ..accounts.serializers import RetrieveUserSerializer
+from .models import ITSFeedback, Submissiondata
+
 
 class RetrieveAllSubmissionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -9,7 +11,7 @@ class RetrieveAllSubmissionSerializer(serializers.ModelSerializer):
 
 class CreateITSFeedbackSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ITS_Feedback
+        model = ITSFeedback
         fields = ['pk','line', 'feedback']
         
 class RetrieveSubmissionDetailsSerializer(serializers.ModelSerializer):
@@ -44,8 +46,6 @@ class RetrieveSubmissionDetailsSerializer(serializers.ModelSerializer):
         return obj
 
 
-
-
 class CreateSubmissionSerializer(serializers.ModelSerializer):
     its_feedback = CreateITSFeedbackSerializer(many=True, write_only=True, required=False)
     submitted_by = RetrieveUserSerializer(read_only=True)
@@ -74,8 +74,6 @@ class CreateSubmissionSerializer(serializers.ModelSerializer):
         print("its_feedback", its_feedback_data)
         if its_feedback_data:
             for feedback in its_feedback_data:
-                ITS_Feedback.objects.create(Submissiondata=submissiondata, **feedback)
+                ITSFeedback.objects.create(Submissiondata=submissiondata, **feedback)
         
         return submissiondata
-
-

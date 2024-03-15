@@ -1,10 +1,10 @@
 from django.contrib.auth.models import (
-    BaseUserManager,
     AbstractBaseUser,
+    BaseUserManager,
     PermissionsMixin,
 )
-from django.core.exceptions import ValidationError, ObjectDoesNotExist
-from django.db import models, IntegrityError
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.db import IntegrityError, models
 from django.utils import timezone
 
 

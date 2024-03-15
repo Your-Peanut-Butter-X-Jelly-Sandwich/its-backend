@@ -1,6 +1,7 @@
-from rest_framework import serializers
-from its_backend.apps.accounts.models import CustomUser
 from django.contrib import auth
+from rest_framework import serializers
+
+from its_backend.apps.accounts.models import CustomUser
 
 
 class SignUpSerializer(serializers.ModelSerializer):

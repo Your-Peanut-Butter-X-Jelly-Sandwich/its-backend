@@ -1,12 +1,13 @@
+from dateutil.relativedelta import relativedelta
 from django.db import models
 from django.utils import timezone
-from dateutil.relativedelta import relativedelta
+
+
+def get_default_due_date():
+    return timezone.now() + relativedelta(days=30)
+
 
 class Question(models.Model):
-
-    def get_default_due_date():
-        return timezone.now() + relativedelta(days=30)
-
     LANGUAGE_CHOICES = [
         ("PY", "Python"),
         ("JAVA", "Java"),

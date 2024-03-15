@@ -1,6 +1,7 @@
 from django.urls import include, path
 from rest_framework_nested import routers
-from .views import TutorQuestionViewSet, StudentQuestionViewSet
+
+from .views import StudentQuestionViewSet, TutorQuestionViewSet
 
 router = routers.SimpleRouter(trailing_slash=False)
 router.register(
