@@ -10,8 +10,10 @@ SERVER_PID=""
 POSTMAN_COLLECTION="ITS-API-Test.postman_collection.json"
 
 cleanup() {
-    # Restore original database
-    mv "${TEST_DIR}/temp.sqlite3" "${ROOT_DIR}/db.sqlite3"
+    # Restore original database if backed up
+    if [ -f "${TEST_DIR}/temp.sqlite3" ]; then
+        mv "${TEST_DIR}/temp.sqlite3" "${ROOT_DIR}/db.sqlite3"
+    fi
 
     # Kill server if running
     if [ -n "$SERVER_PID" ]; then
@@ -19,8 +21,10 @@ cleanup() {
     fi
 }
 
-# Backup original database
-mv "${ROOT_DIR}/db.sqlite3" "${TEST_DIR}/temp.sqlite3"
+# Backup original database if exists
+if [ -f "${ROOT_DIR}/db.sqlite3" ]; then
+    mv "${ROOT_DIR}/db.sqlite3" "${TEST_DIR}/temp.sqlite3"
+fi
 
 # Make and apply migrations
 python "${ROOT_DIR}/manage.py" makemigrations
