@@ -6,11 +6,13 @@ from rest_framework.response import Response
 from ...apps.accounts.models import Teaches
 from ..permission_classes import IsStudent, IsTutor
 from .models import Question
-from .serializers import (StudentQuestionDetailSerializer,
-                          StudentQuestionListSerializer,
-                          TutorCreateUpdateQuestionSerializer,
-                          TutorQuestionDetailSerializer,
-                          TutorQuestionListSerializer)
+from .serializers import (
+    StudentQuestionDetailSerializer,
+    StudentQuestionListSerializer,
+    TutorCreateUpdateQuestionSerializer,
+    TutorQuestionDetailSerializer,
+    TutorQuestionListSerializer,
+)
 
 # Comment unused imports for now
 # from .models import TestCase

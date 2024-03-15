@@ -1,6 +1,6 @@
+from dateutil.relativedelta import relativedelta
 from django.db import models
 from django.utils import timezone
-from dateutil.relativedelta import relativedelta
 
 
 def get_default_due_date():

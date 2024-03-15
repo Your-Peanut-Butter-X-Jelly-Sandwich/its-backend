@@ -1,4 +1,5 @@
 from django.db import models
+
 # from its_backend.apps.accounts.models import CustomUser
 
 class Submissiondata(models.Model):

@@ -1,10 +1,18 @@
 from django.urls import include, path
 from rest_framework_simplejwt.views import TokenRefreshView
 
-from .views import (AddTutorStudentRelationshipView, ChangePasswordView,
-                    CustomSignupView, LoginView, LogoutView,
-                    RetrieveStudentsView, RetrieveTutorsView, RetrieveUserView,
-                    SignUpView, SocialCallbackView)
+from .views import (
+    AddTutorStudentRelationshipView,
+    ChangePasswordView,
+    CustomSignupView,
+    LoginView,
+    LogoutView,
+    RetrieveStudentsView,
+    RetrieveTutorsView,
+    RetrieveUserView,
+    SignUpView,
+    SocialCallbackView,
+)
 
 urlpatterns = [
     path('auth/login', LoginView.as_view() , name='login'),
