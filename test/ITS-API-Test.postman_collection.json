@@ -34,6 +34,7 @@
 									"",
 									"// Set the extracted access token as an environment variable",
 									"pm.environment.set(\"student_bearer\", accessToken);",
+									"pm.collectionVariables.set(\"student_bearer\", accessToken);",
 									""
 								],
 								"type": "text/javascript",
@@ -81,6 +82,7 @@
 									"",
 									"// Set the extracted access token as an environment variable",
 									"pm.environment.set(\"tutor_bearer\", accessToken);",
+									"pm.collectionVariables.set(\"tutor_bearer\", accessToken);",
 									""
 								],
 								"type": "text/javascript",

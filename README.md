@@ -20,17 +20,16 @@ It is suggested to have a dedicated virtual environment for each Django project,
 
 ## Install dependencies
 
-- `cd` into `its_backend`
 - activate the virtual environment by running
 
   - ```bash
-    source its_env/bin/activate # On Windows use env\Scripts\activate
+    source its_env/bin/activate  # On Windows use env\Scripts\activate
     ```
 
 - install dependencies by running
 
   - ```bash
-    pip install -r ../requirement.txt
+    pip install -r requirement.txt
     ```
 
 ## Database Migration
@@ -41,9 +40,24 @@ It is suggested to have a dedicated virtual environment for each Django project,
 - You might encounter this issue: `django.db.migrations.exceptions.InconsistentMigrationHistory: Migration accounts.0001_initial is applied before its dependency auth.0012_alter_user_first_name_max_length on database 'default'.`
   - refer to this [post](https://stackoverflow.com/questions/65562875/migration-admin-0001-initial-is-applied-before-its-dependency-app-0001-initial-o) for solution
 
+```shell
+$ python manage.py makemigrations
+$ python manage.py migrate
+```
+
+## Run Django Server
+
+Run the server by running:
+
+```shell
+$ python manage.py runserver
+```
+
+The server will be running on `http://127.0.0.1:8000`
+
 ## Set up third party login
 
-- Naviage to `http://127.0.0.1:8000/admin`
+- Navigate to `http://127.0.0.1:8000/admin`
 - Modify the entry in `Sites` table to be
   - Domain name: `http://127.0.0.1:8000/`
   - Display name: `http://127.0.0.1:8000/`
@@ -93,7 +107,7 @@ $ newman --version
 If your shell cannot find the `newman` package, download it using NPM or Homebrew:
 
 ```shell
-$ npm install [-g] newman
+$ npm install [-g] newman  # include -g flag to download globally
 $ brew install newman
 ```
 
@@ -108,7 +122,7 @@ After the package is downloaded, run your Postman collection by running:
 
 ```shell
 $ chmod +x ./test/test.sh  # if necessary
-$ ./test/test.sh  # or ./test.sh if you cd-ed into test
+$ ./test/test.sh           # or ./test.sh if you cd-ed into test
 ```
 
 A sample [test Postman collection](./test/ITS-API-Test.postman_collection.json) is already included under the `test` folder. If you want to test your own collection, add your collection under the `test` folder and update the `POSTMAN_COLLECTION` value inside the [test script](./test/test.sh).
@@ -146,6 +160,40 @@ To test endpoints that require authorization (student, tutor, or manager), you c
 ```
 
 Add one of the above in your request's `Authorization` tab with type `Bearer token`.
+
+To test the contents of received response, you can add a Javascript script under `Tests` tab. For example, the following script tests if the response is of status `200 OK` and contains `message` key with value `"Hello World"`.
+
+```js
+// Parse the response body as JSON
+var responseBody = pm.response.json();
+
+// Check if the status code is 200 OK
+pm.test("Status code is 200 OK", function () {
+    pm.response.to.have.status(200);
+});
+
+// Check if the response contains the expected message
+pm.test("Response message is correct", function () {
+    pm.expect(responseBody.message).to.eql("Hello World");
+});
+```
+
+You can also use `Tests` tab to set a new collection variable to be reused inside the Postman collection. For example, the following script stores `"Hello World"` into the variable `message`.
+
+```js
+pm.collectionVariables.set("message", "Hello World");
+```
+
+### Populate DB with test data
+
+There is an [SQL script](./test/populate_db.sql) that currently populates `db.sqlite3` file with the following test data:
+
+- 10 students
+- 5 tutors
+
+> `teaches` relations are added through Postman collection (see `[02] Add teaches relations` in our [collection](./test/ITS-API-Test.postman_collection.json)).
+
+If you need to populate more test data to the DB (e.g., sample questions and submissions), write more `INSERT INTO` SQL statements inside the [script](./test/populate_db.sql).
 
 ## Ruff Linter
 
