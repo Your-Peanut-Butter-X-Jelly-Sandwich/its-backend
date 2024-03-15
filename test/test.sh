@@ -7,6 +7,8 @@ TEST_DIR="$( cd "$( dirname "$0" )" && pwd )"
 ROOT_DIR="$(dirname "$TEST_DIR")"
 SERVER_PID=""
 
+POSTMAN_COLLECTION="ITS-API-Test.postman_collection.json"
+
 cleanup() {
     # Restore original database
     mv "${TEST_DIR}/temp.sqlite3" "${ROOT_DIR}/db.sqlite3"
@@ -35,4 +37,4 @@ SERVER_PID=$!
 sleep 5
 
 # Run postman tests
-newman run "${TEST_DIR}/ITS-API-Test.postman_collection.json"
+newman run "${TEST_DIR}/${POSTMAN_COLLECTION}"
