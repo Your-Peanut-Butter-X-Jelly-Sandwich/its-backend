@@ -151,6 +151,45 @@ Add one of the above in your request's `Authorization` tab with type `Bearer tok
 
 Our project uses [`ruff`](https://docs.astral.sh/ruff/) to lint our code and maintain a clean codebase.
 
+Run the following to lint your whole code base:
+
+```shell
+$ ruff check .
+```
+
+Or the following to lint certain files or directories:
+
+```shell
+$ ruff check /path/to/file_or_folder
+```
+
+You can also select certain rules to test for:
+
+```shell
+$ ruff check --select F .
+```
+
+If there is no output, it means your codebase passes all lint checks.
+
+To fix fixable lint errors, you can also run:
+
+```shell
+$ ruff check --fix .
+```
+
+Or to fix certain set of lint rules, run:
+
+```shell
+$ ruff check --select I --fix .  # fixes imports
+```
+
+You can also format files based on format rules defined in [`ruff.toml`](./ruff.toml):
+
+```shell
+$ ruff format .                 # format all files in codebase
+$ ruff format /path/to/file.py  # format a single file
+```
+
 ### Lint Rules used in ITS Backend
 
 Currently, the lint rules used are as follows:
