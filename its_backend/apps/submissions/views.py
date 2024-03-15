@@ -50,9 +50,9 @@ class StudentSubmissionViewSet(
                 data=its_processed_request,
                 context={"user": request.user},
             )
+            breakpoint()
             serializer.is_valid(raise_exception=True)
-            self.perform_create(serializer)
-            serializer.is_valid(raise_exception=True)
+            print("================================REACHING THIS LINE============================================")
             serializer.save()
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
         except serializers.ValidationError as e:

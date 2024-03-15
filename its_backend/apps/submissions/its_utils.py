@@ -34,9 +34,6 @@ def its_request_parser(language, program):
         return None
     
 
-def its_request_parser_fncs_value(language, source_code):
-    json_response = its_request_parser(language, source_code)
-    return json_response.get('fncs')
 
 # generate interpret result based on provided program, inputs and entry functions
 def its_request_interpreter(language, program_model, function, inputs, args):
