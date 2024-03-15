@@ -31,3 +31,13 @@ jobs:
       run: |
         # stop the build if there are Python syntax errors or undefined names
         ruff check . --output-format github
+    - name: Install newman
+      uses: actions/setup-node@v3
+      run: |
+        cd test
+        npm install
+    - name: Test Postman collections
+      run: |
+        chmod +x test.sh
+        ./test.sh
+
