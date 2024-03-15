@@ -27,6 +27,7 @@ class SignUpView(generics.CreateAPIView):
     serializer_class = SignUpSerializer
     
     def post(self, request):
+        print(request)
         serializer = self.serializer_class(data=request.data)
         try:
             serializer.is_valid(raise_exception=True)

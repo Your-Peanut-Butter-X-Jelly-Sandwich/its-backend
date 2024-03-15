@@ -1,21 +1,29 @@
 from django.db import models
 
-# from its_backend.apps.accounts.models import CustomUser
+# from django.contrib.postgres.fields import ArrayField
 
 class Submissiondata(models.Model):
-    # foreign key to students and problem
-    # problem = models.ForeignKey
-    # student = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-
-    qn_id = models.IntegerField()
-    language = models.CharField(max_length=30, default = 'py')
-    submisson_date = models.DateTimeField(auto_now_add=True)
-    program = models.CharField(max_length=10000)
-    # The blank=True parameter allows these fields to be optional when validating forms.
-    # The null=True parameter allows these fields to have a NULL value in the database.
-    feedback = models.CharField(max_length=10000, blank=True, null=True)   
-    report = models.CharField(max_length=10000, blank=True, null=True)
-    
     def __str__(self) -> str:
         return super().__str__()
+    
+    qn_id = models.IntegerField()
+    language = models.CharField(max_length=30, default = 'py')
+    submission_number = models.IntegerField()
+    submission_date = models.DateTimeField(auto_now_add=True)
+    program = models.CharField(max_length=10000)
+    tutor_feedback = models.CharField(max_length=10000, blank=True, null=True)  
+    report = models.CharField(max_length=10000, blank=True, null=True)
+    score = models.IntegerField()
+    total_score = models.IntegerField()
+    submitted_by = models.ForeignKey(
+        "accounts.CustomUser", blank=True, on_delete=models.CASCADE
+    )
+    
+class ITS_Feedback(models.Model):
+    submission = models.ForeignKey(Submissiondata, on_delete=models.CASCADE)
+    line = models.IntegerField(null = True)
+    feedback = models.CharField(max_length=10000)
+
+    def __str__(self):
+        return ', '.join(self.feedback) if self.feedback else "No feedback"
     
