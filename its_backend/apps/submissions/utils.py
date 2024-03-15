@@ -35,15 +35,16 @@ def compute_score(qn_id, language, student_solution, function):
     test_cases = TestCase.objects.filter(question_id=qn_id)
     total_score = test_cases.count()
     score = 0
+    breakpoint()
     for test_case in test_cases:
         inputs = ""
-        args = "[" + str(test_case.input) + "]"
+        arguments = "[" + str(test_case.input) + "]"
         its_interpreter_response = its_request_interpreter(
-            language, student_solution, function, inputs, args
+            language, student_solution, function, inputs, arguments
         )
         result = its_interpreter_response["entries"][-1]["mem"]["$ret'"]
         # print("result  ", result, type(result),"actual output: ", test_case.output, type(test_case.output))
-        result = '"' + str(result) + '"'
+        result = str(result)
         if result == test_case.output:
             score += 1
     return total_score, score
@@ -57,12 +58,12 @@ def get_submission_number(user, qn_id):
 
 def get_feedback_for_tutor(language, parsed_ref_program, parsed_stu_program, function):
     input = "[]"
-    args = ""
+    arguments = "[2]"
     language = language if language.lower() != "python" else "py"
     parsed_ref_program = json.dumps(parsed_ref_program)
     parsed_stu_program = json.dumps(parsed_stu_program)
     feedback_fix_array = its_request_feedback_fix(
-        language, parsed_ref_program, parsed_stu_program, function, input, args
+        language, parsed_ref_program, parsed_stu_program, function, input, arguments
     )
     its_feedback_fix_tutor = {"fixes": feedback_fix_array}
     return json.dumps(its_feedback_fix_tutor)
@@ -72,12 +73,12 @@ def get_feedback_for_student(
     language, parsed_ref_program, parsed_stu_program, function
 ):
     input = "[]"
-    args = ""
+    arguments = "[2]"
     language = language if language.lower() != "python" else "py"
     parsed_ref_program = json.dumps(parsed_ref_program)
     parsed_stu_program = json.dumps(parsed_stu_program)
     feedback_hint_array = its_request_feedback_hint(
-        language, parsed_ref_program, parsed_stu_program, function, input, args
+        language, parsed_ref_program, parsed_stu_program, function, input, arguments
     )
     its_feedback_hint_student = {"hints": feedback_hint_array}
     return json.dumps(its_feedback_hint_student)

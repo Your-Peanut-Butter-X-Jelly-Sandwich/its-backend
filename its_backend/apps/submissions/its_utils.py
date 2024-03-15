@@ -32,14 +32,14 @@ def its_request_parser(language, program):
 
 
 # generate interpret result based on provided program, inputs and entry functions
-def its_request_interpreter(language, program_model, function, inputs, args):
+def its_request_interpreter(language, program_model, function, inputs, arguments):
     interpreter_url = url + "interpreter"
     data = {
         "language": language,
         "program_model": str(program_model),
         "function": function,
         "inputs": inputs,
-        "args": args,
+        "args": arguments,
     }
     response = requests.post(interpreter_url, headers=headers, json=data)
     if response.status_code == 200:
@@ -54,7 +54,7 @@ def its_request_interpreter(language, program_model, function, inputs, args):
 
 # generate JSON repair based on provided program
 def its_request_feedback_fix(
-    language, reference_solution, student_solution, function, inputs, args
+    language, reference_solution, student_solution, function, inputs, arguments
 ):
     feedback_fix_url = url + "feedback_fix"
 
@@ -64,7 +64,7 @@ def its_request_feedback_fix(
         "student_solution": student_solution,
         "function": function,
         "inputs": inputs,
-        "args": args,
+        "args": arguments,
     }
     response = requests.post(feedback_fix_url, headers=headers, json=data)
 
@@ -84,7 +84,7 @@ def its_request_feedback_fix(
 
 
 def its_request_feedback_hint(
-    language, reference_solution, student_solution, function, inputs, args
+    language, reference_solution, student_solution, function, inputs, arguments
 ):
     feedback_hint_url = url + "feedback_error"
     data = {
@@ -93,9 +93,8 @@ def its_request_feedback_hint(
         "student_solution": student_solution,
         "function": function,
         "inputs": inputs,
-        "args": args,
+        "args": arguments,
     }
-    breakpoint()
     response = requests.post(feedback_hint_url, headers=headers, json=data)
     if response.status_code == 200:
         json_response = response.json()
