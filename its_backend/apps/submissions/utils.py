@@ -1,4 +1,5 @@
 import json
+from ast import literal_eval
 
 from rest_framework.exceptions import APIException
 
@@ -54,7 +55,7 @@ def compute_score(qn_id, language, student_solution, function):
         )
         result = its_interpreter_response["entries"][-1]["mem"]["$ret'"]
         result = str(result)
-        if result == test_case.output:
+        if literal_eval(result) == literal_eval(test_case.output):
             score += 1
         else:
             failed_test_cases.append(test_case.pk)
