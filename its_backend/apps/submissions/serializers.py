@@ -23,22 +23,7 @@ class RetrieveAllSubmissionSerializer(serializers.ModelSerializer):
         return obj
 
 
-# class CreateITSFeedbackSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = ITSFeedback
-#         fields = ['pk','line', 'feedback']
-
-
 class TutorRetrieveSubmissionDetailsSerializer(serializers.ModelSerializer):
-    # its_feedback = CreateITSFeedbackSerializer(many=True, read_only=True, required=False)
-    # qn_id = serializers.IntegerField(read_only=True)
-    # submission_number = serializers.IntegerField(read_only=True)
-    # language = serializers.CharField(read_only=True)
-    # submission_date = serializers.DateTimeField(read_only=True)
-    # program = serializers.CharField(read_only=True)
-    # report = serializers.CharField(read_only=True)
-    # total_score = serializers.IntegerField(read_only=True)
-    # score = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Submissiondata
@@ -49,21 +34,12 @@ class TutorRetrieveSubmissionDetailsSerializer(serializers.ModelSerializer):
             "language",
             "submission_date",
             "program",
-            # "its_feedback_hint_student",
             "its_feedback_fix_tutor",
             "tutor_feedback",
             "report",
             "total_score",
             "score",
         ]
-
-    # def to_representation(self, data):
-    #     obj = super().to_representation(data)
-    #     # its_feedback = data.its_feedback_set.all()  # Access related ITS_Feedback instances through the reverse relation
-    #     its_feedback = data.its_feedback_set.all()  # Access related ITS_Feedback instances through the reverse relation
-
-    #     obj["its_feedback"] = CreateITSFeedbackSerializer(its_feedback, many=True, required=False).data
-    #     return obj
 
 
 class StudentRetrieveSubmissionDetailsSerializer(serializers.ModelSerializer):
@@ -74,7 +50,6 @@ class StudentRetrieveSubmissionDetailsSerializer(serializers.ModelSerializer):
 
 
 class CreateSubmissionSerializer(serializers.ModelSerializer):
-    # its_feedback = CreateITSFeedbackSerializer(many=True, write_only=True, required=False)
     submitted_by = RetrieveUserSerializer(read_only=True)
 
     class Meta:
@@ -100,3 +75,17 @@ class CreateSubmissionSerializer(serializers.ModelSerializer):
             **validated_data, submitted_by=self.context["user"]
         )
         return submissiondata
+
+    def update(self, instance, validated_data):
+        print("serializer update")
+        fields = [
+            "tutor_feedback",
+        ]
+        for field in fields:
+            try:
+                setattr(instance, field, validated_data[field])
+            except KeyError as e:
+                print(e)
+                pass
+        instance.save()
+        return instance

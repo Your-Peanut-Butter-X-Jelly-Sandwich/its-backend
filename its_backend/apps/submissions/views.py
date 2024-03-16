@@ -7,6 +7,7 @@ from .models import Submissiondata
 from ..questions.models import Question
 from .serializers import (
     CreateSubmissionSerializer,
+    CreateUpdateSubmissionSerializer,
     RetrieveAllSubmissionSerializer,
     TutorRetrieveSubmissionDetailsSerializer,
     StudentRetrieveSubmissionDetailsSerializer,
@@ -90,17 +91,21 @@ class TutorSubmissionViewSet(
     mixins.ListModelMixin,
     mixins.RetrieveModelMixin,
     mixins.CreateModelMixin,
+    mixins.UpdateModelMixin,
     viewsets.GenericViewSet,
 ):
+    print("in tutor view")
     queryset = Submissiondata.objects.all()
     permission_classes = (IsTutor,)
     serializer_class = {
         "list": RetrieveAllSubmissionSerializer,
         "retrieve": TutorRetrieveSubmissionDetailsSerializer,
-        # "create": CreateSubmissionSerializer,
+        "partial_update": CreateUpdateSubmissionSerializer,
     }
+    print("got here", serializer_class)
 
     def get_serializer_class(self):
+        print("self.action", self.action)
         return self.serializer_class.get(self.action)
 
     def get_queryset(self):
@@ -161,4 +166,27 @@ class TutorSubmissionViewSet(
                     "message": f"You do not have the permission to access information for submission {pk}"
                 },
                 status=status.HTTP_403_FORBIDDEN,
+            )
+
+    def update(self, request, partial=True, pk=None):
+        print("in update")
+        queryset = self.get_queryset()
+        submision_pk = pk
+        submission = queryset.get(pk=submision_pk)
+        serializer = self.get_serializer_class()(
+            submission,
+            data=request.data,
+            context={
+                "pk": submision_pk,
+                "user": request.user,
+            },
+            partial=partial,
+        )
+        try:
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        except serializers.ValidationError as e:
+            return Response(
+                data={"message": e.detail}, status=status.HTTP_400_BAD_REQUEST
             )
