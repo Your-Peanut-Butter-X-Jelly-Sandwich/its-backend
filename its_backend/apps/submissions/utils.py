@@ -163,7 +163,9 @@ def process_submission_request(request):
             failed_test_cases,
         )
     except CannotGeneratedFeedbackException:
-        its_feedback_fix_tutor = ""
+        its_feedback_fix_tutor = {"message": ""}
+        its_feedback_fix_tutor = json.dumps(its_feedback_fix_tutor)
+
     try:
         its_feedback_hint_student = get_feedback_for_student(
             language,
@@ -173,7 +175,8 @@ def process_submission_request(request):
             failed_test_cases,
         )
     except CannotGeneratedFeedbackException:
-        its_feedback_hint_student = ""
+        its_feedback_hint_student = {"message": ""}
+        its_feedback_hint_student = json.dumps(its_feedback_hint_student)
 
     report = "no report yet"
 
