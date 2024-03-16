@@ -9,10 +9,8 @@ def get_default_due_date():
 
 class Question(models.Model):
     LANGUAGE_CHOICES = [
-        ("PY", "Python"),
-        ("JAVA", "Java"),
-        ("JS", "JavaScript"),
-        ("CPP", "C++"),
+        ("python", "python"),
+        ("c", "c"),
     ]
 
     question_title = models.CharField(max_length=200, blank=False)
@@ -26,7 +24,7 @@ class Question(models.Model):
     due_date = models.DateField(blank=True, default=get_default_due_date)
 
     def __str__(self):
-        return self.question_title
+        return f"Question: {self.pk} {self.question_title}"
 
 
 class TestCase(models.Model):

@@ -80,8 +80,8 @@ class TutorQuestionViewSet(
 
     def list(self, request):
         queryset = self.get_queryset()
-        offset = request.query_params.get("offset", 0)
-        limit = request.query_params.get("limit", 10)
+        offset = int(request.query_params.get("offset", 0))
+        limit = int(request.query_params.get("limit", 10))
         questions = queryset.order_by("-pub_date")[offset : offset + limit]
         serializer = self.get_serializer_class()(questions, many=True)
         return Response(data={"questions": serializer.data}, status=status.HTTP_200_OK)
@@ -140,8 +140,8 @@ class StudentQuestionViewSet(
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
-        offset = request.query_params.get("offset", 0)
-        limit = request.query_params.get("limit", 10)
+        offset = int(request.query_params.get("offset", 0))
+        limit = int(request.query_params.get("limit", 10))
         # student = request.user
         # tutors = Teaches.objects.filter(student=student)
         questions = queryset.order_by("-pub_date")[offset : offset + limit]
@@ -151,11 +151,5 @@ class StudentQuestionViewSet(
     def retrieve(self, request, pk, *args, **kwargs):
         queryset = self.get_queryset()
         question = get_object_or_404(queryset, pk=pk)
-        serializer = self.get_serializer_class()(question, data=request.data)
-        try:
-            serializer.is_valid(raise_exception=True)
-        except serializers.ValidationError as e:
-            return Response(
-                data={"message": e.detail}, status=status.HTTP_400_BAD_REQUEST
-            )
+        serializer = self.get_serializer_class()(question)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
