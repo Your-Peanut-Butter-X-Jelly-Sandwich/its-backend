@@ -6,25 +6,12 @@ from ..permission_classes import IsStudent, IsTutor
 from .models import Submissiondata
 from ..questions.models import Question
 from .serializers import (
-    CreateSubmissionSerializer,
     CreateUpdateSubmissionSerializer,
     RetrieveAllSubmissionSerializer,
     TutorRetrieveSubmissionDetailsSerializer,
     StudentRetrieveSubmissionDetailsSerializer,
 )
 from .utils import process_submission_request
-
-# Uncomment unused imports for now
-# from django.contrib.auth.decorators import login_required
-# from rest_framework import generics, mixins, serializers, status, views, viewsets
-# from rest_framework.permissions import AllowAny, IsAuthenticated
-# from ..permission_classes import IsStudent, IsTutor
-# from .its_system import its_request_feedback_fix, its_request_parser
-# from .its_utils import (
-#     its_request_feedback_fix,
-#     its_request_parser,
-#     its_request_parser_fncs_value,
-# )
 
 
 class StudentSubmissionViewSet(
@@ -38,7 +25,7 @@ class StudentSubmissionViewSet(
     serializer_class = {
         "list": RetrieveAllSubmissionSerializer,
         "retrieve": StudentRetrieveSubmissionDetailsSerializer,
-        "create": CreateSubmissionSerializer,
+        "create": CreateUpdateSubmissionSerializer,
     }
 
     def get_serializer_class(self):
@@ -94,7 +81,6 @@ class TutorSubmissionViewSet(
     mixins.UpdateModelMixin,
     viewsets.GenericViewSet,
 ):
-    print("in tutor view")
     queryset = Submissiondata.objects.all()
     permission_classes = (IsTutor,)
     serializer_class = {
@@ -102,25 +88,18 @@ class TutorSubmissionViewSet(
         "retrieve": TutorRetrieveSubmissionDetailsSerializer,
         "partial_update": CreateUpdateSubmissionSerializer,
     }
-    print("got here", serializer_class)
 
     def get_serializer_class(self):
-        print("self.action", self.action)
         return self.serializer_class.get(self.action)
 
     def get_queryset(self):
         # Filter for submissions to questions created by the authenticated user
         qn_id = self.request.query_params.get("qn_id")
-        if qn_id == None:
-            raise BadRequest("You need to supply a question id")
-        # Check that the question requested is created by the authenticated user
         try:
             question = Question.objects.get(pk=qn_id, pub_by=self.request.user)
             return Submissiondata.objects.filter(qn_id=qn_id)
         except Question.DoesNotExist:
             raise PermissionDenied()
-
-    # def create(self, request):
 
     def list(self, request):
         qn_id = self.request.query_params.get("qn_id")
@@ -133,7 +112,6 @@ class TutorSubmissionViewSet(
             queryset = self.get_queryset().order_by(
                 "-submission_date", "submitted_by__email"
             )
-            print(queryset)
             serializer = self.get_serializer_class()(queryset, many=True)
             return Response(
                 data={"submissions": serializer.data}, status=status.HTTP_200_OK
@@ -155,12 +133,9 @@ class TutorSubmissionViewSet(
             )
             serializer = self.get_serializer_class()(submission)
             return Response(data=serializer.data, status=status.HTTP_200_OK)
-        except Submissiondata.DoesNotExist:
-            return Response(
-                data={"message": "the submission requested does not exist"},
-                status=status.HTTP_404_NOT_FOUND,
-            )
+
         except Question.DoesNotExist:
+            # If the question is not created by the authenticated user
             return Response(
                 data={
                     "message": f"You do not have the permission to access information for submission {pk}"
@@ -168,11 +143,34 @@ class TutorSubmissionViewSet(
                 status=status.HTTP_403_FORBIDDEN,
             )
 
+        except Submissiondata.DoesNotExist:
+            return Response(
+                data={"message": "The submission requested does not exist"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
     def update(self, request, partial=True, pk=None):
-        print("in update")
-        queryset = self.get_queryset()
+        queryset = self.queryset
         submision_pk = pk
-        submission = queryset.get(pk=submision_pk)
+        try:
+            submission = queryset.get(pk=submision_pk)
+            question = Question.objects.get(
+                pk=submission.qn_id, pub_by=self.request.user
+            )
+        except Question.DoesNotExist:
+            # If the question is not created by the authenticated user
+            return Response(
+                data={
+                    "message": f"You do not have the permission to access information for submission {pk}"
+                },
+                status=status.HTTP_403_FORBIDDEN,
+            )
+        except Submissiondata.DoesNotExist:
+            return Response(
+                data={"message": "The submission requested does not exist"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
         serializer = self.get_serializer_class()(
             submission,
             data=request.data,

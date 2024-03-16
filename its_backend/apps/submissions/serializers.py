@@ -49,7 +49,7 @@ class StudentRetrieveSubmissionDetailsSerializer(serializers.ModelSerializer):
         exclude = ["its_feedback_fix_tutor"]
 
 
-class CreateSubmissionSerializer(serializers.ModelSerializer):
+class CreateUpdateSubmissionSerializer(serializers.ModelSerializer):
     submitted_by = RetrieveUserSerializer(read_only=True)
 
     class Meta:
