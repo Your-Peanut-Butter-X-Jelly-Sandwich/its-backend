@@ -29,7 +29,7 @@ It is suggested to have a dedicated virtual environment for each Django project,
 - install dependencies by running
 
   - ```bash
-    pip install -r requirement.txt
+    pip install -r requirements.txt
     ```
 
 ## Database Migration
