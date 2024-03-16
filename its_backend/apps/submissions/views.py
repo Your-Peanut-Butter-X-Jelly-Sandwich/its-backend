@@ -1,13 +1,15 @@
 from django.shortcuts import get_object_or_404
+from django.core.exceptions import PermissionDenied, BadRequest
 from rest_framework import mixins, serializers, status, viewsets
 from rest_framework.response import Response
-
 from ..permission_classes import IsStudent, IsTutor
 from .models import Submissiondata
+from ..questions.models import Question
 from .serializers import (
     CreateSubmissionSerializer,
     RetrieveAllSubmissionSerializer,
-    RetrieveSubmissionDetailsSerializer,
+    TutorRetrieveSubmissionDetailsSerializer,
+    StudentRetrieveSubmissionDetailsSerializer,
 )
 from .utils import process_submission_request
 
@@ -34,7 +36,7 @@ class StudentSubmissionViewSet(
     permission_classes = (IsStudent,)
     serializer_class = {
         "list": RetrieveAllSubmissionSerializer,
-        "retrieve": RetrieveSubmissionDetailsSerializer,
+        "retrieve": StudentRetrieveSubmissionDetailsSerializer,
         "create": CreateSubmissionSerializer,
     }
 
@@ -84,8 +86,6 @@ class StudentSubmissionViewSet(
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
-
-
 class TutorSubmissionViewSet(
     mixins.ListModelMixin,
     mixins.RetrieveModelMixin,
@@ -96,17 +96,69 @@ class TutorSubmissionViewSet(
     permission_classes = (IsTutor,)
     serializer_class = {
         "list": RetrieveAllSubmissionSerializer,
-        "retrieve": RetrieveSubmissionDetailsSerializer,
+        "retrieve": TutorRetrieveSubmissionDetailsSerializer,
         # "create": CreateSubmissionSerializer,
     }
 
     def get_serializer_class(self):
         return self.serializer_class.get(self.action)
 
+    def get_queryset(self):
+        # Filter for submissions to questions created by the authenticated user
+        qn_id = self.request.query_params.get("qn_id")
+        if qn_id == None:
+            raise BadRequest("You need to supply a question id")
+        # Check that the question requested is created by the authenticated user
+        try:
+            question = Question.objects.get(pk=qn_id, pub_by=self.request.user)
+            return Submissiondata.objects.filter(qn_id=qn_id)
+        except Question.DoesNotExist:
+            raise PermissionDenied()
+
     # def create(self, request):
 
     def list(self, request):
-        
+        qn_id = self.request.query_params.get("qn_id")
+        if qn_id == None:
+            return Response(
+                data={"message": "You need to supply a question id"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        try:
+            queryset = self.get_queryset().order_by(
+                "-submission_date", "submitted_by__email"
+            )
+            print(queryset)
+            serializer = self.get_serializer_class()(queryset, many=True)
+            return Response(
+                data={"submissions": serializer.data}, status=status.HTTP_200_OK
+            )
+        except PermissionDenied:
+            return Response(
+                data={
+                    "message": f"You do not have the permission to access information for question {qn_id}"
+                },
+                status=status.HTTP_403_FORBIDDEN,
+            )
 
     def retrieve(self, request, pk):
-        
+        queryset = self.queryset
+        try:
+            submission = queryset.get(pk=pk)
+            question = Question.objects.get(
+                pk=submission.qn_id, pub_by=self.request.user
+            )
+            serializer = self.get_serializer_class()(submission)
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        except Submissiondata.DoesNotExist:
+            return Response(
+                data={"message": "the submission requested does not exist"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        except Question.DoesNotExist:
+            return Response(
+                data={
+                    "message": f"You do not have the permission to access information for submission {pk}"
+                },
+                status=status.HTTP_403_FORBIDDEN,
+            )

@@ -5,9 +5,22 @@ from .models import Submissiondata
 
 
 class RetrieveAllSubmissionSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Submissiondata
-        fields = ["pk", "submission_number", "score", "total_score", "submission_date"]
+        fields = [
+            "pk",
+            "submission_number",
+            "submitted_by",
+            "score",
+            "total_score",
+            "submission_date",
+        ]
+
+    def to_representation(self, data):
+        obj = super().to_representation(data)
+        obj["submitted_by"] = RetrieveUserSerializer(data.submitted_by).data
+        return obj
 
 
 # class CreateITSFeedbackSerializer(serializers.ModelSerializer):
@@ -16,16 +29,16 @@ class RetrieveAllSubmissionSerializer(serializers.ModelSerializer):
 #         fields = ['pk','line', 'feedback']
 
 
-class RetrieveSubmissionDetailsSerializer(serializers.ModelSerializer):
+class TutorRetrieveSubmissionDetailsSerializer(serializers.ModelSerializer):
     # its_feedback = CreateITSFeedbackSerializer(many=True, read_only=True, required=False)
-    qn_id = serializers.IntegerField(read_only=True)
-    submission_number = serializers.IntegerField(read_only=True)
-    language = serializers.CharField(read_only=True)
-    submission_date = serializers.DateTimeField(read_only=True)
-    program = serializers.CharField(read_only=True)
-    report = serializers.CharField(read_only=True)
-    total_score = serializers.IntegerField(read_only=True)
-    score = serializers.IntegerField(read_only=True)
+    # qn_id = serializers.IntegerField(read_only=True)
+    # submission_number = serializers.IntegerField(read_only=True)
+    # language = serializers.CharField(read_only=True)
+    # submission_date = serializers.DateTimeField(read_only=True)
+    # program = serializers.CharField(read_only=True)
+    # report = serializers.CharField(read_only=True)
+    # total_score = serializers.IntegerField(read_only=True)
+    # score = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Submissiondata
@@ -36,7 +49,7 @@ class RetrieveSubmissionDetailsSerializer(serializers.ModelSerializer):
             "language",
             "submission_date",
             "program",
-            "its_feedback_hint_student",
+            # "its_feedback_hint_student",
             "its_feedback_fix_tutor",
             "tutor_feedback",
             "report",
@@ -51,6 +64,13 @@ class RetrieveSubmissionDetailsSerializer(serializers.ModelSerializer):
 
     #     obj["its_feedback"] = CreateITSFeedbackSerializer(its_feedback, many=True, required=False).data
     #     return obj
+
+
+class StudentRetrieveSubmissionDetailsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Submissiondata
+        exclude = ["its_feedback_fix_tutor"]
 
 
 class CreateSubmissionSerializer(serializers.ModelSerializer):

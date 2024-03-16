@@ -1,10 +1,15 @@
 from django.db import models
+from ..questions.models import Question
 
 
 # from django.contrib.postgres.fields import ArrayField
 class Submissiondata(models.Model):
+    LANGUAGE_CHOICES = [
+        ("PY", "python"),
+        ("C", "c"),
+    ]
     qn_id = models.IntegerField()
-    language = models.CharField(max_length=30)
+    language = models.CharField(max_length=20, blank=True, choices=LANGUAGE_CHOICES)
     submission_number = models.IntegerField()
     submission_date = models.DateTimeField(auto_now_add=True)
     program = models.CharField(max_length=10000)
@@ -15,11 +20,12 @@ class Submissiondata(models.Model):
     its_feedback_fix_tutor = models.JSONField(null=True)
     total_score = models.IntegerField()
     submitted_by = models.ForeignKey(
-        "accounts.CustomUser", blank=False, on_delete=models.CASCADE
+        "accounts.CustomUser", blank=True, on_delete=models.CASCADE
     )
 
     def __str__(self) -> str:
-        return super().__str__()
+        qn_title = Question.objects.get(pk=self.qn_id).question_title
+        return f"Question {self.qn_id}: {qn_title} | Submission ID: {str(self.pk)}"
 
 
 # class ITSFeedback(models.Model):
