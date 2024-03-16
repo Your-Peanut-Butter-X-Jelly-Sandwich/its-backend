@@ -71,10 +71,9 @@ class CreateUpdateSubmissionSerializer(serializers.ModelSerializer):
         ]
 
     def create(self, validated_data):
-        submissiondata = Submissiondata.objects.create(
+        return Submissiondata.objects.create(
             **validated_data, submitted_by=self.context["user"]
         )
-        return submissiondata
 
     def update(self, instance, validated_data):
         print("serializer update")

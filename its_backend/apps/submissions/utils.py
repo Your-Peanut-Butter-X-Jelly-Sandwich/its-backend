@@ -33,8 +33,7 @@ def get_parsed_ref_program(qn_id):
     ref_program = question.ref_program
     language = question.language.lower()
     ref_program = ref_program.replace("\\n", "\n").replace("\\t", "\t")
-    parsed_ref_program = its_request_parser(language, ref_program)
-    return parsed_ref_program
+    return its_request_parser(language, ref_program)
 
 
 def get_parsed_stu_program(program, language):
