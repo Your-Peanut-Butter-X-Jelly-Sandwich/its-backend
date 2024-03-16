@@ -11,7 +11,6 @@ url = "https://its.comp.nus.edu.sg/cs3213/"
 # generate parser result based on provided program
 def its_request_parser(language, program):
     parser_url = url + "parser"
-
     data = {
         "language": language,
         "source_code": program,

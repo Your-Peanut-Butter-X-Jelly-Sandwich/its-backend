@@ -21,6 +21,7 @@ def get_parsed_ref_program(qn_id):
 
     ref_program = question.ref_program
     language = question.language.lower()
+    ref_program = ref_program.replace("\\n", "\n").replace("\\t", "\t")
     parsed_ref_program = its_request_parser(language, ref_program)
     return parsed_ref_program
 
@@ -58,53 +59,66 @@ def get_submission_number(user, qn_id):
 
 
 def get_failed_test_case_arg(failed_test_cases):
-    sample_test_case = TestCase.objects.filter(pk__in=failed_test_cases)[0]
-    print("sample testcase: ", sample_test_case)
-    return sample_test_case.input
+    test_cases = TestCase.objects.filter(pk__in=failed_test_cases)
+    if test_cases:
+        sample_test_case = test_cases[0]
+        return sample_test_case[0].input
+    else:
+        return None
 
 
 def process_feedback_params(
     language, parsed_ref_program, parsed_stu_program, failed_test_cases
 ):
     input = "[]"
-    arguments = "[" + str(get_failed_test_case_arg(failed_test_cases)) + "]"
-    language = language if language.lower() != "python" else "py"
-    parsed_ref_program = json.dumps(parsed_ref_program)
-    parsed_stu_program = json.dumps(parsed_stu_program)
-    return input, arguments, language, parsed_ref_program, parsed_stu_program
+    argument_content = get_failed_test_case_arg(failed_test_cases)
+    if argument_content:
+        arguments = "[" + str(get_failed_test_case_arg(failed_test_cases)) + "]"
+        language = language if language.lower() != "python" else "py"
+        parsed_ref_program = json.dumps(parsed_ref_program)
+        parsed_stu_program = json.dumps(parsed_stu_program)
+        return input, arguments, language, parsed_ref_program, parsed_stu_program
+    else:
+        return None
 
 
 def get_feedback_for_tutor(
     language, parsed_ref_program, parsed_stu_program, function, failed_test_cases
 ):
-    # print("failed_test_cases  ", failed_test_cases)
-    input, arguments, language, parsed_ref_program, parsed_stu_program = (
-        process_feedback_params(
-            language, parsed_ref_program, parsed_stu_program, failed_test_cases
+    feedback_params = process_feedback_params(
+        language, parsed_ref_program, parsed_stu_program, failed_test_cases
+    )
+    if feedback_params:
+        input, arguments, language, parsed_ref_program, parsed_stu_program = feedback_params
+        feedback_fix_array = its_request_feedback_fix(
+            language, parsed_ref_program, parsed_stu_program, function, input, arguments
         )
-    )
-    feedback_fix_array = its_request_feedback_fix(
-        language, parsed_ref_program, parsed_stu_program, function, input, arguments
-    )
-    its_feedback_fix_tutor = {"fixes": feedback_fix_array}
-    return json.dumps(its_feedback_fix_tutor)
+        its_feedback_fix_tutor = {"fixes": feedback_fix_array}
+        return json.dumps(its_feedback_fix_tutor)
+    
+    else:
+        feedback_fix_tutor = {"message": "Student submission passes all test cases, no feedback fix is generated"}
+        return json.dumps(feedback_fix_tutor)
+
 
 
 def get_feedback_for_student(
     language, parsed_ref_program, parsed_stu_program, function, failed_test_cases
 ):
-    input, arguments, language, parsed_ref_program, parsed_stu_program = (
-        process_feedback_params(
-            language, parsed_ref_program, parsed_stu_program, failed_test_cases
+    feedback_params = process_feedback_params(
+        language, parsed_ref_program, parsed_stu_program, failed_test_cases
+    )
+    if feedback_params: 
+        input, arguments, language, parsed_ref_program, parsed_stu_program = feedback_params
+        feedback_hint_array = its_request_feedback_hint(
+            language, parsed_ref_program, parsed_stu_program, function, input, arguments
         )
-    )
-    feedback_hint_array = its_request_feedback_hint(
-        language, parsed_ref_program, parsed_stu_program, function, input, arguments
-    )
-    its_feedback_hint_student = {"hints": feedback_hint_array}
-    return json.dumps(its_feedback_hint_student)
-
-
+        its_feedback_hint_student = {"hints": feedback_hint_array}
+        return json.dumps(its_feedback_hint_student)
+    else:
+        feedback_hint_student = {"message": "Student submission passes all test cases, no feedback hint is generated"}
+        return json.dumps(feedback_hint_student)
+    
 def generate_report():
     pass
 
@@ -131,6 +145,7 @@ def process_submission_request(request):
     its_feedback_fix_tutor = get_feedback_for_tutor(
         language, parsed_ref_program, parsed_stu_program, function, failed_test_cases
     )
+
     its_feedback_hint_student = get_feedback_for_student(
         language, parsed_ref_program, parsed_stu_program, function, failed_test_cases
     )
