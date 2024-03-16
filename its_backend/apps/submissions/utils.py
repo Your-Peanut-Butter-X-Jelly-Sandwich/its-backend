@@ -43,7 +43,6 @@ def compute_score(qn_id, language, student_solution, function):
             language, student_solution, function, inputs, arguments
         )
         result = its_interpreter_response["entries"][-1]["mem"]["$ret'"]
-        # print("result  ", result, type(result),"actual output: ", test_case.output, type(test_case.output))
         result = str(result)
         if result == test_case.output:
             score += 1
@@ -78,7 +77,7 @@ def process_feedback_params(
 def get_feedback_for_tutor(
     language, parsed_ref_program, parsed_stu_program, function, failed_test_cases
 ):
-    print("failed_test_cases  ", failed_test_cases)
+    # print("failed_test_cases  ", failed_test_cases)
     input, arguments, language, parsed_ref_program, parsed_stu_program = (
         process_feedback_params(
             language, parsed_ref_program, parsed_stu_program, failed_test_cases
@@ -136,9 +135,6 @@ def process_submission_request(request):
         language, parsed_ref_program, parsed_stu_program, function, failed_test_cases
     )
 
-    # feedback_fix = its_request_feedback_fix(language, parsed_ref_program, student_solution, function, inputs, args)
-    # print("feedback_fix", feedback_fix)
-    # generate report?? if there is
     report = " no report yet"
 
     # get submission number
