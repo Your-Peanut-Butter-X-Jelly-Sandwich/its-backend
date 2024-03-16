@@ -9,8 +9,8 @@ def get_default_due_date():
 
 class Question(models.Model):
     LANGUAGE_CHOICES = [
-        ("PY", "python"),
-        ("C", "c"),
+        ("python", "python"),
+        ("c", "c"),
     ]
 
     question_title = models.CharField(max_length=200, blank=False)
