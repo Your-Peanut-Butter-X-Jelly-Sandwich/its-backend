@@ -27,7 +27,6 @@ class SignUpView(generics.CreateAPIView):
     serializer_class = SignUpSerializer
     
     def post(self, request):
-        print(request)
         serializer = self.serializer_class(data=request.data)
         try:
             serializer.is_valid(raise_exception=True)
@@ -49,7 +48,6 @@ class LoginView(views.APIView):
             serializer.is_valid(raise_exception=True)
             user = CustomUser.objects.get(email=serializer.data['email'])
             tokens = generate_tokens_for_user(user)
-            print(serializer.data)
             return Response(data={
                 "tokens": tokens,
                 "user": serializer.data

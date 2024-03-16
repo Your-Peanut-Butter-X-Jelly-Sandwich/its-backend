@@ -193,6 +193,4 @@ def process_submission_request(request):
 
     mutable_data["report"] = report
 
-    print("mutable_data:", mutable_data)
-
     return mutable_data

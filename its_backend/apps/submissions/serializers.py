@@ -76,7 +76,6 @@ class CreateUpdateSubmissionSerializer(serializers.ModelSerializer):
         )
 
     def update(self, instance, validated_data):
-        print("serializer update")
         fields = [
             "tutor_feedback",
         ]

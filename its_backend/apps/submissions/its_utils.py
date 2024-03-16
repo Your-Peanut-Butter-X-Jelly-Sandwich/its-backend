@@ -28,9 +28,6 @@ def its_request_parser(language, program):
     if response.status_code == 200:
         # API call was successful
         return response.json()
-        # Access the 'fncs' field from the JSON response
-        # fncs_value = json_response.get("fncs")
-        # print(json_response)
     else:  # noqa: RET505
         # API call failed
         print(f"Error: {response.status_code}, {response.text}")
