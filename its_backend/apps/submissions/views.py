@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import mixins, serializers, status, viewsets
 from rest_framework.response import Response
 
-from ..permission_classes import IsStudent
+from ..permission_classes import IsStudent, IsTutor
 from .models import Submissiondata
 from .serializers import (
     CreateSubmissionSerializer,
@@ -82,3 +82,31 @@ class StudentSubmissionViewSet(
                 data={"message": e.detail}, status=status.HTTP_400_BAD_REQUEST
             )
         return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
+
+
+class TutorSubmissionViewSet(
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.CreateModelMixin,
+    viewsets.GenericViewSet,
+):
+    queryset = Submissiondata.objects.all()
+    permission_classes = (IsTutor,)
+    serializer_class = {
+        "list": RetrieveAllSubmissionSerializer,
+        "retrieve": RetrieveSubmissionDetailsSerializer,
+        # "create": CreateSubmissionSerializer,
+    }
+
+    def get_serializer_class(self):
+        return self.serializer_class.get(self.action)
+
+    # def create(self, request):
+
+    def list(self, request):
+        
+
+    def retrieve(self, request, pk):
+        
