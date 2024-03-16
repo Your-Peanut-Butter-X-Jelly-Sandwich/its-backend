@@ -9,13 +9,6 @@ class RetrieveAllSubmissionSerializer(serializers.ModelSerializer):
         model = Submissiondata
         fields = ["pk", "submission_number", "score", "total_score", "submission_date"]
 
-
-# class CreateITSFeedbackSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = ITSFeedback
-#         fields = ['pk','line', 'feedback']
-
-
 class RetrieveSubmissionDetailsSerializer(serializers.ModelSerializer):
     # its_feedback = CreateITSFeedbackSerializer(many=True, read_only=True, required=False)
     qn_id = serializers.IntegerField(read_only=True)
@@ -44,17 +37,7 @@ class RetrieveSubmissionDetailsSerializer(serializers.ModelSerializer):
             "score",
         ]
 
-    # def to_representation(self, data):
-    #     obj = super().to_representation(data)
-    #     # its_feedback = data.its_feedback_set.all()  # Access related ITS_Feedback instances through the reverse relation
-    #     its_feedback = data.its_feedback_set.all()  # Access related ITS_Feedback instances through the reverse relation
-
-    #     obj["its_feedback"] = CreateITSFeedbackSerializer(its_feedback, many=True, required=False).data
-    #     return obj
-
-
-class CreateSubmissionSerializer(serializers.ModelSerializer):
-    # its_feedback = CreateITSFeedbackSerializer(many=True, write_only=True, required=False)
+class CreateUpdateSubmissionSerializer(serializers.ModelSerializer):
     submitted_by = RetrieveUserSerializer(read_only=True)
 
     class Meta:
@@ -80,3 +63,17 @@ class CreateSubmissionSerializer(serializers.ModelSerializer):
             **validated_data, submitted_by=self.context["user"]
         )
         return submissiondata
+    
+    def update(self, instance, validated_data):
+        print("serializer update")
+        fields = [
+            "tutor_feedback",
+        ]
+        for field in fields:
+            try:
+                setattr(instance, field, validated_data[field])
+            except KeyError as e:
+                print(e)
+                pass
+        instance.save()
+        return instance

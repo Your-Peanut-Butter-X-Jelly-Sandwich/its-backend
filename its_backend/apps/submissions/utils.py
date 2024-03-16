@@ -60,6 +60,7 @@ def get_submission_number(user, qn_id):
 
 def get_failed_test_case_arg(failed_test_cases):
     sample_test_case = TestCase.objects.filter(pk__in=failed_test_cases)[0]
+    print("sample testcase: ", sample_test_case)
     return sample_test_case.input
 
 
@@ -77,6 +78,7 @@ def process_feedback_params(
 def get_feedback_for_tutor(
     language, parsed_ref_program, parsed_stu_program, function, failed_test_cases
 ):
+    print("failed_test_cases  ", failed_test_cases)
     input, arguments, language, parsed_ref_program, parsed_stu_program = (
         process_feedback_params(
             language, parsed_ref_program, parsed_stu_program, failed_test_cases
