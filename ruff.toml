@@ -5,7 +5,7 @@ target-version = "py311"
 # Enable flake8-bugbear (`B`) rules, in addition to the defaults.
 select = ["E4", "E7", "E9", "F", "I", "N", "B", "A", "DJ", "RET"]
 exclude = ["**/tests.py"]
-ignore = ["DJ001"]
+ignore = ["B904", "DJ001", "RET504"]
 
 # Ignore `E402` (import violations) in all `__init__.py` files, and in select subdirectories.
 [lint.per-file-ignores]
