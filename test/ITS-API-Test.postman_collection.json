@@ -1,9 +1,10 @@
 {
 	"info": {
-		"_postman_id": "a83c20e0-7ada-4843-884b-f0e8b23f8204",
+		"_postman_id": "b45a12e8-3eff-4cdd-9cc6-3de4769f9bd5",
 		"name": "ITS-API-Test",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "30394855"
+		"_exporter_id": "33356344",
+		"_collection_link": "https://cloudy-crater-900599.postman.co/workspace/ITS~82f810c1-83df-4c00-97b7-8bf416dc9d67/collection/33356344-b45a12e8-3eff-4cdd-9cc6-3de4769f9bd5?action=share&source=collection_link&creator=33356344"
 	},
 	"item": [
 		{
@@ -2000,6 +2001,507 @@
 										"student",
 										"question",
 										"2000"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "[05] Test Submission app",
+			"item": [
+				{
+					"name": "[01] Tutor View Submission CRUD",
+					"item": [
+						{
+							"name": "[01] Tutor List all Student Submissions from one Question",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tutor_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "qn_id",
+											"value": "8",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/tutor/submission",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutor",
+										"submission"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[02] Tutor List all Student Submissions from a Missing Question",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tutor_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "qn_id",
+											"value": "1000",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/tutor/submission",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutor",
+										"submission"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[03] Tutor Retrieve Submission Details",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tutor_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/tutor/submission/8",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutor",
+										"submission",
+										"8"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[04] Tutor Retrieve Missing Submission Details",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tutor_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/tutor/submission/1000",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutor",
+										"submission",
+										"1000"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[05] Tutor Add/Update feedback to a  Student Submission",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tutor_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "tutor_feedback",
+											"value": "Great Job!",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/tutor/submission/8",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutor",
+										"submission",
+										"8"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[06] Tutor Add/Update feedback to a  Missing Student Submission",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "tutor_feedback",
+											"value": "Great Job!",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/tutor/submission/1000",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutor",
+										"submission",
+										"1000"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "[02] Student Submission CRUD",
+					"item": [
+						{
+							"name": "[01] Student Add Submission (All Testcases passed))",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{student_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "qn_id",
+											"value": "6",
+											"type": "text"
+										},
+										{
+											"key": "language",
+											"value": "python",
+											"type": "text"
+										},
+										{
+											"key": "program",
+											"value": "def reverse(x):\\n\\tans = 0\\n\\twhile x != 0:\\n\\t\\tans = ans * 10 + x % 10\\n\\t\\tx //= 10\\n\\n\\tif ans > 2**31 - 1 or ans < -(2**31):\\n\\t\\treturn 0\\n\\n\\treturn ans",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/tutor/submission",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutor",
+										"submission"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[02] Student Add Submission (Not all Testcases passed)",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{student_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "qn_id",
+											"value": "6",
+											"type": "text"
+										},
+										{
+											"key": "language",
+											"value": "python",
+											"type": "text"
+										},
+										{
+											"key": "program",
+											"value": "def reverse(x):\\n\\tans = 0\\n\\twhile x != 0:\\n\\t\\tans = ans * 100 + x % 10\\n\\t\\tx //= 10\\n\\n\\tif ans > 2**31 - 1 or ans < -(2**31):\\n\\t\\treturn 0\\n\\n\\treturn ans",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/student/submission",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"student",
+										"submission"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[03] Student List Past Submissions of a Question",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{student_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "qn_id",
+											"value": "2",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/student/submission/6",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"student",
+										"submission",
+										"6"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[04] Student List Past Submissions of a Question without Past Submission",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{student_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "qn_id",
+											"value": "5",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/student/submission",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"student",
+										"submission"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[05] Student List Past Submissions of Missing Question",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{student_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "qn_id",
+											"value": "1000",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/student/submission",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"student",
+										"submission"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[06] Student Retrieve Submission Feedback and Details",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{student_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/student/submission/8",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"student",
+										"submission",
+										"8"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[07] Student Retrieve Missing Submission's Details",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{student_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/student/submission/200",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"student",
+										"submission",
+										"200"
 									]
 								}
 							},
