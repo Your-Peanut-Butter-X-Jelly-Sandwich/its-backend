@@ -5,8 +5,8 @@ from ..questions.models import Question
 # from django.contrib.postgres.fields import ArrayField
 class Submissiondata(models.Model):
     LANGUAGE_CHOICES = [
-        ("PY", "python"),
-        ("C", "c"),
+        ("python", "python"),
+        ("c", "c"),
     ]
     qn_id = models.IntegerField()
     language = models.CharField(max_length=20, blank=True, choices=LANGUAGE_CHOICES)

@@ -1,11 +1,19 @@
 import requests
-import json
+from rest_framework.exceptions import APIException
 
 headers = {
     "accept": "application/json",
     "Content-Type": "application/json",
 }
 url = "https://its.comp.nus.edu.sg/cs3213/"
+
+
+class ITSFeedbackException(APIException):
+    default_detail = "Program too complex for ITS to process"
+
+
+class ITSInterpreterException(APIException):
+    default_detail = "Program too complex for ITS to process"
 
 
 # generate parser result based on provided program
@@ -20,12 +28,11 @@ def its_request_parser(language, program):
 
     if response.status_code == 200:
         # API call was successful
-        json_response = response.json()
+        return response.json()
         # Access the 'fncs' field from the JSON response
-        fncs_value = json_response.get("fncs")
+        # fncs_value = json_response.get("fncs")
         # print(json_response)
-        return json_response
-    else:
+    else:  # noqa: RET505
         # API call failed
         print(f"Error: {response.status_code}, {response.text}")
         return None
@@ -44,12 +51,14 @@ def its_request_interpreter(language, program_model, function, inputs, arguments
     response = requests.post(interpreter_url, headers=headers, json=data)
     if response.status_code == 200:
         # API call was successful
-        json_response = response.json()
+        return response.json()
         # Process the JSON response as needed
-        return json_response
-    else:
+    elif response.status_code == 422:  # noqa: RET505
         # API call failed
         print(f"Error: {response.status_code}, {response.text}")
+        return "interpreter failed"
+    else:
+        raise ITSInterpreterException()
 
 
 # generate JSON repair based on provided program
@@ -67,20 +76,16 @@ def its_request_feedback_fix(
         "args": arguments,
     }
     response = requests.post(feedback_fix_url, headers=headers, json=data)
-
+    print(response.status_code)
     if response.status_code == 200:
         # API call was successful
-        json_response = response.json()
-        # Process the JSON response as needed
-        # print(json_response)
-        # repair_strings = data[0]["repairStrings"]
-        # return repair_strings
-        feedback_array = json_response
-        return feedback_array
-    else:
+        return response.json()
+    elif response.status_code == 422:  # noqa: RET505
         # API call failed
         print(f"Error: {response.status_code}, {response.text}")
         return "error generating feedback for tutor"
+    else:
+        raise ITSFeedbackException()
 
 
 def its_request_feedback_hint(
@@ -97,10 +102,10 @@ def its_request_feedback_hint(
     }
     response = requests.post(feedback_hint_url, headers=headers, json=data)
     if response.status_code == 200:
-        json_response = response.json()
-        repair_array = json_response
-        return repair_array
-    else:
+        return response.json()
+    elif response.status_code == 422:  # noqa: RET505
         # API call failed
         print(f"Error: {response.status_code}, {response.text}")
         return "error generating feedback hint for student"
+    else:
+        raise ITSFeedbackException()

@@ -1,34 +1,42 @@
-from .its_utils import (
-    its_request_interpreter,
-    its_request_parser,
-    its_request_feedback_fix,
-    its_request_feedback_hint,
-)
-from ..questions.models import Question, TestCase
-from .models import Submissiondata
 import json
 
+from rest_framework.exceptions import APIException
 
-class QuestionNotFoundException(Exception):
+from ..questions.models import Question, TestCase
+from ..submissions.its_utils import ITSFeedbackException
+from .its_utils import (
+    its_request_feedback_fix,
+    its_request_feedback_hint,
+    its_request_interpreter,
+    its_request_parser,
+)
+from .models import Submissiondata
+
+
+class QuestionNotFoundError(Exception):
     pass
+
+
+class CannotGeneratedFeedbackException(APIException):
+    default_detail = (
+        "Program too complex to cannot be processed by ITS feedback service"
+    )
 
 
 def get_parsed_ref_program(qn_id):
     try:
         question = Question.objects.get(pk=qn_id)
     except Question.DoesNotExist:
-        raise QuestionNotFoundException(f"Question with qn_id {qn_id} not found")
+        raise QuestionNotFoundError(f"Question with qn_id {qn_id} not found") from None
 
     ref_program = question.ref_program
     language = question.language.lower()
-    parsed_ref_program = its_request_parser(language, ref_program)
-    return parsed_ref_program
+    return its_request_parser(language, ref_program)
 
 
 def get_parsed_stu_program(program, language):
     program = program.replace("\\n", "\n").replace("\\t", "\t")
-    parsed_stu_program = its_request_parser(language, program)
-    return parsed_stu_program
+    return its_request_parser(language, program)
 
 
 def compute_score(qn_id, language, student_solution, function):
@@ -53,56 +61,72 @@ def compute_score(qn_id, language, student_solution, function):
 
 def get_submission_number(user, qn_id):
     submissions = Submissiondata.objects.filter(submitted_by=user, qn_id=qn_id)
-    submission_number = submissions.count() + 1
-    return submission_number
+    return submissions.count() + 1
 
 
 def get_failed_test_case_arg(failed_test_cases):
-    sample_test_case = TestCase.objects.filter(pk__in=failed_test_cases)[0]
-    print("sample testcase: ", sample_test_case)
-    return sample_test_case.input
+    sample_test_case = TestCase.objects.filter(pk__in=failed_test_cases)
+    if sample_test_case.count() == 0:
+        return ""
+    else:  # noqa: RET505
+        return sample_test_case.input
 
 
 def process_feedback_params(
     language, parsed_ref_program, parsed_stu_program, failed_test_cases
 ):
-    input = "[]"
+    io_input = "[]"
     arguments = "[" + str(get_failed_test_case_arg(failed_test_cases)) + "]"
     language = language if language.lower() != "python" else "py"
     parsed_ref_program = json.dumps(parsed_ref_program)
     parsed_stu_program = json.dumps(parsed_stu_program)
-    return input, arguments, language, parsed_ref_program, parsed_stu_program
+    return io_input, arguments, language, parsed_ref_program, parsed_stu_program
 
 
 def get_feedback_for_tutor(
     language, parsed_ref_program, parsed_stu_program, function, failed_test_cases
 ):
-    # print("failed_test_cases  ", failed_test_cases)
-    input, arguments, language, parsed_ref_program, parsed_stu_program = (
+    io_input, arguments, language, parsed_ref_program, parsed_stu_program = (
         process_feedback_params(
             language, parsed_ref_program, parsed_stu_program, failed_test_cases
         )
     )
-    feedback_fix_array = its_request_feedback_fix(
-        language, parsed_ref_program, parsed_stu_program, function, input, arguments
-    )
-    its_feedback_fix_tutor = {"fixes": feedback_fix_array}
-    return json.dumps(its_feedback_fix_tutor)
+    try:
+        feedback_fix_array = its_request_feedback_fix(
+            language,
+            parsed_ref_program,
+            parsed_stu_program,
+            function,
+            io_input,
+            arguments,
+        )
+        its_feedback_fix_tutor = {"fixes": feedback_fix_array}
+        return json.dumps(its_feedback_fix_tutor)
+    except ITSFeedbackException as err:
+        raise CannotGeneratedFeedbackException() from err
 
 
 def get_feedback_for_student(
     language, parsed_ref_program, parsed_stu_program, function, failed_test_cases
 ):
-    input, arguments, language, parsed_ref_program, parsed_stu_program = (
+    io_input, arguments, language, parsed_ref_program, parsed_stu_program = (
         process_feedback_params(
             language, parsed_ref_program, parsed_stu_program, failed_test_cases
         )
     )
-    feedback_hint_array = its_request_feedback_hint(
-        language, parsed_ref_program, parsed_stu_program, function, input, arguments
-    )
-    its_feedback_hint_student = {"hints": feedback_hint_array}
-    return json.dumps(its_feedback_hint_student)
+    try:
+        feedback_hint_array = its_request_feedback_hint(
+            language,
+            parsed_ref_program,
+            parsed_stu_program,
+            function,
+            io_input,
+            arguments,
+        )
+        its_feedback_hint_student = {"hints": feedback_hint_array}
+        return json.dumps(its_feedback_hint_student)
+    except ITSFeedbackException as err:
+        raise CannotGeneratedFeedbackException() from err
 
 
 def generate_report():
@@ -128,14 +152,28 @@ def process_submission_request(request):
         qn_id, language, parsed_stu_program, function
     )
 
-    its_feedback_fix_tutor = get_feedback_for_tutor(
-        language, parsed_ref_program, parsed_stu_program, function, failed_test_cases
-    )
-    its_feedback_hint_student = get_feedback_for_student(
-        language, parsed_ref_program, parsed_stu_program, function, failed_test_cases
-    )
+    try:
+        its_feedback_fix_tutor = get_feedback_for_tutor(
+            language,
+            parsed_ref_program,
+            parsed_stu_program,
+            function,
+            failed_test_cases,
+        )
+    except CannotGeneratedFeedbackException:
+        its_feedback_fix_tutor = ""
+    try:
+        its_feedback_hint_student = get_feedback_for_student(
+            language,
+            parsed_ref_program,
+            parsed_stu_program,
+            function,
+            failed_test_cases,
+        )
+    except CannotGeneratedFeedbackException:
+        its_feedback_hint_student = ""
 
-    report = " no report yet"
+    report = "no report yet"
 
     # get submission number
     submission_number = get_submission_number(request.user, qn_id)
