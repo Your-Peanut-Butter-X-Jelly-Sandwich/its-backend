@@ -47,13 +47,19 @@
 						"method": "POST",
 						"header": [],
 						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"email\": \"stu01@student.com\",\n    \"password\": \"CS3213ITS\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "stu02@student.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "CS3213ITS",
+									"type": "text"
 								}
-							}
+							]
 						},
 						"url": {
 							"raw": "{{base_url}}/auth/login",
@@ -96,7 +102,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"tut11@tutor.com\",\n    \"password\": \"CS3213ITS\"\n}",
+							"raw": "{\n    \"email\": \"tut12@tutor.com\",\n    \"password\": \"CS3213ITS\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2018,6 +2024,24 @@
 					"item": [
 						{
 							"name": "[01] Student Add Submission (All Testcases passed))",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON\r",
+											"var responseBody = pm.response.json();\r",
+											"\r",
+											"// Check if the status code is 201 CREATED\r",
+											"pm.test(\"Status code is 201 CREATED\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
 							"request": {
 								"auth": {
 									"type": "bearer",
@@ -2036,7 +2060,7 @@
 									"formdata": [
 										{
 											"key": "qn_id",
-											"value": "6",
+											"value": "5",
 											"type": "text"
 										},
 										{
@@ -2046,18 +2070,18 @@
 										},
 										{
 											"key": "program",
-											"value": "def reverse(x):\\n\\tans = 0\\n\\twhile x != 0:\\n\\t\\tans = ans * 10 + x % 10\\n\\t\\tx //= 10\\n\\n\\tif ans > 2**31 - 1 or ans < -(2**31):\\n\\t\\treturn 0\\n\\n\\treturn ans",
+											"value": "def main():\n    a = 10\n    b = 0\n    for i in range(0, a):\n        b = b + 1\n    return b",
 											"type": "text"
 										}
 									]
 								},
 								"url": {
-									"raw": "{{base_url}}/tutor/submission",
+									"raw": "{{base_url}}/student/submission",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
-										"tutor",
+										"student",
 										"submission"
 									]
 								}
@@ -2066,6 +2090,24 @@
 						},
 						{
 							"name": "[02] Student Add Submission (Not all Testcases passed)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON\r",
+											"var responseBody = pm.response.json();\r",
+											"\r",
+											"// Check if the status code is 201 CREATED\r",
+											"pm.test(\"Status code is 201 CREATED\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
 							"request": {
 								"auth": {
 									"type": "bearer",
@@ -2084,7 +2126,7 @@
 									"formdata": [
 										{
 											"key": "qn_id",
-											"value": "6",
+											"value": "5",
 											"type": "text"
 										},
 										{
@@ -2094,7 +2136,7 @@
 										},
 										{
 											"key": "program",
-											"value": "def reverse(x):\\n\\tans = 0\\n\\twhile x != 0:\\n\\t\\tans = ans * 100 + x % 10\\n\\t\\tx //= 10\\n\\n\\tif ans > 2**31 - 1 or ans < -(2**31):\\n\\t\\treturn 0\\n\\n\\treturn ans",
+											"value": "def main():\n    a = 10\n    b = 0\n    for i in range(0, a):\n        b = b \n    return b",
 											"type": "text"
 										}
 									]
@@ -2114,6 +2156,24 @@
 						},
 						{
 							"name": "[03] Student List Past Submissions of a Question",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON\r",
+											"var responseBody = pm.response.json();\r",
+											"\r",
+											"// Check if the status code is 200 OK\r",
+											"pm.test(\"Status code is 200 OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
 							"protocolProfileBehavior": {
 								"disableBodyPruning": true
 							},
@@ -2155,6 +2215,24 @@
 						},
 						{
 							"name": "[04] Student List Past Submissions of a Question without Past Submission",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON\r",
+											"var responseBody = pm.response.json();\r",
+											"\r",
+											"// Check if the status code is 200 OK\r",
+											"pm.test(\"Status code is 200 OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
 							"protocolProfileBehavior": {
 								"disableBodyPruning": true
 							},
@@ -2176,7 +2254,7 @@
 									"formdata": [
 										{
 											"key": "qn_id",
-											"value": "5",
+											"value": "3",
 											"type": "text"
 										}
 									]
@@ -2196,6 +2274,24 @@
 						},
 						{
 							"name": "[05] Student List Past Submissions of Missing Question",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON\r",
+											"var responseBody = pm.response.json();\r",
+											"\r",
+											"// Check if the status code is 200 OK\r",
+											"pm.test(\"Status code is 200 OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
 							"protocolProfileBehavior": {
 								"disableBodyPruning": true
 							},
@@ -2217,7 +2313,7 @@
 									"formdata": [
 										{
 											"key": "qn_id",
-											"value": "1000",
+											"value": "10000",
 											"type": "text"
 										}
 									]
@@ -2237,6 +2333,24 @@
 						},
 						{
 							"name": "[06] Student Retrieve Submission Feedback and Details",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON\r",
+											"var responseBody = pm.response.json();\r",
+											"\r",
+											"// Check if the status code is 200 OK\r",
+											"pm.test(\"Status code is 200 OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
 							"request": {
 								"auth": {
 									"type": "bearer",
@@ -2266,6 +2380,24 @@
 						},
 						{
 							"name": "[07] Student Retrieve Missing Submission's Details",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON\r",
+											"var responseBody = pm.response.json();\r",
+											"\r",
+											"// Check if the status code is 404 NOT FOUND\r",
+											"pm.test(\"Status code is 404 NOT FOUND\", function () {\r",
+											"    pm.response.to.have.status(404);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
 							"request": {
 								"auth": {
 									"type": "bearer",
@@ -2300,6 +2432,24 @@
 					"item": [
 						{
 							"name": "[01] Tutor List all Student Submissions from one Question",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON\r",
+											"var responseBody = pm.response.json();\r",
+											"\r",
+											"// Check if the status code is 201 CREATED\r",
+											"pm.test(\"Status code is 200 OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
 							"protocolProfileBehavior": {
 								"disableBodyPruning": true
 							},
@@ -2321,7 +2471,7 @@
 									"formdata": [
 										{
 											"key": "qn_id",
-											"value": "8",
+											"value": "3",
 											"type": "text"
 										}
 									]
@@ -2341,6 +2491,24 @@
 						},
 						{
 							"name": "[01] Tutor List all Student Submissions from a Question(not Owned by the Tutor)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON\r",
+											"var responseBody = pm.response.json();\r",
+											"\r",
+											"// Check if the status code is 404 NOT FOUND\r",
+											"pm.test(\"Status code is 404 NOT FOUND\", function () {\r",
+											"    pm.response.to.have.status(404);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
 							"protocolProfileBehavior": {
 								"disableBodyPruning": true
 							},
@@ -2382,6 +2550,24 @@
 						},
 						{
 							"name": "[02] Tutor List all Student Submissions from a Missing Question",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON\r",
+											"var responseBody = pm.response.json();\r",
+											"\r",
+											"// Check if the status code is 404 NOT FOUND\r",
+											"pm.test(\"Status code is 404 NOT FOUND\", function () {\r",
+											"    pm.response.to.have.status(404);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
 							"protocolProfileBehavior": {
 								"disableBodyPruning": true
 							},
@@ -2423,6 +2609,24 @@
 						},
 						{
 							"name": "[03] Tutor Retrieve Submission Details",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON\r",
+											"var responseBody = pm.response.json();\r",
+											"\r",
+											"// Check if the status code is 200 OK\r",
+											"pm.test(\"Status code is 200 OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
 							"request": {
 								"auth": {
 									"type": "bearer",
@@ -2452,6 +2656,24 @@
 						},
 						{
 							"name": "[04] Tutor Retrieve Missing Submission Details",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON\r",
+											"var responseBody = pm.response.json();\r",
+											"\r",
+											"// Check if the status code is 404 NOT FOUND\r",
+											"pm.test(\"Status code is 404 NOT FOUND\", function () {\r",
+											"    pm.response.to.have.status(404);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
 							"request": {
 								"auth": {
 									"type": "bearer",
@@ -2481,6 +2703,24 @@
 						},
 						{
 							"name": "[05] Tutor Add/Update feedback to a  Student Submission",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON\r",
+											"var responseBody = pm.response.json();\r",
+											"\r",
+											"// Check if the status code is 200 OK\r",
+											"pm.test(\"Status code is 200 OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
 							"request": {
 								"auth": {
 									"type": "bearer",
@@ -2520,6 +2760,24 @@
 						},
 						{
 							"name": "[06] Tutor Add/Update feedback to a  Missing Student Submission",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON\r",
+											"var responseBody = pm.response.json();\r",
+											"\r",
+											"// Check if the status code is 404 NOT FOUND\r",
+											"pm.test(\"Status code is 404 NOT FOUND\", function () {\r",
+											"    pm.response.to.have.status(404);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
 							"request": {
 								"method": "PATCH",
 								"header": [],
