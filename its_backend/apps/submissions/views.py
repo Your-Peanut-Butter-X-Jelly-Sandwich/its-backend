@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import mixins, serializers, status, viewsets
 from rest_framework.response import Response
 
+from ..accounts.models import Teaches
 from ..permission_classes import IsStudent, IsTutor
 from ..questions.models import Question
 from .models import Submissiondata
@@ -12,8 +13,12 @@ from .serializers import (
     StudentRetrieveSubmissionDetailsSerializer,
     TutorRetrieveSubmissionDetailsSerializer,
 )
-from .utils import process_submission_request, QuestionNotAvailableToStudentError, QuestionNotFoundError
-from ..accounts.models import Teaches
+from .utils import (
+    QuestionNotAvailableToStudentError,
+    QuestionNotFoundError,
+    process_submission_request,
+)
+
 
 class StudentSubmissionViewSet(
     mixins.ListModelMixin,

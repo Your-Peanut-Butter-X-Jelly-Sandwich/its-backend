@@ -3,8 +3,9 @@ from ast import literal_eval
 
 from rest_framework.exceptions import APIException
 
+from ..accounts.models import Teaches
 from ..questions.models import Question, TestCase
-from ..submissions.its_utils import ITSFeedbackException, ITSInterpreterException, ITSParserException
+from ..submissions.its_utils import ITSFeedbackException, ITSParserException
 from .its_utils import (
     its_request_feedback_fix,
     its_request_feedback_hint,
@@ -12,7 +13,7 @@ from .its_utils import (
     its_request_parser,
 )
 from .models import Submissiondata
-from ..accounts.models import Teaches, CustomUser
+
 
 class QuestionNotFoundError(Exception):
     pass
