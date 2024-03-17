@@ -102,7 +102,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"tut12@tutor.com\",\n    \"password\": \"CS3213ITS\"\n}",
+							"raw": "{\n    \"email\": \"tut11@tutor.com\",\n    \"password\": \"CS3213ITS\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2060,7 +2060,7 @@
 									"formdata": [
 										{
 											"key": "qn_id",
-											"value": "5",
+											"value": "3",
 											"type": "text"
 										},
 										{
@@ -2070,7 +2070,7 @@
 										},
 										{
 											"key": "program",
-											"value": "def main():\n    a = 10\n    b = 0\n    for i in range(0, a):\n        b = b + 1\n    return b",
+											"value": "def intToRoman(num):\n    istado_unidad = [\"\", \"I\", \"II\", \"III\", \"IV\", \"V\", \"VI\", \"VII\", \"VIII\", \"IX\"]\n    listado_decena = [\"\", \"X\", \"XX\", \"XXX\", \"XL\", \"L\", \"LX\", \"LXX\", \"LXXX\", \"XC\"]\n    listado_centena = [\"\", \"C\", \"CC\", \"CCC\", \"CD\", \"D\", \"DC\", \"DCC\", \"DCCC\", \"CM\"]\n    listado_millar = [\"\", \"M\", \"MM\", \"MMM\"]\n    millar = num // 1000\n    centena = (num % 1000) // 100\n    decena = (num % 100) // 10\n    unidad = num % 10\n    millar_romano = listado_millar[millar]\n    centena_romano = listado_centena[centena]\n    decena_romano = listado_decena[decena]\n    unidad_romano = listado_unidad[unidad]\n    return millar_romano + centena_romano + decena_romano + unidad_romano",
 											"type": "text"
 										}
 									]
@@ -2099,8 +2099,74 @@
 											"var responseBody = pm.response.json();\r",
 											"\r",
 											"// Check if the status code is 201 CREATED\r",
-											"pm.test(\"Status code is 201 CREATED\", function () {\r",
-											"    pm.response.to.have.status(201);\r",
+											"pm.test(\"Status code is 400 Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{student_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "qn_id",
+											"value": "3",
+											"type": "text"
+										},
+										{
+											"key": "language",
+											"value": "python",
+											"type": "text"
+										},
+										{
+											"key": "program",
+											"value": "def intToRoman(num):\n    istado_unidad = [\"\", \"I\", \"II\", \"III\", \"IV\", \"V\", \"VI\", \"VII\", \"VIII\", \"IX\"]\n    listado_decena = [\"\", \"X\", \"XX\", \"XXX\", \"XL\", \"L\", \"LX\", \"LXX\", \"LXXX\", \"XC\"]\n    listado_centena = [\"\", \"C\", \"CC\", \"CCC\", \"CD\", \"D\", \"DC\", \"DCC\", \"DCCC\", \"CM\"]\n    listado_millar = [\"\", \"M\", \"MM\", \"MMM\"]\n    millar = num // 1000\n    centena = (num % 1000) // 100\n    decena = (num % 100) // 10\n    unidad = num % 10\n    millar_romano = listado_millar[millar]\n    centena_romano = listado_centena[centena]\n    decena_romano = listado_decena[decena]\n    unidad_romano = listado_unidad[unidad]\n    return millar_romano + centena_romano + decena_romano ",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/student/submission",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"student",
+										"submission"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[01] Student Add Submission to other tutor's Question",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON\r",
+											"var responseBody = pm.response.json();\r",
+											"\r",
+											"// Check if the status code is 201 CREATED\r",
+											"pm.test(\"Status code is 400 Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
 											"});"
 										],
 										"type": "text/javascript",
@@ -2136,7 +2202,73 @@
 										},
 										{
 											"key": "program",
-											"value": "def main():\n    a = 10\n    b = 0\n    for i in range(0, a):\n        b = b \n    return b",
+											"value": "def main():\n    a = 10\n    b = 0\n    for i in range(0, a):\n        b = b + 1\n    return b",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/student/submission",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"student",
+										"submission"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[01] Student Add Submission to Missing Question",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON\r",
+											"var responseBody = pm.response.json();\r",
+											"\r",
+											"// Check if the status code is 201 CREATED\r",
+											"pm.test(\"Status code is 400 Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{student_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "qn_id",
+											"value": "10000",
+											"type": "text"
+										},
+										{
+											"key": "language",
+											"value": "python",
+											"type": "text"
+										},
+										{
+											"key": "program",
+											"value": "def main():\n    a = 10\n    b = 0\n    for i in range(0, a):\n        b = b + 1\n    return b",
 											"type": "text"
 										}
 									]

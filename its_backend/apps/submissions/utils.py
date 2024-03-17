@@ -12,11 +12,13 @@ from .its_utils import (
     its_request_parser,
 )
 from .models import Submissiondata
-
+from ..accounts.models import Teaches, CustomUser
 
 class QuestionNotFoundError(Exception):
     pass
 
+class QuestionNotAvailableToStudentError(Exception):
+    pass
 
 class CannotGeneratedFeedbackException(APIException):
     default_detail = (
@@ -24,12 +26,7 @@ class CannotGeneratedFeedbackException(APIException):
     )
 
 
-def get_parsed_ref_program(qn_id):
-    try:
-        question = Question.objects.get(pk=qn_id)
-    except Question.DoesNotExist:
-        raise QuestionNotFoundError(f"Question with qn_id {qn_id} not found") from None
-
+def get_parsed_ref_program(question):
     ref_program = question.ref_program
     language = question.language.lower()
     ref_program = ref_program.replace("\\n", "\n").replace("\\t", "\t")
@@ -73,7 +70,7 @@ def get_failed_test_case_arg(failed_test_cases):
     if sample_test_case.count() == 0:
         return ""
     else:  # noqa: RET505
-        return sample_test_case.input
+        return sample_test_case[0].input
 
 
 def process_feedback_params(
@@ -142,23 +139,29 @@ def process_submission_request(request):
     program = request.data.get("program")
     qn_id = request.data.get("qn_id")
 
+    try:
+        question = Question.objects.get(pk=qn_id)
+    except Question.DoesNotExist:
+        raise QuestionNotFoundError(f"Question with qn_id {qn_id} not found") from None
+
+    # check if student should make the sumission
+    tutor = Teaches.objects.get(id=request.user.pk)
+    tutor_id = tutor.tutor_id
+    question_pub_by = question.pub_by.pk
+    if question_pub_by != tutor_id:
+        raise QuestionNotAvailableToStudentError(f"Question with qn_id {qn_id} is not available to the student") from None
+
     mutable_data = request.data.copy()
-    print(11111)
     # parsed student and reference program
     parsed_stu_program = get_parsed_stu_program(program, language)
-    parsed_ref_program = get_parsed_ref_program(qn_id)
-    print("parsed_stu_program", parsed_ref_program)
-    print("parsed_stu_program", parsed_stu_program)
-    print(222222)
+    parsed_ref_program = get_parsed_ref_program(question)
     # the entry function of the program
     function = next(iter(parsed_stu_program["fncs"].keys()))
-    print(33333, function)
 
     # number of test cases passed
     total_score, score, failed_test_cases = compute_score(
         qn_id, language, parsed_stu_program, function
     )
-    print(4444444)
 
     try:
         its_feedback_fix_tutor = get_feedback_for_tutor(
