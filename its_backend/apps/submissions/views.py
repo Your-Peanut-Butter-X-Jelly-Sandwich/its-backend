@@ -51,7 +51,7 @@ class StudentSubmissionViewSet(
             )
 
     def list(self, request):
-        qn_id = request.query_params.get("qn_id")
+        qn_id = request.data.get("qn_id")
         if qn_id is None:
             return Response(
                 data={"message": "You need to supply a question id"},
@@ -101,7 +101,7 @@ class TutorSubmissionViewSet(
             raise PermissionDenied() from err
 
     def list(self, request):
-        qn_id = self.request.query_params.get("qn_id")
+        qn_id = request.data.get("qn_id")
         if qn_id is None:
             return Response(
                 data={"message": "You need to supply a question id"},
