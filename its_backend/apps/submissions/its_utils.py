@@ -15,9 +15,13 @@ class ITSFeedbackException(APIException):
 class ITSInterpreterException(APIException):
     default_detail = "Program too complex for ITS to process"
 
+class ITSParserException(APIException):
+    def __init__(self, program_name, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.default_detail = "ITS is unable to interpret " + program_name
 
 # generate parser result based on provided program
-def its_request_parser(language, program):
+def its_request_parser(language, program, program_name):
     parser_url = url + "parser"
     data = {
         "language": language,
@@ -30,8 +34,8 @@ def its_request_parser(language, program):
         return response.json()
     else:  # noqa: RET505
         # API call failed
-        print(f"Error: {response.status_code}, {response.text}")
-        return None
+        raise ITSParserException(program_name)
+
 
 
 # generate interpret result based on provided program, inputs and entry functions
@@ -72,7 +76,6 @@ def its_request_feedback_fix(
         "args": arguments,
     }
     response = requests.post(feedback_fix_url, headers=headers, json=data)
-    print(response.status_code)
     if response.status_code == 200:
         # API call was successful
         return response.json()
