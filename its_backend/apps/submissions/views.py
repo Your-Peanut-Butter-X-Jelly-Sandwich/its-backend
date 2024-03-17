@@ -13,7 +13,7 @@ from .serializers import (
     TutorRetrieveSubmissionDetailsSerializer,
 )
 from .utils import process_submission_request, QuestionNotAvailableToStudentError, QuestionNotFoundError
-from .its_utils import ITSParserException
+from ..accounts.models import Teaches
 
 class StudentSubmissionViewSet(
     mixins.ListModelMixin,
@@ -35,8 +35,14 @@ class StudentSubmissionViewSet(
     def get_queryset(self):
         return self.queryset.filter(submitted_by=self.request.user)
 
+    def check_is_question_accessible(self, request, question):
+        # check if student should make the sumission
+        tutor = Teaches.objects.get(id=request.user.pk)
+        tutor_id = tutor.tutor_id
+        question_pub_by = question.pub_by.pk
+        return question_pub_by == tutor_id
+
     def create(self, request):
-        print("request received", request)
         try:
             its_processed_request = process_submission_request(request)
             serializer = self.get_serializer_class()(
@@ -53,6 +59,7 @@ class StudentSubmissionViewSet(
         except (QuestionNotAvailableToStudentError, QuestionNotFoundError) as e:
             return Response(data={"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+
     def list(self, request):
         qn_id = request.query_params.get("qn_id")
         if qn_id is None:
@@ -60,6 +67,17 @@ class StudentSubmissionViewSet(
                 data={"message": "You need to supply a question id"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+        
+        try:
+            question = Question.objects.get(pk=qn_id)
+        except Question.DoesNotExist:
+            return Response(data={"message": f"Question with qn_id {qn_id} not found"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        is_question_accessible = self.check_is_question_accessible(request, question)
+        if not is_question_accessible:
+            return Response(data={"message": f"Student does not have access to Question with qn_id {qn_id}"}, status=status.HTTP_400_BAD_REQUEST)
+
+        
         offset = int(request.query_params.get("offset", 0))
         limit = int(request.query_params.get("limit", 10))
         queryset = self.get_queryset().filter(qn_id=qn_id)
