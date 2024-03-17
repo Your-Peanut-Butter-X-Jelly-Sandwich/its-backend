@@ -52,6 +52,8 @@ def compute_score(qn_id, language, student_solution, function):
         its_interpreter_response = its_request_interpreter(
             language, student_solution, function, inputs, arguments
         )
+        if not its_interpreter_response:
+            continue
         result = its_interpreter_response["entries"][-1]["mem"]["$ret'"]
         result = str(result)
         if literal_eval(result) == literal_eval(test_case.output):
@@ -141,18 +143,22 @@ def process_submission_request(request):
     qn_id = request.data.get("qn_id")
 
     mutable_data = request.data.copy()
-
+    print(11111)
     # parsed student and reference program
     parsed_stu_program = get_parsed_stu_program(program, language)
     parsed_ref_program = get_parsed_ref_program(qn_id)
-
+    print("parsed_stu_program", parsed_ref_program)
+    print("parsed_stu_program", parsed_stu_program)
+    print(222222)
     # the entry function of the program
     function = next(iter(parsed_stu_program["fncs"].keys()))
+    print(33333, function)
 
     # number of test cases passed
     total_score, score, failed_test_cases = compute_score(
         qn_id, language, parsed_stu_program, function
     )
+    print(4444444)
 
     try:
         its_feedback_fix_tutor = get_feedback_for_tutor(
