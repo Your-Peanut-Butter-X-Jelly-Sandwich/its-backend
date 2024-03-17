@@ -2065,7 +2065,7 @@
 										},
 										{
 											"key": "language",
-											"value": "python",
+											"value": "c",
 											"type": "text"
 										},
 										{
@@ -2099,8 +2099,8 @@
 											"var responseBody = pm.response.json();\r",
 											"\r",
 											"// Check if the status code is 201 CREATED\r",
-											"pm.test(\"Status code is 400 Bad Request\", function () {\r",
-											"    pm.response.to.have.status(400);\r",
+											"pm.test(\"Status code is 201 CREATED\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
 											"});"
 										],
 										"type": "text/javascript",
@@ -2155,7 +2155,7 @@
 							"response": []
 						},
 						{
-							"name": "[01] Student Add Submission to other tutor's Question",
+							"name": "[01] Student Add Submission to not Accessible Question",
 							"event": [
 								{
 									"listen": "test",
@@ -2165,8 +2165,8 @@
 											"var responseBody = pm.response.json();\r",
 											"\r",
 											"// Check if the status code is 201 CREATED\r",
-											"pm.test(\"Status code is 400 Bad Request\", function () {\r",
-											"    pm.response.to.have.status(400);\r",
+											"pm.test(\"Status code is 403 Forbidden\", function () {\r",
+											"    pm.response.to.have.status(403);\r",
 											"});"
 										],
 										"type": "text/javascript",
@@ -2323,23 +2323,23 @@
 								"method": "GET",
 								"header": [],
 								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "qn_id",
-											"value": "5",
-											"type": "text"
-										}
-									]
+									"mode": "raw",
+									"raw": ""
 								},
 								"url": {
-									"raw": "{{base_url}}/student/submission",
+									"raw": "{{base_url}}/student/submission?qn_id=3",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"student",
 										"submission"
+									],
+									"query": [
+										{
+											"key": "qn_id",
+											"value": "3"
+										}
 									]
 								}
 							},
@@ -2365,9 +2365,6 @@
 									}
 								}
 							],
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
 							"request": {
 								"auth": {
 									"type": "bearer",
@@ -2381,24 +2378,20 @@
 								},
 								"method": "GET",
 								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "qn_id",
-											"value": "3",
-											"type": "text"
-										}
-									]
-								},
 								"url": {
-									"raw": "{{base_url}}/student/submission",
+									"raw": "{{base_url}}/student/submission?qn_id=2",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"student",
 										"submission"
+									],
+									"query": [
+										{
+											"key": "qn_id",
+											"value": "2"
+										}
 									]
 								}
 							},
@@ -2414,9 +2407,9 @@
 											"// Parse the response body as JSON\r",
 											"var responseBody = pm.response.json();\r",
 											"\r",
-											"// Check if the status code is 200 OK\r",
-											"pm.test(\"Status code is 200 OK\", function () {\r",
-											"    pm.response.to.have.status(200);\r",
+											"// Check if the status code is 404 NOT FOUND\r",
+											"pm.test(\"Status code is 404 NOT FOUND\", function () {\r",
+											"    pm.response.to.have.status(404);\r",
 											"});"
 										],
 										"type": "text/javascript",
@@ -2446,18 +2439,84 @@
 										{
 											"key": "qn_id",
 											"value": "10000",
-											"type": "text"
+											"type": "text",
+											"disabled": true
 										}
 									]
 								},
 								"url": {
-									"raw": "{{base_url}}/student/submission",
+									"raw": "{{base_url}}/student/submission?qn_id=100000",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"student",
 										"submission"
+									],
+									"query": [
+										{
+											"key": "qn_id",
+											"value": "100000"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[05] Student List Past Submissions of Not accessible Question",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON\r",
+											"var responseBody = pm.response.json();\r",
+											"\r",
+											"// Check if the status code is 404 NOT FOUND\r",
+											"pm.test(\"Status code is 400 Bad Request\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{student_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{base_url}}/student/submission?qn_id=5",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"student",
+										"submission"
+									],
+									"query": [
+										{
+											"key": "qn_id",
+											"value": "5"
+										}
 									]
 								}
 							},
@@ -2600,22 +2659,30 @@
 								"header": [],
 								"body": {
 									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "qn_id",
-											"value": "3",
-											"type": "text"
-										}
-									]
+									"formdata": []
 								},
 								"url": {
-									"raw": "{{base_url}}/tutor/submission",
+									"raw": "{{base_url}}/tutor/submission?qn_id=5&offset=0&limit=10",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"tutor",
 										"submission"
+									],
+									"query": [
+										{
+											"key": "qn_id",
+											"value": "5"
+										},
+										{
+											"key": "offset",
+											"value": "0"
+										},
+										{
+											"key": "limit",
+											"value": "10"
+										}
 									]
 								}
 							},
@@ -2632,8 +2699,8 @@
 											"var responseBody = pm.response.json();\r",
 											"\r",
 											"// Check if the status code is 404 NOT FOUND\r",
-											"pm.test(\"Status code is 404 NOT FOUND\", function () {\r",
-											"    pm.response.to.have.status(404);\r",
+											"pm.test(\"Status code is 403 Forbidden\", function () {\r",
+											"    pm.response.to.have.status(403);\r",
 											"});"
 										],
 										"type": "text/javascript",
@@ -2659,22 +2726,30 @@
 								"header": [],
 								"body": {
 									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "qn_id",
-											"value": "8",
-											"type": "text"
-										}
-									]
+									"formdata": []
 								},
 								"url": {
-									"raw": "{{base_url}}/tutor/submission",
+									"raw": "{{base_url}}/tutor/submission?qn_id=3&offset=0&limit=10",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"tutor",
 										"submission"
+									],
+									"query": [
+										{
+											"key": "qn_id",
+											"value": "3"
+										},
+										{
+											"key": "offset",
+											"value": "0"
+										},
+										{
+											"key": "limit",
+											"value": "10"
+										}
 									]
 								}
 							},
@@ -2691,8 +2766,8 @@
 											"var responseBody = pm.response.json();\r",
 											"\r",
 											"// Check if the status code is 404 NOT FOUND\r",
-											"pm.test(\"Status code is 404 NOT FOUND\", function () {\r",
-											"    pm.response.to.have.status(404);\r",
+											"pm.test(\"Status code is 403 Forbidden\", function () {\r",
+											"    pm.response.to.have.status(403);\r",
 											"});"
 										],
 										"type": "text/javascript",
@@ -2718,22 +2793,22 @@
 								"header": [],
 								"body": {
 									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "qn_id",
-											"value": "1000",
-											"type": "text"
-										}
-									]
+									"formdata": []
 								},
 								"url": {
-									"raw": "{{base_url}}/tutor/submission",
+									"raw": "{{base_url}}/tutor/submission?qn_id=10000",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"tutor",
 										"submission"
+									],
+									"query": [
+										{
+											"key": "qn_id",
+											"value": "10000"
+										}
 									]
 								}
 							},
@@ -2901,8 +2976,8 @@
 											"var responseBody = pm.response.json();\r",
 											"\r",
 											"// Check if the status code is 404 NOT FOUND\r",
-											"pm.test(\"Status code is 404 NOT FOUND\", function () {\r",
-											"    pm.response.to.have.status(404);\r",
+											"pm.test(\"Status code is 403 Forbidden\", function () {\r",
+											"    pm.response.to.have.status(403);\r",
 											"});"
 										],
 										"type": "text/javascript",

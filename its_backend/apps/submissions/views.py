@@ -56,9 +56,10 @@ class StudentSubmissionViewSet(
             return Response(
                 data={"message": e.detail}, status=status.HTTP_400_BAD_REQUEST
             )
-        except (QuestionNotAvailableToStudentError, QuestionNotFoundError) as e:
-            return Response(data={"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
+        except QuestionNotAvailableToStudentError as e:
+            return Response(data={"message": str(e)}, status=status.HTTP_403_FORBIDDEN)
+        except QuestionNotFoundError as e:
+            return Response(data={"message": str(e)}, status=status.HTTP_404_NOT_FOUND)
 
     def list(self, request):
         qn_id = request.query_params.get("qn_id")
@@ -71,11 +72,11 @@ class StudentSubmissionViewSet(
         try:
             question = Question.objects.get(pk=qn_id)
         except Question.DoesNotExist:
-            return Response(data={"message": f"Question with qn_id {qn_id} not found"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(data={"message": f"Question with qn_id {qn_id} not found"}, status=status.HTTP_404_NOT_FOUND)
         
         is_question_accessible = self.check_is_question_accessible(request, question)
         if not is_question_accessible:
-            return Response(data={"message": f"Student does not have access to Question with qn_id {qn_id}"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(data={"message": f"Student does not have access to Question with qn_id {qn_id}"}, status=status.HTTP_403_FORBIDDEN)
 
         
         offset = int(request.query_params.get("offset", 0))
@@ -129,9 +130,11 @@ class TutorSubmissionViewSet(
                 status=status.HTTP_400_BAD_REQUEST,
             )
         try:
+            offset = int(request.query_params.get("offset", 0))
+            limit = int(request.query_params.get("limit", 10))
             queryset = self.get_queryset().order_by(
                 "-submission_date", "submitted_by__email"
-            )
+            )[offset : limit + offset]
             serializer = self.get_serializer_class()(queryset, many=True)
             return Response(
                 data={"submissions": serializer.data}, status=status.HTTP_200_OK
