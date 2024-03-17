@@ -13,6 +13,7 @@ from .serializers import (
     TutorRetrieveSubmissionDetailsSerializer,
 )
 from .utils import process_submission_request, QuestionNotAvailableToStudentError, QuestionNotFoundError
+from .its_utils import ITSParserException
 
 class StudentSubmissionViewSet(
     mixins.ListModelMixin,
@@ -35,6 +36,7 @@ class StudentSubmissionViewSet(
         return self.queryset.filter(submitted_by=self.request.user)
 
     def create(self, request):
+        print("request received", request)
         try:
             its_processed_request = process_submission_request(request)
             serializer = self.get_serializer_class()(
@@ -48,11 +50,8 @@ class StudentSubmissionViewSet(
             return Response(
                 data={"message": e.detail}, status=status.HTTP_400_BAD_REQUEST
             )
-        except QuestionNotAvailableToStudentError as e:
+        except (QuestionNotAvailableToStudentError, QuestionNotFoundError) as e:
             return Response(data={"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        except QuestionNotFoundError as e:
-            return Response(data={"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
 
     def list(self, request):
         qn_id = request.data.get("qn_id")
