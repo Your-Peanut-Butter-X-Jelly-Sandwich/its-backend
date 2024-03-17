@@ -5,7 +5,8 @@ from rest_framework.response import Response
 
 from ...apps.accounts.models import Teaches
 from ..permission_classes import IsStudent, IsTutor
-from .models import Question
+from ..questions.models import Question, TestCase
+from ..submissions.models import Submissiondata
 from .serializers import (
     StudentQuestionDetailSerializer,
     StudentQuestionListSerializer,
@@ -86,12 +87,37 @@ class TutorQuestionViewSet(
         serializer = self.get_serializer_class()(questions, many=True)
         return Response(data={"questions": serializer.data}, status=status.HTTP_200_OK)
 
+    def get_total_assignees(self, tutor):
+        return Teaches.objects.filter(tutor=tutor).count()
+
+    def get_total_submissions(self, qn_id, tutor):
+        students = Teaches.objects.filter(tutor=tutor).values("student")
+        return Submissiondata.objects.filter(
+            qn_id=qn_id, submitted_by__in=students
+        ).count()
+
+    def get_total_passes(self, qn_id, tutor):
+        students = Teaches.objects.filter(tutor=tutor).values("student")
+        all_submissions = Submissiondata.objects.filter(
+            qn_id=qn_id, submitted_by__in=students
+        )
+        total_test_cases = TestCase.objects.filter(question__pk=qn_id).count()
+        passing_submissions = all_submissions.filter(score=total_test_cases)
+        distinct_passing_submissions = (
+            passing_submissions.values("submitted_by").distinct().count()
+        )
+        return distinct_passing_submissions
+
     def retrieve(self, request, pk=None):
         queryset = self.get_queryset()
         question = get_object_or_404(queryset, pk=pk)
-        total_submissions = 100  # each student can make multiple submissions, so this number can be greater than student count
-        passes = 20  # each student can only pass once, so this number must be smaller than student count
-        total_students = Teaches.objects.filter(tutor=request.user).count()
+        total_submissions = self.get_total_submissions(
+            pk, request.user
+        )  # each student can make multiple submissions, so this number can be greater than student count
+        passes = self.get_total_passes(
+            pk, request.user
+        )  # each student can only pass once, so this number must be smaller than student count
+        total_students = self.get_total_assignees(request.user)
         serializer = self.get_serializer_class()(question)
         return Response(
             data={
