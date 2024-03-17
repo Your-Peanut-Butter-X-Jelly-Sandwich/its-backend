@@ -12,7 +12,4 @@ ignore = ["B904", "DJ001", "RET504"]
 "__init__.py" = ["E402"]
 
 [format]
-# Use single quotes
-quote-style = "single"
 indent-style = "tab"
-
