@@ -102,7 +102,6 @@ class TutorSubmissionViewSet(
 
     def list(self, request):
         qn_id = request.query_params.get("qn_id")
-        print(qn_id)
         if qn_id is None:
             return Response(
                 data={"message": "You need to supply a question id"},
