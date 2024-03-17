@@ -151,12 +151,9 @@ def process_submission_request(request):
     language = request.data.get("language")
     program = request.data.get("program")
     qn_id = request.data.get("qn_id")
-    print("here")
     try:
         question = Question.objects.get(pk=qn_id)
-        print(question)
     except Question.DoesNotExist:
-        print("not foujd")
         raise QuestionNotFoundError(f"Question with qn_id {qn_id} not found") from None
 
     # check if student can submit to question
