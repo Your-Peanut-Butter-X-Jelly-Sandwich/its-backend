@@ -60,4 +60,4 @@ SERVER_PID=$!
 sleep 5
 
 # # Run postman tests
-# newman run "${TEST_DIR}/${POSTMAN_COLLECTION}"
+newman run "${TEST_DIR}/${POSTMAN_COLLECTION}"
