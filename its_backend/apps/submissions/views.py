@@ -37,10 +37,10 @@ class StudentSubmissionViewSet(
 
     def check_is_question_accessible(self, request, question):
         # check if student should make the sumission
-        tutor = Teaches.objects.get(id=request.user.pk)
-        tutor_id = tutor.tutor_id
+        tutors = Teaches.objects.filter(student_id=request.user.pk).values_list('tutor_id', flat=True)
         question_pub_by = question.pub_by.pk
-        return question_pub_by == tutor_id
+        result = question_pub_by in tutors
+        return result
 
     def create(self, request):
         try:

@@ -140,12 +140,12 @@ def get_feedback_for_student(
 def generate_report():
     pass
 
-def check_if_valid_question(request, question):
-    # check if student should make the sumission
-    tutor = Teaches.objects.get(id=request.user.pk)
-    tutor_id = tutor.tutor_id
+def check_is_question_accessible(request, question):
+    # check if student has access to the question
+    tutors = Teaches.objects.filter(student_id=request.user.pk).values_list('tutor_id', flat=True)
     question_pub_by = question.pub_by.pk
-    return question_pub_by == tutor_id
+    result = question_pub_by in tutors
+    return result
 
 def process_submission_request(request):
     language = request.data.get("language")
@@ -158,7 +158,7 @@ def process_submission_request(request):
         raise QuestionNotFoundError(f"Question with qn_id {qn_id} not found") from None
 
     # check if student can submit to question
-    if not check_if_valid_question(request, question):
+    if not check_is_question_accessible(request, question):
         raise QuestionNotAvailableToStudentError(f"Question with qn_id {qn_id} is not available to the student") from None
 
     mutable_data = request.data.copy()
