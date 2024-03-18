@@ -65,7 +65,9 @@ class StudentSubmissionViewSet(
             return Response(data={"message": str(e)}, status=status.HTTP_403_FORBIDDEN)
         except QuestionNotFoundError as e:
             return Response(data={"message": str(e)}, status=status.HTTP_404_NOT_FOUND)
-
+        except Exception as e:  # Catch any other exceptions
+            return Response(data={"message": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
     def list(self, request):
         qn_id = request.query_params.get("qn_id")
         if qn_id is None:
