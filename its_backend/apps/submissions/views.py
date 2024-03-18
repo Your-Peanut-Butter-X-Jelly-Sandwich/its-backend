@@ -42,7 +42,9 @@ class StudentSubmissionViewSet(
 
     def check_is_question_accessible(self, request, question):
         # check if student should make the sumission
-        tutors = Teaches.objects.filter(student_id=request.user.pk).values_list('tutor_id', flat=True)
+        tutors = Teaches.objects.filter(student_id=request.user.pk).values_list(
+            "tutor_id", flat=True
+        )
         question_pub_by = question.pub_by.pk
         result = question_pub_by in tutors
         return result
@@ -75,17 +77,24 @@ class StudentSubmissionViewSet(
                 data={"message": "You need to supply a question id"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        
+
         try:
             question = Question.objects.get(pk=qn_id)
         except Question.DoesNotExist:
-            return Response(data={"message": f"Question with qn_id {qn_id} not found"}, status=status.HTTP_404_NOT_FOUND)
-        
+            return Response(
+                data={"message": f"Question with qn_id {qn_id} not found"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
         is_question_accessible = self.check_is_question_accessible(request, question)
         if not is_question_accessible:
-            return Response(data={"message": f"Student does not have access to Question with qn_id {qn_id}"}, status=status.HTTP_403_FORBIDDEN)
+            return Response(
+                data={
+                    "message": f"Student does not have access to Question with qn_id {qn_id}"
+                },
+                status=status.HTTP_403_FORBIDDEN,
+            )
 
-        
         offset = int(request.query_params.get("offset", 0))
         limit = int(request.query_params.get("limit", 10))
         queryset = self.get_queryset().filter(qn_id=qn_id)
