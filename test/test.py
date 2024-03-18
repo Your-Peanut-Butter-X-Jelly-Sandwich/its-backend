@@ -1,4 +1,5 @@
 import os
+import platform
 import shutil
 import signal
 import sqlite3
@@ -30,15 +31,17 @@ def populate_db():
     connection = sqlite3.connect(ORIG_DB)
     cursor = connection.cursor()
 
-    # Execute the SQL script
-    cursor.executescript(sql_script)
-
-    # Commit the changes to the database
-    connection.commit()
-
-    # Close the cursor and connection
-    cursor.close()
-    connection.close()
+    try:
+        # Execute the SQL script and commit changes
+        cursor.executescript(sql_script)
+        connection.commit()
+    except Exception as e:
+        # Propagate error
+        raise e
+    finally:
+        # Close the cursor and connection
+        cursor.close()
+        connection.close()
 
 def main():
     global SERVER_PID
@@ -64,9 +67,12 @@ def main():
 
         # Run postman tests
         postman_collection = os.path.join(TEST, POSTMAN_COLLECTION)
-        subprocess.Popen(["newman", "run", postman_collection]).wait()
-    except:  # noqa: E722
-        pass
+        subprocess.Popen(
+            args=["newman", "run", postman_collection],
+            shell=(platform.system() == "Windows")
+        ).wait()
+    except Exception as e:
+        print('Something went wrong:', str(e))
     finally:
         cleanup()
 
