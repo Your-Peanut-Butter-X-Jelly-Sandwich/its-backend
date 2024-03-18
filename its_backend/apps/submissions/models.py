@@ -14,7 +14,7 @@ class Submissiondata(models.Model):
     submission_number = models.IntegerField()
     submission_date = models.DateTimeField(auto_now_add=True)
     program = models.CharField(max_length=10000)
-    report = models.CharField(max_length=10000, blank=True, null=True)
+    status = models.CharField(max_length=10000, blank=True, null=True)
     score = models.IntegerField()
     tutor_feedback = models.CharField(max_length=10000, blank=True, null=True)
     its_feedback_hint_student = models.JSONField(null=True)

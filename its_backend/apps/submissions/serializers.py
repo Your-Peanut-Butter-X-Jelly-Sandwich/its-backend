@@ -36,7 +36,7 @@ class TutorRetrieveSubmissionDetailsSerializer(serializers.ModelSerializer):
             "program",
             "its_feedback_fix_tutor",
             "tutor_feedback",
-            "report",
+            "status",
             "total_score",
             "score",
         ]
@@ -64,7 +64,7 @@ class CreateUpdateSubmissionSerializer(serializers.ModelSerializer):
             "its_feedback_hint_student",
             "its_feedback_fix_tutor",
             "tutor_feedback",
-            "report",
+            "status",
             "total_score",
             "score",
             "submitted_by",

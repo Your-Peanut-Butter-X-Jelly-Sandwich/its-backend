@@ -132,7 +132,7 @@ INSERT INTO "main"."questions_testcase" ("input", "output", "question_id") VALUE
 ('[1,2,3]', '[[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]', '4');
 
 -- Populate 7 submissions
-INSERT INTO submissions_submissiondata ("qn_id", "submission_number", "submission_date", "program", "report", "score", "tutor_feedback", "its_feedback_hint_student", "its_feedback_fix_tutor", "total_score", "submitted_by_id", "language") VALUES 
+INSERT INTO submissions_submissiondata ("qn_id", "submission_number", "submission_date", "program", "status", "score", "tutor_feedback", "its_feedback_hint_student", "its_feedback_fix_tutor", "total_score", "submitted_by_id", "language") VALUES 
 ('1', '1', '2024-03-16 09:28:22.913025', 'def twoSum(nums, target):
 	hashmap = {}
 	for i in range(len(nums)):
@@ -140,7 +140,7 @@ INSERT INTO submissions_submissiondata ("qn_id", "submission_number", "submissio
 	for i in range(len(nums)):
 		complement = target - nums[i]
 		if complement in hashmap and hashmap[complement] != i:
-			return [i, hashmap[complement]]', 'no report yet', '3', '', '""', '""', '3', '1', 'python'),
+			return [i, hashmap[complement]]', 'no status yet', '3', '', '""', '""', '3', '1', 'python'),
 ('1', '2', '2024-03-16 09:35:36.663842', 'def twoSum(nums, target):
 	hashmap = {}
 	for i in range(len(nums)):
@@ -148,7 +148,7 @@ INSERT INTO submissions_submissiondata ("qn_id", "submission_number", "submissio
 	for i in range(len(nums)):
 		complement = target - nums[i]
 		if complement in hashmap and hashmap[complement] != i:
-			return [i, hashmap[complement]]', 'no report yet', '3', '', '""', '""', '3', '1', 'python'),
+			return [i, hashmap[complement]]', 'no status yet', '3', '', '""', '""', '3', '1', 'python'),
 ('1', '3', '2024-03-16 12:26:33.709593', 'def twoSum(nums, target):
 	hashmap = {}
 	for i in range(len(nums)):
@@ -156,7 +156,7 @@ INSERT INTO submissions_submissiondata ("qn_id", "submission_number", "submissio
 	for i in range(len(nums)):
 		complement = target - nums[i]
 		if complement in hashmap and hashmap[complement] != i:
-			return [i, hashmap[complement]]', 'no report yet', '3', '', '"{\"message\": \"\"}"', '"{\"message\": \"\"}"', '3', '1', 'python'),
+			return [i, hashmap[complement]]', 'no status yet', '3', '', '"{\"message\": \"\"}"', '"{\"message\": \"\"}"', '3', '1', 'python'),
 ('1', '4', '2024-03-16 12:28:13.108628', 'def twoSum(nums, target):
 	hashmap = {}
 	for i in range(len(nums)):
@@ -164,7 +164,7 @@ INSERT INTO submissions_submissiondata ("qn_id", "submission_number", "submissio
 	for i in range(len(nums)):
 		complement = target - nums[i]
 		if complement in hashmap and hashmap[complement] != i:
-			return [i, hashmap[complement]]', 'no report yet', '3', '', '"{\"message\": \"\"}"', '"{\"message\": \"\"}"', '3', '1', 'python'),
+			return [i, hashmap[complement]]', 'no status yet', '3', '', '"{\"message\": \"\"}"', '"{\"message\": \"\"}"', '3', '1', 'python'),
 ('3', '1', '2024-03-15 14:02:50.594625', 'def intToRoman(num: int) -> str:
 	Roman = ""
 	storeIntRoman = [
@@ -186,7 +186,7 @@ INSERT INTO submissions_submissiondata ("qn_id", "submission_number", "submissio
 		while num >= storeIntRoman[i][0]:
 			Roman += storeIntRoman[i][1]
 			num -= storeIntRoman[i][0]
-	return Roman', 'no report yet', '0', '', '"{\"hint\": [{\"lineNumber\": 3, \"hintStrings\": [\"Incorrect else-block for if ( a > 0 )\"]}]}"', '"{\"fix\": [{\"lineNumber\": 5, \"oldExpr\": \"b = (b - 1)\", \"newExpr\": \"b = (b + 1)\", \"repairStrings\": [\"Wrong expression. Change b = (b - 1) to b = (b + 1);\"]}]}"', '3', '1', 'python'),
+	return Roman', 'no status yet', '0', '', '"{\"hint\": [{\"lineNumber\": 3, \"hintStrings\": [\"Incorrect else-block for if ( a > 0 )\"]}]}"', '"{\"fix\": [{\"lineNumber\": 5, \"oldExpr\": \"b = (b - 1)\", \"newExpr\": \"b = (b + 1)\", \"repairStrings\": [\"Wrong expression. Change b = (b - 1) to b = (b + 1);\"]}]}"', '3', '1', 'python'),
 ('3', '2', '2024-03-15 14:15:29.379233', 'def intToRoman(num: int) -> str:
 	Roman = ""
 	storeIntRoman = [
@@ -208,7 +208,7 @@ INSERT INTO submissions_submissiondata ("qn_id", "submission_number", "submissio
 		while num >= storeIntRoman[i][0]:
 			Roman += storeIntRoman[i][1]
 			num -= storeIntRoman[i][0]
-	return Roman', 'no report yet', '0', '', '"{\"hint\": [{\"lineNumber\": 3, \"hintStrings\": [\"Incorrect else-block for if ( a > 0 )\"]}]}"', '"{\"fix\": [{\"lineNumber\": 5, \"oldExpr\": \"b = (b - 1)\", \"newExpr\": \"b = (b + 1)\", \"repairStrings\": [\"Wrong expression. Change b = (b - 1) to b = (b + 1);\"]}]}"', '3', '1', 'python'),
+	return Roman', 'no status yet', '0', '', '"{\"hint\": [{\"lineNumber\": 3, \"hintStrings\": [\"Incorrect else-block for if ( a > 0 )\"]}]}"', '"{\"fix\": [{\"lineNumber\": 5, \"oldExpr\": \"b = (b - 1)\", \"newExpr\": \"b = (b + 1)\", \"repairStrings\": [\"Wrong expression. Change b = (b - 1) to b = (b + 1);\"]}]}"', '3', '1', 'python'),
 ('3', '3', '2024-03-15 14:16:40.151735', 'def intToRoman(num: int) -> str:
 	Roman = ""
 	storeIntRoman = [
@@ -230,4 +230,4 @@ INSERT INTO submissions_submissiondata ("qn_id", "submission_number", "submissio
 		while num >= storeIntRoman[i][0]:
 			Roman += storeIntRoman[i][1]
 			num -= storeIntRoman[i][0]
-	return Roman', 'no report yet', '3', '', '"{\"hint\": [{\"lineNumber\": 3, \"hintStrings\": [\"Incorrect else-block for if ( a > 0 )\"]}]}"', '"{\"fix\": [{\"lineNumber\": 5, \"oldExpr\": \"b = (b - 1)\", \"newExpr\": \"b = (b + 1)\", \"repairStrings\": [\"Wrong expression. Change b = (b - 1) to b = (b + 1);\"]}]}"', '3', '1', 'python');
+	return Roman', 'no stau yet', '3', '', '"{\"hint\": [{\"lineNumber\": 3, \"hintStrings\": [\"Incorrect else-block for if ( a > 0 )\"]}]}"', '"{\"fix\": [{\"lineNumber\": 5, \"oldExpr\": \"b = (b - 1)\", \"newExpr\": \"b = (b + 1)\", \"repairStrings\": [\"Wrong expression. Change b = (b - 1) to b = (b + 1);\"]}]}"', '3', '1', 'python');
