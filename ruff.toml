@@ -10,6 +10,3 @@ ignore = ["B904", "DJ001", "RET504"]
 # Ignore `E402` (import violations) in all `__init__.py` files, and in select subdirectories.
 [lint.per-file-ignores]
 "__init__.py" = ["E402"]
-
-[format]
-indent-style = "tab"
