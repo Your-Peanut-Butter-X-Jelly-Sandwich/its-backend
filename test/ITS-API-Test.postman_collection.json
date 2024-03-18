@@ -1563,14 +1563,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{base_url}}/tutor/question/6",
+									"raw": "{{base_url}}/tutor/question/7",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"tutor",
 										"question",
-										"6"
+										"7"
 									]
 								}
 							},
@@ -1656,14 +1656,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/tutor/question/6",
+									"raw": "{{base_url}}/tutor/question/7",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"tutor",
 										"question",
-										"6"
+										"7"
 									]
 								}
 							},
@@ -1750,14 +1750,14 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/tutor/question/6",
+									"raw": "{{base_url}}/tutor/question/7",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"tutor",
 										"question",
-										"6"
+										"7"
 									]
 								}
 							},
@@ -2059,7 +2059,7 @@
 									"formdata": [
 										{
 											"key": "qn_id",
-											"value": "1",
+											"value": "6",
 											"type": "text"
 										},
 										{
@@ -2069,7 +2069,7 @@
 										},
 										{
 											"key": "program",
-											"value": "def twoSum(nums, target):\n        numMap = {}\n        n = len(nums)\n        for i in range(n):\n            complement = target - nums[i]\n            if complement in numMap:\n                return [numMap[complement], i]\n            numMap[nums[i]] = i\n        return [] ",
+											"value": "def is_odd(x):\n\tif x % 2 == 0:\n\t\treturn False\n\telse:\n\t\treturn True",
 											"type": "text"
 										}
 									]
@@ -2088,7 +2088,73 @@
 							"response": []
 						},
 						{
-							"name": "[02] Student Add Submission (Not all Testcases passed)",
+							"name": "[02] Student Add Submission (Not all Testcases passed, ITS Feedback is generated)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON\r",
+											"var responseBody = pm.response.json();\r",
+											"\r",
+											"// Check if the status code is 201 CREATED\r",
+											"pm.test(\"Status code is 201 CREATED\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{student_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "qn_id",
+											"value": "6",
+											"type": "text"
+										},
+										{
+											"key": "language",
+											"value": "python",
+											"type": "text"
+										},
+										{
+											"key": "program",
+											"value": "def is_odd(x):\n\tif x % 2 == 0:\n\t\treturn False\n\telse:\n\t\treturn False",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/student/submission",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"student",
+										"submission"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[02] Student Add Submission (ITS can's parse student program)",
 							"event": [
 								{
 									"listen": "test",

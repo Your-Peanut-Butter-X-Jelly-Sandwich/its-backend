@@ -117,7 +117,7 @@ Given an integer, convert it to a roman numeral.', 'def intToRoman(num):
 	if x % 2 == 0:
 		return False
 	else:
-		return True', 'python', '2024-03-16 12:46:26.344129', '12', '2024-04-14');
+		return True', 'python', '2024-03-16 12:46:26.344129', '11', '2024-04-14');
 
 -- Pouplate 10 test cases
 
@@ -134,7 +134,11 @@ INSERT INTO "main"."questions_testcase" ("input", "output", "question_id") VALUE
 ('58', '"LVIII"', '3'),
 ('1994', '"MCMXCIV"', '3'),
 
-('[1,2,3]', '[[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]', '4');
+('[1,2,3]', '[[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]', '4'),
+
+('1', 'True', '6'),
+('15', 'True', '6'),
+('100', 'False', '6');
 
 -- Populate 7 submissions
 INSERT INTO submissions_submissiondata ("qn_id", "submission_number", "submission_date", "program", "status", "score", "tutor_feedback", "its_feedback_hint_student", "its_feedback_fix_tutor", "total_score", "submitted_by_id", "language") VALUES 
