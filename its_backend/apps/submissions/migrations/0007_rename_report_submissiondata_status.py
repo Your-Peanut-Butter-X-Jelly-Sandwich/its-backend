@@ -4,15 +4,14 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('submissions', '0006_alter_submissiondata_language'),
+        ("submissions", "0006_alter_submissiondata_language"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='submissiondata',
-            old_name='report',
-            new_name='status',
+            model_name="submissiondata",
+            old_name="report",
+            new_name="status",
         ),
     ]

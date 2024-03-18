@@ -6,31 +6,48 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
-        ('submissions', '0001_initial'),
+        ("submissions", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Submissiondata',
+            name="Submissiondata",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('qn_id', models.IntegerField()),
-                ('language', models.CharField(max_length=30)),
-                ('submission_number', models.IntegerField()),
-                ('submission_date', models.DateTimeField(auto_now_add=True)),
-                ('program', models.CharField(max_length=10000)),
-                ('report', models.CharField(blank=True, max_length=10000, null=True)),
-                ('score', models.IntegerField()),
-                ('tutor_feedback', models.CharField(blank=True, max_length=10000, null=True)),
-                ('its_feedback_hint_student', models.JSONField(null=True)),
-                ('its_feedback_fix_tutor', models.JSONField(null=True)),
-                ('total_score', models.IntegerField()),
-                ('submitted_by', models.ForeignKey(blank=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("qn_id", models.IntegerField()),
+                ("language", models.CharField(max_length=30)),
+                ("submission_number", models.IntegerField()),
+                ("submission_date", models.DateTimeField(auto_now_add=True)),
+                ("program", models.CharField(max_length=10000)),
+                ("report", models.CharField(blank=True, max_length=10000, null=True)),
+                ("score", models.IntegerField()),
+                (
+                    "tutor_feedback",
+                    models.CharField(blank=True, max_length=10000, null=True),
+                ),
+                ("its_feedback_hint_student", models.JSONField(null=True)),
+                ("its_feedback_fix_tutor", models.JSONField(null=True)),
+                ("total_score", models.IntegerField()),
+                (
+                    "submitted_by",
+                    models.ForeignKey(
+                        blank=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]

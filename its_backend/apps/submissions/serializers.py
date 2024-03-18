@@ -5,7 +5,6 @@ from .models import Submissiondata
 
 
 class RetrieveAllSubmissionSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Submissiondata
         fields = [
@@ -24,7 +23,6 @@ class RetrieveAllSubmissionSerializer(serializers.ModelSerializer):
 
 
 class TutorRetrieveSubmissionDetailsSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Submissiondata
         fields = [
@@ -43,7 +41,6 @@ class TutorRetrieveSubmissionDetailsSerializer(serializers.ModelSerializer):
 
 
 class StudentRetrieveSubmissionDetailsSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Submissiondata
         exclude = ["its_feedback_fix_tutor"]

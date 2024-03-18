@@ -17,19 +17,26 @@ from .models import Submissiondata
 
 
 class ItsStatus(Enum):
-    ITS_SUCCESS = 'ITS SUCCESS'
+    ITS_SUCCESS = "ITS SUCCESS"
     ITS_STUDENT_SUBMISSION_PARSER_FAILURE = "The ITS failed to parse Student Program. "
     ITS_REF_PROGRAM_PARSER_FAILURE = "The ITS failed to parse Reference Program. "
-    ITS_FEEDBACK_INTERPRETER_FAILURE = "The ITS interpreter fails to interprete the Program and Testcases. "
+    ITS_FEEDBACK_INTERPRETER_FAILURE = (
+        "The ITS interpreter fails to interprete the Program and Testcases. "
+    )
     ITS_FEEDBACK_HINT_FAILURE = "The ITS fails to provide Feedback Hint. "
     ITS_FEEDBACK_FIX_FAILURE = "The ITS fails to provide Feedback Fix. "
-    ITS_STUDENT_SUBMISSION_PROGRAM_INVALID = "The ITS parser failed to evaluate the Student Submission Program"
+    ITS_STUDENT_SUBMISSION_PROGRAM_INVALID = (
+        "The ITS parser failed to evaluate the Student Submission Program"
+    )
+
 
 class QuestionNotFoundError(Exception):
     pass
 
+
 class QuestionNotAvailableToStudentError(Exception):
     pass
+
 
 class CannotGeneratedFeedbackException(APIException):
     default_detail = (
@@ -47,13 +54,15 @@ def get_parsed_ref_program(question):
     except ITSParserException:
         return None
 
+
 def get_parsed_stu_program(program, language):
     try:
         program = program.replace("\\n", "\n").replace("\\t", "\t")
-        parsed_program =  its_request_parser(language, program, "Student Submission")
+        parsed_program = its_request_parser(language, program, "Student Submission")
         return parsed_program
     except ITSParserException:
         return None
+
 
 def compute_score(qn_id, language, student_solution, function):
     test_cases = TestCase.objects.filter(question_id=qn_id)
@@ -146,12 +155,16 @@ def get_feedback_for_student(
     except ITSFeedbackException as err:
         raise CannotGeneratedFeedbackException() from err
 
+
 def check_is_question_accessible(request, question):
     # check if student has access to the question
-    tutors = Teaches.objects.filter(student_id=request.user.pk).values_list('tutor_id', flat=True)
+    tutors = Teaches.objects.filter(student_id=request.user.pk).values_list(
+        "tutor_id", flat=True
+    )
     question_pub_by = question.pub_by.pk
     result = question_pub_by in tutors
     return result
+
 
 def process_submission_request(request):
     language = request.data.get("language")
@@ -166,7 +179,9 @@ def process_submission_request(request):
 
     # check if student can submit to question
     if not check_is_question_accessible(request, question):
-        raise QuestionNotAvailableToStudentError(f"Question with qn_id {qn_id} is not available to the student") from None
+        raise QuestionNotAvailableToStudentError(
+            f"Question with qn_id {qn_id} is not available to the student"
+        ) from None
 
     mutable_data = request.data.copy()
     # parsed student and reference program
@@ -188,7 +203,7 @@ def process_submission_request(request):
             total_score = test_cases.count()
         else:
             function = next(iter(parsed_stu_program["fncs"].keys()))
-        # number of test cases passed
+            # number of test cases passed
             total_score, score, failed_test_cases = compute_score(
                 qn_id, language, parsed_stu_program, function
             )

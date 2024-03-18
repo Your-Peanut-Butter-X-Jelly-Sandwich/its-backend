@@ -13,8 +13,9 @@ SERVER_PID = None
 
 DJ_MANAGE = os.path.join(ROOT, "manage.py")
 
-ORIG_DB = os.path.join(ROOT, 'db.sqlite3')
-TEMP_DB = os.path.join(TEST, 'temp.sqlite3')
+ORIG_DB = os.path.join(ROOT, "db.sqlite3")
+TEMP_DB = os.path.join(TEST, "temp.sqlite3")
+
 
 def cleanup():
     if os.path.exists(TEMP_DB):
@@ -22,9 +23,10 @@ def cleanup():
     if SERVER_PID:
         os.kill(SERVER_PID, signal.SIGTERM)
 
+
 def populate_db():
     sql_script_file = os.path.join(TEST, "populate_db.sql")
-    with open(sql_script_file, 'r') as f:
+    with open(sql_script_file, "r") as f:
         sql_script = f.read()
 
     # Connect to the SQLite database
@@ -43,6 +45,7 @@ def populate_db():
         cursor.close()
         connection.close()
 
+
 def main():
     global SERVER_PID
 
@@ -50,7 +53,7 @@ def main():
         # Backup original DB if it exists
         if os.path.exists(ORIG_DB):
             shutil.move(ORIG_DB, TEMP_DB)
-        
+
         # Make and apply migrations
         subprocess.Popen(["python", DJ_MANAGE, "makemigrations"]).wait()
         subprocess.Popen(["python", DJ_MANAGE, "migrate"]).wait()
@@ -69,12 +72,13 @@ def main():
         postman_collection = os.path.join(TEST, POSTMAN_COLLECTION)
         subprocess.Popen(
             args=["newman", "run", postman_collection],
-            shell=(platform.system() == "Windows")
+            shell=(platform.system() == "Windows"),
         ).wait()
     except Exception as e:
-        print('Something went wrong:', str(e))
+        print("Something went wrong:", str(e))
     finally:
         cleanup()
+
 
 if __name__ == "__main__":
     main()
