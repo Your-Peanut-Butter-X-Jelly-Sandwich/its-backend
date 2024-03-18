@@ -190,6 +190,9 @@ There is an [SQL script](./test/populate_db.sql) that currently populates `db.sq
 
 - 10 students
 - 5 tutors
+- 6 questions
+- 13 test cases
+- 7 submissions
 
 > `teaches` relations are added through Postman collection (see `[02] Add teaches relations` in our [collection](./test/ITS-API-Test.postman_collection.json)).
 

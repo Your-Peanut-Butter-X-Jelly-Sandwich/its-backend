@@ -119,7 +119,7 @@ Given an integer, convert it to a roman numeral.', 'def intToRoman(num):
 	else:
 		return True', 'python', '2024-03-16 12:46:26.344129', '11', '2024-04-14');
 
--- Pouplate 10 test cases
+-- Pouplate 13 test cases
 
 INSERT INTO "main"."questions_testcase" ("input", "output", "question_id") VALUES 
 ('[2,7,11,15],9', '[0, 1]', '1'),
