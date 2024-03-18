@@ -51,7 +51,7 @@
 							"formdata": [
 								{
 									"key": "email",
-									"value": "stu02@student.com",
+									"value": "stu01@student.com",
 									"type": "text"
 								},
 								{
@@ -259,7 +259,6 @@
 									"",
 									"// Check if the response contains the expected message",
 									"var expectedResponseMessage = [",
-									"    \"Added [tutor_id=12, s_id=1]\",",
 									"    \"Added [tutor_id=12, s_id=3]\",",
 									"    \"Added [tutor_id=12, s_id=5]\",",
 									"    \"Added [tutor_id=12, s_id=7]\"",
@@ -280,7 +279,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"tutor_id\": 12,\n    \"student_ids\": [1, 3, 5, 7]\n}",
+							"raw": "{\n    \"tutor_id\": 12,\n    \"student_ids\": [3, 5, 7]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1304,7 +1303,7 @@
 							"response": []
 						},
 						{
-							"name": "[06] Get tutors that teach Student 1 - Success",
+							"name": "[06] Get tutors that teach Student 3 - Success",
 							"event": [
 								{
 									"listen": "test",
@@ -1351,7 +1350,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/tutors?student_id=1",
+									"raw": "{{base_url}}/tutors?student_id=3",
 									"host": [
 										"{{base_url}}"
 									],
@@ -1361,7 +1360,7 @@
 									"query": [
 										{
 											"key": "student_id",
-											"value": "1"
+											"value": "3"
 										}
 									]
 								}
@@ -1564,14 +1563,14 @@
 									}
 								},
 								"url": {
-									"raw": "{{base_url}}/tutor/question/6",
+									"raw": "{{base_url}}/tutor/question/7",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"tutor",
 										"question",
-										"6"
+										"7"
 									]
 								}
 							},
@@ -1657,14 +1656,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/tutor/question/6",
+									"raw": "{{base_url}}/tutor/question/7",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"tutor",
 										"question",
-										"6"
+										"7"
 									]
 								}
 							},
@@ -1751,14 +1750,14 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/tutor/question/6",
+									"raw": "{{base_url}}/tutor/question/7",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"tutor",
 										"question",
-										"6"
+										"7"
 									]
 								}
 							},
@@ -2060,7 +2059,7 @@
 									"formdata": [
 										{
 											"key": "qn_id",
-											"value": "3",
+											"value": "6",
 											"type": "text"
 										},
 										{
@@ -2070,7 +2069,7 @@
 										},
 										{
 											"key": "program",
-											"value": "def intToRoman(num):\n    istado_unidad = [\"\", \"I\", \"II\", \"III\", \"IV\", \"V\", \"VI\", \"VII\", \"VIII\", \"IX\"]\n    listado_decena = [\"\", \"X\", \"XX\", \"XXX\", \"XL\", \"L\", \"LX\", \"LXX\", \"LXXX\", \"XC\"]\n    listado_centena = [\"\", \"C\", \"CC\", \"CCC\", \"CD\", \"D\", \"DC\", \"DCC\", \"DCCC\", \"CM\"]\n    listado_millar = [\"\", \"M\", \"MM\", \"MMM\"]\n    millar = num // 1000\n    centena = (num % 1000) // 100\n    decena = (num % 100) // 10\n    unidad = num % 10\n    millar_romano = listado_millar[millar]\n    centena_romano = listado_centena[centena]\n    decena_romano = listado_decena[decena]\n    unidad_romano = listado_unidad[unidad]\n    return millar_romano + centena_romano + decena_romano + unidad_romano",
+											"value": "def is_odd(x):\n\tif x % 2 == 0:\n\t\treturn False\n\telse:\n\t\treturn True",
 											"type": "text"
 										}
 									]
@@ -2089,7 +2088,7 @@
 							"response": []
 						},
 						{
-							"name": "[02] Student Add Submission (Not all Testcases passed)",
+							"name": "[02] Student Add Submission (Not all Testcases passed, ITS Feedback is generated)",
 							"event": [
 								{
 									"listen": "test",
@@ -2099,8 +2098,8 @@
 											"var responseBody = pm.response.json();\r",
 											"\r",
 											"// Check if the status code is 201 CREATED\r",
-											"pm.test(\"Status code is 400 Bad Request\", function () {\r",
-											"    pm.response.to.have.status(400);\r",
+											"pm.test(\"Status code is 201 CREATED\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
 											"});"
 										],
 										"type": "text/javascript",
@@ -2126,7 +2125,7 @@
 									"formdata": [
 										{
 											"key": "qn_id",
-											"value": "3",
+											"value": "6",
 											"type": "text"
 										},
 										{
@@ -2136,7 +2135,7 @@
 										},
 										{
 											"key": "program",
-											"value": "def intToRoman(num):\n    istado_unidad = [\"\", \"I\", \"II\", \"III\", \"IV\", \"V\", \"VI\", \"VII\", \"VIII\", \"IX\"]\n    listado_decena = [\"\", \"X\", \"XX\", \"XXX\", \"XL\", \"L\", \"LX\", \"LXX\", \"LXXX\", \"XC\"]\n    listado_centena = [\"\", \"C\", \"CC\", \"CCC\", \"CD\", \"D\", \"DC\", \"DCC\", \"DCCC\", \"CM\"]\n    listado_millar = [\"\", \"M\", \"MM\", \"MMM\"]\n    millar = num // 1000\n    centena = (num % 1000) // 100\n    decena = (num % 100) // 10\n    unidad = num % 10\n    millar_romano = listado_millar[millar]\n    centena_romano = listado_centena[centena]\n    decena_romano = listado_decena[decena]\n    unidad_romano = listado_unidad[unidad]\n    return millar_romano + centena_romano + decena_romano ",
+											"value": "def is_odd(x):\n\tif x % 2 == 0:\n\t\treturn False\n\telse:\n\t\treturn False",
 											"type": "text"
 										}
 									]
@@ -2155,7 +2154,7 @@
 							"response": []
 						},
 						{
-							"name": "[01] Student Add Submission to other tutor's Question",
+							"name": "[02] Student Add Submission (ITS can's parse student program)",
 							"event": [
 								{
 									"listen": "test",
@@ -2165,8 +2164,74 @@
 											"var responseBody = pm.response.json();\r",
 											"\r",
 											"// Check if the status code is 201 CREATED\r",
-											"pm.test(\"Status code is 400 Bad Request\", function () {\r",
-											"    pm.response.to.have.status(400);\r",
+											"pm.test(\"Status code is 201 CREATED\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{student_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "qn_id",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "language",
+											"value": "python",
+											"type": "text"
+										},
+										{
+											"key": "program",
+											"value": "def twoSum(nums, target):\n        numMap = {}\n        n = len(nums)\n        for i in range(n):\n            complement = target - nums[i] - 1\n            if complement in numMap:\n                return [numMap[complement], i]\n            numMap[nums[i]] = i\n        return [] ",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/student/submission",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"student",
+										"submission"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[01] Student Add Submission to not Accessible Question",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON\r",
+											"var responseBody = pm.response.json();\r",
+											"\r",
+											"// Check if the status code is 201 CREATED\r",
+											"pm.test(\"Status code is 403 Forbidden\", function () {\r",
+											"    pm.response.to.have.status(403);\r",
 											"});"
 										],
 										"type": "text/javascript",
@@ -2231,8 +2296,8 @@
 											"var responseBody = pm.response.json();\r",
 											"\r",
 											"// Check if the status code is 201 CREATED\r",
-											"pm.test(\"Status code is 400 Bad Request\", function () {\r",
-											"    pm.response.to.have.status(400);\r",
+											"pm.test(\"Status code is 404 Not FOUND\", function () {\r",
+											"    pm.response.to.have.status(404);\r",
 											"});"
 										],
 										"type": "text/javascript",
@@ -2323,23 +2388,23 @@
 								"method": "GET",
 								"header": [],
 								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "qn_id",
-											"value": "5",
-											"type": "text"
-										}
-									]
+									"mode": "raw",
+									"raw": ""
 								},
 								"url": {
-									"raw": "{{base_url}}/student/submission",
+									"raw": "{{base_url}}/student/submission?qn_id=3",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"student",
 										"submission"
+									],
+									"query": [
+										{
+											"key": "qn_id",
+											"value": "3"
+										}
 									]
 								}
 							},
@@ -2365,9 +2430,6 @@
 									}
 								}
 							],
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
 							"request": {
 								"auth": {
 									"type": "bearer",
@@ -2381,24 +2443,20 @@
 								},
 								"method": "GET",
 								"header": [],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "qn_id",
-											"value": "3",
-											"type": "text"
-										}
-									]
-								},
 								"url": {
-									"raw": "{{base_url}}/student/submission",
+									"raw": "{{base_url}}/student/submission?qn_id=2",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"student",
 										"submission"
+									],
+									"query": [
+										{
+											"key": "qn_id",
+											"value": "2"
+										}
 									]
 								}
 							},
@@ -2414,9 +2472,9 @@
 											"// Parse the response body as JSON\r",
 											"var responseBody = pm.response.json();\r",
 											"\r",
-											"// Check if the status code is 200 OK\r",
-											"pm.test(\"Status code is 200 OK\", function () {\r",
-											"    pm.response.to.have.status(200);\r",
+											"// Check if the status code is 404 NOT FOUND\r",
+											"pm.test(\"Status code is 404 NOT FOUND\", function () {\r",
+											"    pm.response.to.have.status(404);\r",
 											"});"
 										],
 										"type": "text/javascript",
@@ -2446,18 +2504,84 @@
 										{
 											"key": "qn_id",
 											"value": "10000",
-											"type": "text"
+											"type": "text",
+											"disabled": true
 										}
 									]
 								},
 								"url": {
-									"raw": "{{base_url}}/student/submission",
+									"raw": "{{base_url}}/student/submission?qn_id=100000",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"student",
 										"submission"
+									],
+									"query": [
+										{
+											"key": "qn_id",
+											"value": "100000"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[05] Student List Past Submissions of Not accessible Question",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON\r",
+											"var responseBody = pm.response.json();\r",
+											"\r",
+											"// Check if the status code is 404 NOT FOUND\r",
+											"pm.test(\"Status code is 403 Forbidden\", function () {\r",
+											"    pm.response.to.have.status(403);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{student_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{base_url}}/student/submission?qn_id=5",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"student",
+										"submission"
+									],
+									"query": [
+										{
+											"key": "qn_id",
+											"value": "5"
+										}
 									]
 								}
 							},
@@ -2600,22 +2724,30 @@
 								"header": [],
 								"body": {
 									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "qn_id",
-											"value": "3",
-											"type": "text"
-										}
-									]
+									"formdata": []
 								},
 								"url": {
-									"raw": "{{base_url}}/tutor/submission",
+									"raw": "{{base_url}}/tutor/submission?qn_id=1&offset=0&limit=10",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"tutor",
 										"submission"
+									],
+									"query": [
+										{
+											"key": "qn_id",
+											"value": "1"
+										},
+										{
+											"key": "offset",
+											"value": "0"
+										},
+										{
+											"key": "limit",
+											"value": "10"
+										}
 									]
 								}
 							},
@@ -2632,8 +2764,8 @@
 											"var responseBody = pm.response.json();\r",
 											"\r",
 											"// Check if the status code is 404 NOT FOUND\r",
-											"pm.test(\"Status code is 404 NOT FOUND\", function () {\r",
-											"    pm.response.to.have.status(404);\r",
+											"pm.test(\"Status code is 403 Forbidden\", function () {\r",
+											"    pm.response.to.have.status(403);\r",
 											"});"
 										],
 										"type": "text/javascript",
@@ -2659,22 +2791,30 @@
 								"header": [],
 								"body": {
 									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "qn_id",
-											"value": "8",
-											"type": "text"
-										}
-									]
+									"formdata": []
 								},
 								"url": {
-									"raw": "{{base_url}}/tutor/submission",
+									"raw": "{{base_url}}/tutor/submission?qn_id=5&offset=0&limit=10",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"tutor",
 										"submission"
+									],
+									"query": [
+										{
+											"key": "qn_id",
+											"value": "5"
+										},
+										{
+											"key": "offset",
+											"value": "0"
+										},
+										{
+											"key": "limit",
+											"value": "10"
+										}
 									]
 								}
 							},
@@ -2691,8 +2831,8 @@
 											"var responseBody = pm.response.json();\r",
 											"\r",
 											"// Check if the status code is 404 NOT FOUND\r",
-											"pm.test(\"Status code is 404 NOT FOUND\", function () {\r",
-											"    pm.response.to.have.status(404);\r",
+											"pm.test(\"Status code is 403 Forbidden\", function () {\r",
+											"    pm.response.to.have.status(403);\r",
 											"});"
 										],
 										"type": "text/javascript",
@@ -2718,22 +2858,22 @@
 								"header": [],
 								"body": {
 									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "qn_id",
-											"value": "1000",
-											"type": "text"
-										}
-									]
+									"formdata": []
 								},
 								"url": {
-									"raw": "{{base_url}}/tutor/submission",
+									"raw": "{{base_url}}/tutor/submission?qn_id=10000",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"tutor",
 										"submission"
+									],
+									"query": [
+										{
+											"key": "qn_id",
+											"value": "10000"
+										}
 									]
 								}
 							},
@@ -2901,8 +3041,8 @@
 											"var responseBody = pm.response.json();\r",
 											"\r",
 											"// Check if the status code is 404 NOT FOUND\r",
-											"pm.test(\"Status code is 404 NOT FOUND\", function () {\r",
-											"    pm.response.to.have.status(404);\r",
+											"pm.test(\"Status code is 403 Forbidden\", function () {\r",
+											"    pm.response.to.have.status(403);\r",
 											"});"
 										],
 										"type": "text/javascript",
