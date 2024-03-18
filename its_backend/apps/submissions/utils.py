@@ -3,8 +3,9 @@ from ast import literal_eval
 
 from rest_framework.exceptions import APIException
 
+from ..accounts.models import Teaches
 from ..questions.models import Question, TestCase
-from ..submissions.its_utils import ITSFeedbackException, ITSInterpreterException, ITSParserException
+from ..submissions.its_utils import ITSFeedbackException, ITSParserException
 from .its_utils import (
     its_request_feedback_fix,
     its_request_feedback_hint,
@@ -12,7 +13,7 @@ from .its_utils import (
     its_request_parser,
 )
 from .models import Submissiondata
-from ..accounts.models import Teaches, CustomUser
+
 
 class QuestionNotFoundError(Exception):
     pass
@@ -140,25 +141,24 @@ def get_feedback_for_student(
 def generate_report():
     pass
 
-def check_if_valid_question(request, question):
-    # check if student should make the sumission
-    tutor = Teaches.objects.get(id=request.user.pk)
-    tutor_id = tutor.tutor_id
+def check_is_question_accessible(request, question):
+    # check if student has access to the question
+    tutors = Teaches.objects.filter(student_id=request.user.pk).values_list('tutor_id', flat=True)
     question_pub_by = question.pub_by.pk
-    return question_pub_by == tutor_id
+    result = question_pub_by in tutors
+    return result
 
 def process_submission_request(request):
     language = request.data.get("language")
     program = request.data.get("program")
     qn_id = request.data.get("qn_id")
-
     try:
         question = Question.objects.get(pk=qn_id)
     except Question.DoesNotExist:
         raise QuestionNotFoundError(f"Question with qn_id {qn_id} not found") from None
 
     # check if student can submit to question
-    if not check_if_valid_question(request, question):
+    if not check_is_question_accessible(request, question):
         raise QuestionNotAvailableToStudentError(f"Question with qn_id {qn_id} is not available to the student") from None
 
     mutable_data = request.data.copy()
