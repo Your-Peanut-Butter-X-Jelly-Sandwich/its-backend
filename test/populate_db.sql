@@ -24,7 +24,7 @@ INSERT INTO accounts_customuser (email, password, username, organisation, is_act
 ('tut14@tutor.com', 'pbkdf2_sha256$720000$cp2TzSkZWwFe6Ztj8zU0cu$RnmYUQ1IX7Nr3gZtyvW42sGJNHBHOWttpyUhsZKCE64=', '', '', 1, 0, 0, CURRENT_DATE, 1, 0, 0),  -- id = 14
 ('tut15@tutor.com', 'pbkdf2_sha256$720000$cp2TzSkZWwFe6Ztj8zU0cu$RnmYUQ1IX7Nr3gZtyvW42sGJNHBHOWttpyUhsZKCE64=', '', '', 1, 0, 0, CURRENT_DATE, 1, 0, 0);  -- id = 15
 
--- Populate 5 questions
+-- Populate 6 questions
 INSERT INTO questions_question ("question_title", "question_statement", "ref_program", "language", "pub_date", "pub_by_id", "due_date") VALUES
 ('Two Sum', 'Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.
 
@@ -112,7 +112,12 @@ Given an integer, convert it to a roman numeral.', 'def intToRoman(num):
     b = 0
     for i in range(0, a):
         b = b + 1
-    return b', 'python', '2024-03-16 12:46:26.344129', '12', '2024-04-14');
+    return b', 'python', '2024-03-16 12:46:26.344129', '12', '2024-04-14'),
+('Is Odd', 'The standard test question', 'def is_odd(x):
+	if x % 2 == 0:
+		return False
+	else:
+		return True', 'python', '2024-03-16 12:46:26.344129', '12', '2024-04-14');
 
 -- Pouplate 10 test cases
 
