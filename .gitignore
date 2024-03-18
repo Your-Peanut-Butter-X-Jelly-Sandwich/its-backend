@@ -2,7 +2,9 @@
 .ruff_cache
 venv
 **/__pycache__
-db.sqlite3
+
+# Upload DB for demo
+# db.sqlite3
 
 # js dependencies
 **/node_modules
