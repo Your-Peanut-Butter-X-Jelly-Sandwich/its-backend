@@ -1,11 +1,12 @@
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import F
 from django.shortcuts import get_object_or_404
 from rest_framework import mixins, serializers, status, viewsets
 from rest_framework.response import Response
 
 from ...apps.accounts.models import Teaches
 from ..permission_classes import IsStudent, IsTutor
-from ..questions.models import Question, TestCase
+from ..questions.models import Question
 from ..submissions.models import Submissiondata
 from .serializers import (
     StudentQuestionDetailSerializer,
@@ -101,8 +102,9 @@ class TutorQuestionViewSet(
         all_submissions = Submissiondata.objects.filter(
             qn_id=qn_id, submitted_by__in=students
         )
-        total_test_cases = TestCase.objects.filter(question__pk=qn_id).count()
-        passing_submissions = all_submissions.filter(score=total_test_cases)
+        # total_test_cases = TestCase.objects.filter(question__pk=qn_id).count()
+
+        passing_submissions = all_submissions.filter(score=F("total_score"))
         distinct_passing_submissions = (
             passing_submissions.values("submitted_by").distinct().count()
         )
