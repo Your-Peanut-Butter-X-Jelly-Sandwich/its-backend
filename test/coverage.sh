@@ -94,6 +94,7 @@ NEWMAN_PID=$!
 coverage run --branch ${ROOT_DIR}/manage.py runserver --noreload
 
 # Generate report only for models.py and views.py
-coverage html --include="${ROOT_DIR}/its_backend/apps/**/models.py","${ROOT_DIR}/its_backend/apps/**/views.py"
-coverage json --include="${ROOT_DIR}/its_backend/apps/**/models.py","${ROOT_DIR}/its_backend/apps/**/views.py"
-coverage report --include="${ROOT_DIR}/its_backend/apps/**/models.py","${ROOT_DIR}/its_backend/apps/**/views.py"
+FILES="${ROOT_DIR}/its_backend/apps/**/models.py","${ROOT_DIR}/its_backend/apps/**/views.py","${ROOT_DIR}/its_backend/apps/submissions/its_utils.py","${ROOT_DIR}/its_backend/apps/submissions/utils.py"
+coverage html --include=$FILES
+coverage json --include=$FILES
+coverage report --include=$FILES
