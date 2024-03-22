@@ -204,6 +204,44 @@ There is an [SQL script](./test/populate_db.sql) that currently populates `db.sq
 
 If you need to populate more test data to the DB (e.g., sample questions and submissions), write more `INSERT INTO` SQL statements inside the [script](./test/populate_db.sql).
 
+## Test Code Coverage
+
+Our project's code coverage is tested using the [Coverage.py](https://coverage.readthedocs.io/en/7.4.4/) library along with the Postman tests explained above. Similar to testing APIs, testing code coverage also requires your machine to have the `newman` package installed.
+
+To test and generate reports on the code coverage of the Postman tests, you can run the following:
+
+```shell
+$ cd test
+$ chmod +x coverage.sh
+$ ./coverage.sh
+```
+
+This will generate 3 artifacts:
+
+| Name | Description |
+|------|-------------|
+| `.coverage` | File containing the data of the last run coverage result |
+| `htmlcov/` | Folder containing the coverage report in HTML format <br><br> Open `index.html` under this directory in your browser to see more in-depth code coverage analysis |
+| `coverage.json` | Coverage report in JSON format |
+
+These can be cleaned up by running:
+
+```shell
+$ chmod +x clean.sh  # ./test/clean.sh if not in test directory
+$ ./clean.sh         # ./test/clean.sh if not in test directory
+```
+
+We generate coverage reports for only the following files
+
+- `its_backend/apps/**/models.py`
+- `its_backend/apps/**/views.py`
+- `its_backend/apps/submissions/its_utils.py`
+- `its_backend/apps/submissions/utils.py`
+
+because these are the only files related to the actual logic of the backend server.
+
+We check for both statement and branch coverage. To only test for statement coverage, you can remove the `--branch` flag from the `coverage run` command inside the [coverage script](./test/coverage.sh). `Coverage.py` checks for statement branch by default, and there is no way to force it to test for only branch coverage as of now.
+
 ## Ruff Linter
 
 Our project uses [`ruff`](https://docs.astral.sh/ruff/) to lint our code and maintain a clean codebase.
