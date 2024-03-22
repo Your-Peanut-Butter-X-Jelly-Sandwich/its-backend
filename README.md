@@ -118,14 +118,20 @@ $ cd test
 $ npm install
 ```
 
-After the package is downloaded, run your Postman collection by running:
+After the package is downloaded, run your Postman collection by running either the schell script:
 
 ```shell
 $ chmod +x ./test/test.sh  # if necessary
 $ ./test/test.sh           # or ./test.sh if you cd-ed into test
 ```
 
-A sample [test Postman collection](./test/ITS-API-Test.postman_collection.json) is already included under the `test` folder. If you want to test your own collection, add your collection under the `test` folder and update the `POSTMAN_COLLECTION` value inside the [test script](./test/test.sh).
+Or the Python script:
+
+```shell
+$ python test/test.py      # or test.py if you cd-ed into test
+```
+
+A sample [test Postman collection](./test/ITS-API-Test.postman_collection.json) is already included under the `test` folder. If you want to test your own collection, add your collection under the `test` folder and update the `POSTMAN_COLLECTION` value inside the [shell test script](./test/test.sh) or [python test script](./test/test.py).
 
 ### Add test cases
 
@@ -190,6 +196,9 @@ There is an [SQL script](./test/populate_db.sql) that currently populates `db.sq
 
 - 10 students
 - 5 tutors
+- 6 questions
+- 13 test cases
+- 7 submissions
 
 > `teaches` relations are added through Postman collection (see `[02] Add teaches relations` in our [collection](./test/ITS-API-Test.postman_collection.json)).
 

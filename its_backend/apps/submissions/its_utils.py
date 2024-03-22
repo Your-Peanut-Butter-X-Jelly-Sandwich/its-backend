@@ -15,10 +15,12 @@ class ITSFeedbackException(APIException):
 class ITSInterpreterException(APIException):
     default_detail = "Program too complex for ITS to process"
 
+
 class ITSParserException(APIException):
     def __init__(self, program_name, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.default_detail = "ITS is unable to interpret " + program_name
+
 
 # generate parser result based on provided program
 def its_request_parser(language, program, program_name):
@@ -35,7 +37,6 @@ def its_request_parser(language, program, program_name):
     else:  # noqa: RET505
         # API call failed
         raise ITSParserException(program_name)
-
 
 
 # generate interpret result based on provided program, inputs and entry functions

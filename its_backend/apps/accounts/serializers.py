@@ -22,7 +22,7 @@ class SignUpSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         return CustomUser.objects.create_user(**validated_data)
-    
+
     def update(self, instance, validated_data):
         instance.is_student = validated_data.get("is_student", instance.is_student)
         instance.is_tutor = validated_data.get("is_tutor", instance.is_tutor)
@@ -61,7 +61,6 @@ class SignInSerializer(serializers.ModelSerializer):
 
 
 class SocialCallbackSerializer(serializers.ModelSerializer):
-
     email = serializers.EmailField(required=True)
 
     class Meta:
@@ -77,7 +76,6 @@ class SocialCallbackSerializer(serializers.ModelSerializer):
 
 
 class RetrieveUserSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = CustomUser
         fields = [

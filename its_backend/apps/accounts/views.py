@@ -34,14 +34,12 @@ class SignUpView(generics.CreateAPIView):
         try:
             serializer.is_valid(raise_exception=True)
         except serializers.ValidationError as e:
-            print("+++++++++++++++++")
             return Response(
                 data={"message": e.detail}, status=status.HTTP_400_BAD_REQUEST
             )
         try:
             serializer.save()
         except IntegrityError as e:
-            print("======================")
             return Response(
                 data={"message": e.args}, status=status.HTTP_400_BAD_REQUEST
             )

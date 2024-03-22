@@ -6,15 +6,17 @@ import its_backend.apps.questions.models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('questions', '0003_rename_question_id_testcase_question'),
+        ("questions", "0003_rename_question_id_testcase_question"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='question',
-            name='due_date',
-            field=models.DateField(blank=True, default=its_backend.apps.questions.models.get_default_due_date),
+            model_name="question",
+            name="due_date",
+            field=models.DateField(
+                blank=True,
+                default=its_backend.apps.questions.models.get_default_due_date,
+            ),
         ),
     ]
