@@ -6,16 +6,13 @@ trap cleanup EXIT
 TEST_DIR="$( cd "$( dirname "$0" )" && pwd )"
 ROOT_DIR="$(dirname "$TEST_DIR")"
 SERVER_PID=""
+POSTMAN_COLLECTION="ITS-API-Test.postman_collection.json"
 
 if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
     ROOT_DIR="${ROOT_DIR///c/C:}"
     TEST_DIR="${TEST_DIR///c/C:}"
 fi
 
-echo "${ROOT_DIR}"
-echo "${TEST_DIR}"
-
-POSTMAN_COLLECTION="ITS-API-Test.postman_collection.json"
 cleanup() {
     # Restore original database if backed up
     if [ -f "${TEST_DIR}/temp.sqlite3" ]; then
@@ -49,8 +46,7 @@ if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
 fi
 
 # Populate database with test data
-sqlite3 "${ROOT_DIR}/db.sqlite3" ".read ${ROOT_DIR}/test/populate_db.sql"
-# sqlite3 "${ROOT_DIR}/db.sqlite3" ".read ${TEST_DIR}/populate_db.sql"
+sqlite3 "${ROOT_DIR}/db.sqlite3" ".read ${TEST_DIR}/populate_db.sql"
 
 # Run development server in background and save PID
 python "${ROOT_DIR}/manage.py" runserver &
