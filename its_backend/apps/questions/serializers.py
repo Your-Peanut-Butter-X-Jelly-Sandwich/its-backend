@@ -1,6 +1,8 @@
+from django.db.models import F
 from rest_framework import serializers
 
 from ..accounts.serializers import RetrieveUserSerializer
+from ..submissions.models import Submissiondata
 from .models import Question, TestCase
 
 
@@ -13,6 +15,23 @@ class StudentQuestionListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
         fields = ["pk", "question_title", "pub_date", "due_date", "pub_by"]
+
+    def to_representation(self, data):
+        obj = super().to_representation(data)
+        submissions = Submissiondata.objects.filter(
+            qn_id=data.pk, submitted_by=self.context["user"]
+        )
+        attempts = submissions.count()
+        passes = submissions.filter(score=F("total_score")).count()
+        if attempts > 0:
+            obj["attempted"] = True
+        else:
+            obj["attempted"] = False
+        if passes > 0:
+            obj["passed"] = True
+        else:
+            obj["passed"] = False
+        return obj
 
 
 class StudentQuestionDetailSerializer(serializers.ModelSerializer):

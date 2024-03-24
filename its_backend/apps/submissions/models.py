@@ -26,7 +26,7 @@ class Submissiondata(models.Model):
 
     def __str__(self) -> str:
         qn_title = Question.objects.get(pk=self.qn_id).question_title
-        return f"Question {self.qn_id}: {qn_title} | Submission ID: {str(self.pk)}"
+        return f"Question {self.qn_id}: {qn_title} | Submission ID: {str(self.pk)} | By: {str(self.submitted_by.pk)}"
 
 
 # class ITSFeedback(models.Model):

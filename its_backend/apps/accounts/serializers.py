@@ -86,3 +86,26 @@ class RetrieveUserSerializer(serializers.ModelSerializer):
             "is_tutor",
             "is_manager",
         ]
+
+
+class UpdateUserInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = [
+            "email",
+            "organisation",
+            "username",
+            "is_student",
+            "is_tutor",
+            "is_manager",
+        ]
+
+    def update(self, instance, validated_data):
+        fields = ["username", "organisation"]
+        for field in fields:
+            try:
+                setattr(instance, field, validated_data[field])
+            except KeyError:
+                pass
+        instance.save()
+        return instance

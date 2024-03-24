@@ -12,6 +12,7 @@ from .views import (
     RetrieveUserView,
     SignUpView,
     SocialCallbackView,
+    UpdateUserInfoView,
 )
 
 urlpatterns = [
@@ -34,4 +35,5 @@ urlpatterns = [
         AddTutorStudentRelationshipView.as_view(),
         name="add_tutor_student_relationship",
     ),
+    path("auth/update-info", UpdateUserInfoView.as_view(), name="update_info"),
 ]

@@ -8,9 +8,14 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from ..permission_classes import IsManager, IsTutor
+from ..permission_classes import IsManager, IsStudent, IsTutor
 from .models import CustomUser, Teaches
-from .serializers import RetrieveUserSerializer, SignInSerializer, SignUpSerializer
+from .serializers import (
+    RetrieveUserSerializer,
+    SignInSerializer,
+    SignUpSerializer,
+    UpdateUserInfoSerializer,
+)
 
 # from .serializers import (SocialCallbackSerializer)
 
@@ -143,9 +148,7 @@ class RetrieveUserView(generics.GenericAPIView):
         serializer = self.serializer_class(instance=user)
         try:
             return Response(
-                data={
-                    "user": serializer.data,
-                },
+                data=serializer.data,
                 status=status.HTTP_200_OK,
             )
         except serializers.ValidationError as e:
@@ -560,3 +563,19 @@ class AddTutorStudentRelationshipView(views.APIView):
             response |= {"error": errors}
 
         return Response(response, status=status.HTTP_200_OK)
+
+
+class UpdateUserInfoView(generics.UpdateAPIView):
+    permission_classes = [IsStudent | IsTutor]
+    serializer = UpdateUserInfoSerializer
+
+    def patch(self, request, partial=True):
+        serializer = self.serializer(request.user, request.data, partial=partial)
+        try:
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        except serializers.ValidationError as e:
+            return Response(
+                data={"message": e.detail}, status=status.HTTP_400_BAD_REQUEST
+            )

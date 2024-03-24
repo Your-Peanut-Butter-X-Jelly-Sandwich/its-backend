@@ -1,10 +1,14 @@
+from datetime import date, timedelta
+
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import F
 from django.shortcuts import get_object_or_404
-from rest_framework import mixins, serializers, status, viewsets
+from rest_framework import generics, mixins, serializers, status, viewsets
 from rest_framework.response import Response
 
 from ...apps.accounts.models import Teaches
+from ..accounts.models import CustomUser
+from ..accounts.serializers import RetrieveUserSerializer
 from ..permission_classes import IsStudent, IsTutor
 from ..questions.models import Question
 from ..submissions.models import Submissiondata
@@ -173,7 +177,9 @@ class StudentQuestionViewSet(
         # student = request.user
         # tutors = Teaches.objects.filter(student=student)
         questions = queryset.order_by("-pub_date")[offset : offset + limit]
-        serializer = self.get_serializer_class()(questions, many=True)
+        serializer = self.get_serializer_class()(
+            questions, many=True, context={"user": request.user}
+        )
         return Response(data={"questions": serializer.data}, status=status.HTTP_200_OK)
 
     def retrieve(self, request, pk, *args, **kwargs):
@@ -181,3 +187,71 @@ class StudentQuestionViewSet(
         question = get_object_or_404(queryset, pk=pk)
         serializer = self.get_serializer_class()(question)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
+class StudentDashboardStatisticsView(generics.RetrieveAPIView):
+    permission_classes = [
+        IsStudent,
+    ]
+
+    def get_personal_info(self, student):
+        serializer = RetrieveUserSerializer(student)
+        return serializer.data
+
+    def get_tutors(self, student):
+        tutors = Teaches.objects.filter(student=student).values("tutor")
+        return tutors
+
+    def get_tutor_list(self, tutors):
+        tutor_ids = tutors.values("pk")
+        tutors = CustomUser.objects.filter(pk__in=tutor_ids)
+        serializer = RetrieveUserSerializer(tutors, many=True)
+        return serializer.data
+
+    def get_all_questions_assigned(self, tutors):
+        questions = Question.objects.filter(pub_by__in=tutors)
+        count = questions.count()
+        return questions, count
+
+    def get_attempted_questions_count(self, student):
+        submissions = (
+            Submissiondata.objects.filter(submitted_by=student)
+            .values("qn_id")
+            .distinct()
+        )
+        count = submissions.count()
+        return count
+
+    def get_due_questions(self, questions, student):
+        questions_due_in_a_week = questions.filter(
+            due_date__lte=date.today() + timedelta(weeks=1)
+        ).order_by("due_date")
+        serializer_week = StudentQuestionListSerializer(
+            questions_due_in_a_week, many=True, context={"user": student}
+        )
+        questions_due_in_a_month = questions.filter(
+            due_date__lte=date.today() + timedelta(days=30)
+        ).order_by("due_date")
+        serializer_month = StudentQuestionListSerializer(
+            questions_due_in_a_month, many=True, context={"user": student}
+        )
+
+        return serializer_week.data, serializer_month.data
+
+    def get(self, request):
+        student = request.user
+        personal_info = self.get_personal_info(student)
+        tutors = self.get_tutors(student)
+        tutor_list = self.get_tutor_list(tutors)
+        questions, total_questions_count = self.get_all_questions_assigned(tutors)
+        attempted_questions_count = self.get_attempted_questions_count(student)
+        due_in_week, due_in_month = self.get_due_questions(questions, student)
+        data = {
+            "personal_info": personal_info,
+            "tutors": tutor_list,
+            "total_question_assigned": total_questions_count,
+            "attempted_questions": attempted_questions_count,
+            "questions_due_in_a_week": due_in_week,
+            "questions_due_in_a_month": due_in_month,
+        }
+        return Response(data=data, status=status.HTTP_200_OK)
