@@ -1,6 +1,5 @@
 from allauth.socialaccount.views import SignupView as AllauthSignupView
 from django.contrib.auth import logout
-from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
 from django.http import HttpRequest, HttpResponsePermanentRedirect
 from rest_framework import generics, serializers, status, views
@@ -204,47 +203,6 @@ class RetrieveStudentsView(views.APIView):
     ]
     serializer_class = RetrieveUserSerializer
 
-    def get_student_by_id(self, student_id: str):
-        """
-        Example response (one serialized CustomUser in JSON)
-        {
-            "user": serialized_CustomUser1
-        }
-        """
-        if not student_id.isdigit():
-            return Response(
-                {"error": "Student ID must be an integer"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        student_id: int = int(student_id)
-
-        # TODO: Bulk GET students does not throw error if student is not found or user is not a student
-        #       (should this do the same?)
-        try:
-            student = CustomUser.objects.get(id=student_id)
-            if not student.is_student:
-                return Response(
-                    data={"error": f"User with id {student_id} is not a student"},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
-        except ObjectDoesNotExist:
-            return Response(
-                data={"error": f"Student with id {student_id} does not exist"},
-                status=status.HTTP_404_NOT_FOUND,
-            )
-
-        try:
-            serialized_data = self.serializer_class(student).data
-        except serializers.ValidationError as e:
-            return Response(
-                data={"error": e.detail}, status=status.HTTP_400_BAD_REQUEST
-            )
-        except AttributeError as e:
-            return Response(data={"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
-        return Response({"user": serialized_data}, status=status.HTTP_200_OK)
-
     def get_students_by_ids(self, student_ids: list[str]):
         """
         Example response (list of serialized CustomUser in JSON)
@@ -325,7 +283,7 @@ class RetrieveStudentsView(views.APIView):
     def get(self, request: HttpRequest):
         """
         Example url query string
-        1. /students?student_id=1
+        1. /students?student_ids=1
         2. /students?student_ids=1,2,3
         3. /students?student_ids=1&student_ids=2&student_ids=3
         4. /students?tutor_id=10
@@ -343,13 +301,10 @@ class RetrieveStudentsView(views.APIView):
         order mentioned above
         """
         url_query = request.GET
-        student_id = url_query.get("student_id")
         student_ids = url_query.getlist("student_ids")
         tutor_id = url_query.get("tutor_id")
         invert = url_query.get("invert", default="false")
 
-        if student_id:
-            return self.get_student_by_id(student_id)
         if student_ids:
             return self.get_students_by_ids(student_ids)
         if tutor_id:
@@ -366,47 +321,6 @@ class RetrieveTutorsView(views.APIView):
         IsAuthenticated,
     ]
     serializer_class = RetrieveUserSerializer
-
-    def get_tutor_by_id(self, tutor_id: str):
-        """
-        Example response (one serialized CustomUser in JSON)
-        {
-            "user": serialized_CustomUser1
-        }
-        """
-        if not tutor_id.isdigit():
-            return Response(
-                {"error": "Tutor ID must be an integer"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        tutor_id: int = int(tutor_id)
-
-        # TODO: Bulk GET tutors does not throw error if tutor is not found or user is not a tutor
-        #       (should this do the same?)
-        try:
-            tutor = CustomUser.objects.get(id=tutor_id)
-            if not tutor.is_tutor:
-                return Response(
-                    data={"error": f"User with id {tutor_id} is not a tutor"},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
-        except ObjectDoesNotExist:
-            return Response(
-                data={"error": f"Tutor with id {tutor_id} does not exist"},
-                status=status.HTTP_404_NOT_FOUND,
-            )
-
-        try:
-            serialized_data = self.serializer_class(tutor).data
-        except serializers.ValidationError as e:
-            return Response(
-                data={"error": e.detail}, status=status.HTTP_400_BAD_REQUEST
-            )
-        except AttributeError as e:
-            return Response(data={"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
-        return Response({"user": serialized_data}, status=status.HTTP_200_OK)
 
     def get_tutors_by_ids(self, tutor_ids: list[str]):
         """
@@ -482,7 +396,7 @@ class RetrieveTutorsView(views.APIView):
     def get(self, request: HttpRequest):
         """
         Example url query string
-        1. /tutors?tutor_id=10
+        1. /tutors?tutor_ids=10
         2. /tutors?tutor_ids=10,20,30
         3. /tutors?tutor_ids=10&tutor_ids=20&tutor_ids=30
         4. /tutors?student_id=1
@@ -497,12 +411,9 @@ class RetrieveTutorsView(views.APIView):
         order mentioned above
         """
         url_query = request.GET
-        tutor_id = url_query.get("tutor_id")
         tutor_ids = url_query.getlist("tutor_ids")
         student_id = url_query.get("student_id")
 
-        if tutor_id:
-            return self.get_tutor_by_id(tutor_id)
         if tutor_ids:
             return self.get_tutors_by_ids(tutor_ids)
         if student_id:
