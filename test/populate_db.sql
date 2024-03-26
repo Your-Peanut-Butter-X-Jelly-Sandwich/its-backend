@@ -24,6 +24,10 @@ INSERT INTO accounts_customuser (email, password, username, organisation, is_act
 ('tut14@tutor.com', 'pbkdf2_sha256$720000$cp2TzSkZWwFe6Ztj8zU0cu$RnmYUQ1IX7Nr3gZtyvW42sGJNHBHOWttpyUhsZKCE64=', '', '', 1, 0, 0, CURRENT_DATE, 1, 0, 0),  -- id = 14
 ('tut15@tutor.com', 'pbkdf2_sha256$720000$cp2TzSkZWwFe6Ztj8zU0cu$RnmYUQ1IX7Nr3gZtyvW42sGJNHBHOWttpyUhsZKCE64=', '', '', 1, 0, 0, CURRENT_DATE, 1, 0, 0);  -- id = 15
 
+-- Populate 1 manager
+INSERT INTO accounts_customuser (email, password, username, organisation, is_active, is_superuser, is_staff, date_joined, is_tutor, is_student, is_manager) VALUES
+('man16@manager.com', 'pbkdf2_sha256$720000$cp2TzSkZWwFe6Ztj8zU0cu$RnmYUQ1IX7Nr3gZtyvW42sGJNHBHOWttpyUhsZKCE64=', '', '', 1, 0, 0, CURRENT_DATE, 0, 0, 1);  -- id = 16
+
 -- Populate 6 questions
 INSERT INTO questions_question ("question_title", "question_statement", "ref_program", "language", "pub_date", "pub_by_id", "due_date") VALUES
 ('Two Sum', 'Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.

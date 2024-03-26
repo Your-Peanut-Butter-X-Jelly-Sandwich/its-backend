@@ -1,6 +1,5 @@
 from allauth.socialaccount.views import SignupView as AllauthSignupView
 from django.contrib.auth import logout
-from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
 from django.http import HttpRequest, HttpResponsePermanentRedirect
 from rest_framework import generics, serializers, status, views
@@ -79,15 +78,15 @@ class LogoutView(views.APIView):
     ]
 
     def post(self, request):
-        refresh_token = request.data["tokens"]["refresh_token"]
+        refresh_token = request.data["tokens"]["refresh"]
         if not refresh_token:
             return Response(
                 {"error": "Refresh token is required"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
         try:
-            refersh_token = RefreshToken(refresh_token)
-            refersh_token.blacklist()
+            refresh_token = RefreshToken(refresh_token)
+            refresh_token.blacklist()
             logout(request)
             return Response(
                 {"message": "User successfully logged out"}, status=status.HTTP_200_OK
@@ -199,51 +198,13 @@ class ChangePasswordView(views.APIView):
 
 
 class RetrieveStudentsView(views.APIView):
-    permission_classes = [
-        IsAuthenticated,
-    ]
+    permission_classes = [IsTutor | IsManager]
     serializer_class = RetrieveUserSerializer
 
-    def get_student_by_id(self, student_id: str):
-        """
-        Example response (one serialized CustomUser in JSON)
-        {
-            "user": serialized_CustomUser1
-        }
-        """
-        if not student_id.isdigit():
-            return Response(
-                {"error": "Student ID must be an integer"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        student_id: int = int(student_id)
-
-        # TODO: Bulk GET students does not throw error if student is not found or user is not a student
-        #       (should this do the same?)
-        try:
-            student = CustomUser.objects.get(id=student_id)
-            if not student.is_student:
-                return Response(
-                    data={"error": f"User with id {student_id} is not a student"},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
-        except ObjectDoesNotExist:
-            return Response(
-                data={"error": f"Student with id {student_id} does not exist"},
-                status=status.HTTP_404_NOT_FOUND,
-            )
-
-        try:
-            serialized_data = self.serializer_class(student).data
-        except serializers.ValidationError as e:
-            return Response(
-                data={"error": e.detail}, status=status.HTTP_400_BAD_REQUEST
-            )
-        except AttributeError as e:
-            return Response(data={"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
-        return Response({"user": serialized_data}, status=status.HTTP_200_OK)
+    def get_all_students(self):
+        students = CustomUser.objects.filter(is_student=True)
+        serialized_students = [self.serializer_class(s).data for s in students]
+        return Response({"user": serialized_students}, status=status.HTTP_200_OK)
 
     def get_students_by_ids(self, student_ids: list[str]):
         """
@@ -325,31 +286,34 @@ class RetrieveStudentsView(views.APIView):
     def get(self, request: HttpRequest):
         """
         Example url query string
-        1. /students?student_id=1
-        2. /students?student_ids=1,2,3
-        3. /students?student_ids=1&student_ids=2&student_ids=3
-        4. /students?tutor_id=10
-        5. /students?tutor_id=10&invert=true
+        1. /students
+        2. /students?student_ids=1
+        3. /students?student_ids=1,2,3
+        4. /students?student_ids=1&student_ids=2&student_ids=3
+        5. /students?tutor_id=10
+        6. /students?tutor_id=10&invert=true
 
         Example response for each query (assuming all are valid queries)
-        1. CustomUser with id=1 and is_student=True
-        2. Three CustomUsers with id in (1, 2, 3) and is_student=True
-        3. Same as the above
-        4. n CustomUsers that are taught by tutor with id=10
-        5. m CustomUsers that are NOT taught by tutor with id=10
+        1. All CustomUsers with is_student=True
+        2. CustomUser with id=1 and is_student=True
+        3. Three CustomUsers with id in (1, 2, 3) and is_student=True
+        4. Same as the above
+        5. n CustomUsers that are taught by tutor with id=10
+        6. m CustomUsers that are NOT taught by tutor with id=10
             -> so that tutors can potentially add them in their class (?)
 
         If multiple GET params are specified, it will be evaluated in the
         order mentioned above
         """
         url_query = request.GET
-        student_id = url_query.get("student_id")
+
+        if not url_query:
+            return self.get_all_students()
+
         student_ids = url_query.getlist("student_ids")
         tutor_id = url_query.get("tutor_id")
         invert = url_query.get("invert", default="false")
 
-        if student_id:
-            return self.get_student_by_id(student_id)
         if student_ids:
             return self.get_students_by_ids(student_ids)
         if tutor_id:
@@ -362,51 +326,13 @@ class RetrieveStudentsView(views.APIView):
 
 
 class RetrieveTutorsView(views.APIView):
-    permission_classes = [
-        IsAuthenticated,
-    ]
+    permission_classes = [IsTutor | IsManager]
     serializer_class = RetrieveUserSerializer
 
-    def get_tutor_by_id(self, tutor_id: str):
-        """
-        Example response (one serialized CustomUser in JSON)
-        {
-            "user": serialized_CustomUser1
-        }
-        """
-        if not tutor_id.isdigit():
-            return Response(
-                {"error": "Tutor ID must be an integer"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        tutor_id: int = int(tutor_id)
-
-        # TODO: Bulk GET tutors does not throw error if tutor is not found or user is not a tutor
-        #       (should this do the same?)
-        try:
-            tutor = CustomUser.objects.get(id=tutor_id)
-            if not tutor.is_tutor:
-                return Response(
-                    data={"error": f"User with id {tutor_id} is not a tutor"},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
-        except ObjectDoesNotExist:
-            return Response(
-                data={"error": f"Tutor with id {tutor_id} does not exist"},
-                status=status.HTTP_404_NOT_FOUND,
-            )
-
-        try:
-            serialized_data = self.serializer_class(tutor).data
-        except serializers.ValidationError as e:
-            return Response(
-                data={"error": e.detail}, status=status.HTTP_400_BAD_REQUEST
-            )
-        except AttributeError as e:
-            return Response(data={"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
-        return Response({"user": serialized_data}, status=status.HTTP_200_OK)
+    def get_all_tutors(self):
+        tutors = CustomUser.objects.filter(is_tutor=True)
+        serialized_tutors = [self.serializer_class(t).data for t in tutors]
+        return Response({"user": serialized_tutors}, status=status.HTTP_200_OK)
 
     def get_tutors_by_ids(self, tutor_ids: list[str]):
         """
@@ -482,27 +408,30 @@ class RetrieveTutorsView(views.APIView):
     def get(self, request: HttpRequest):
         """
         Example url query string
-        1. /tutors?tutor_id=10
-        2. /tutors?tutor_ids=10,20,30
-        3. /tutors?tutor_ids=10&tutor_ids=20&tutor_ids=30
-        4. /tutors?student_id=1
+        1. /tutors
+        2. /tutors?tutor_ids=10
+        3. /tutors?tutor_ids=10,20,30
+        4. /tutors?tutor_ids=10&tutor_ids=20&tutor_ids=30
+        5. /tutors?student_id=1
 
         Example response for each query (assuming all are valid queries)
-        1. CustomUser with id=10 and is_tutor=True
-        2. Three CustomUsers with id in (10, 20, 30) and is_tutor=True
-        3. Same as the above
-        4. n CustomUsers that teach student with id=1
+        1. All CustomUsers with is_tutor=True
+        2. CustomUser with id=10 and is_tutor=True
+        3. Three CustomUsers with id in (10, 20, 30) and is_tutor=True
+        4. Same as the above
+        5. n CustomUsers that teach student with id=1
 
         If multiple GET params are specified, it will be evaluated in the
         order mentioned above
         """
         url_query = request.GET
-        tutor_id = url_query.get("tutor_id")
+
+        if not url_query:
+            return self.get_all_tutors()
+
         tutor_ids = url_query.getlist("tutor_ids")
         student_id = url_query.get("student_id")
 
-        if tutor_id:
-            return self.get_tutor_by_id(tutor_id)
         if tutor_ids:
             return self.get_tutors_by_ids(tutor_ids)
         if student_id:
@@ -517,37 +446,18 @@ class RetrieveTutorsView(views.APIView):
 class AddTutorStudentRelationshipView(views.APIView):
     permission_classes = [IsManager | IsTutor]
 
-    def post(self, request: HttpRequest):
-        """
-        Example payload
-        {
-            "tutor_id": 10,
-            "student_ids": [1, 2, 3]
-        }
-        """
-        payload = request.data
-        tutor_id = payload.get("tutor_id")
-        student_ids = payload.get("student_ids")
-
-        if not tutor_id or not student_ids:
-            return Response(
-                {"error": "Tutor ID and student ID(s) must be provided"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        if (
-            not isinstance(tutor_id, int)
-            or not isinstance(student_ids, list)
-            or any(not isinstance(s_id, int) for s_id in student_ids)
-        ):
-            return Response(
-                {"error": "Tutor ID and student ID(s) must be integers"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+    def add_teaches_relation(self, tutor_id: int, student_ids: list[int]):
+        # No point in adding if tutor ID is invalid
+        if not isinstance(tutor_id, int):
+            return [], []
 
         messages = []  # students successfully added
         errors = []  # students not successfully added
         for s_id in student_ids:
+            # Skip invalid parameter values
+            if not isinstance(s_id, int):
+                continue
+
             ok, error_msg = Teaches.objects.add_teaching_relationship(tutor_id, s_id)
             if ok:
                 # e.g., "Added [tutor_id=10, s_id=1]"
@@ -555,6 +465,45 @@ class AddTutorStudentRelationshipView(views.APIView):
             else:
                 # e.g., "[tutor_id=10, s_id=1]: UNIQUE constraint failed: R.tutor_id, R.student_id"
                 errors.append(f"[{tutor_id=}, {s_id=}]: {error_msg}")
+        return messages, errors
+
+    def post(self, request: HttpRequest):
+        """
+        Example payload for managers
+        [
+            {"tutor_id": 10, "student_ids": [1, 2, 3]},
+            {"tutor_id": 11, "student_ids": [4, 5, 6]},
+            {"tutor_id": 12, "student_ids": [1, 3, 5]}
+        ]
+
+        Example payload for tutors
+        {
+            "student_ids": [1, 2, 3]
+        }
+        """
+        payload = request.data
+        if request.user.is_tutor:
+            payload["tutor_id"] = request.user.id
+
+        if not isinstance(payload, list):
+            payload = [payload]
+
+        messages = []  # students successfully added
+        errors = []  # students not successfully added
+        for teaches in payload:
+            # Skip invalid teaches relation
+            if (
+                not isinstance(teaches, dict)
+                or "tutor_id" not in teaches
+                or "student_ids" not in teaches
+            ):
+                continue
+            # Add teaches relation and update response messages
+            tutor_id = teaches["tutor_id"]
+            student_ids = teaches["student_ids"]
+            msgs, errs = self.add_teaches_relation(tutor_id, student_ids)
+            messages.extend(msgs)
+            errors.extend(errs)
 
         response = {}
         if messages:
