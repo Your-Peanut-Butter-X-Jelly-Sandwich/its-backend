@@ -7,7 +7,6 @@ from .views import (
     CustomSignupView,
     LoginView,
     LogoutView,
-    RetrieveCustomUsersView,
     RetrieveStudentsView,
     RetrieveTutorsView,
     RetrieveUserView,
@@ -29,7 +28,6 @@ urlpatterns = [
     path("auth/token/refresh", TokenRefreshView.as_view(), name="token_refresh"),
     path("auth/update-info", UpdateUserInfoView.as_view(), name="update_info"),
     path("auth/user", RetrieveUserView.as_view(), name="retrieve_user"),
-    path("managers", RetrieveCustomUsersView.as_view(), name="retrieve_custom_users"),
     path("students", RetrieveStudentsView.as_view(), name="retrieve_students"),
     path("tutors", RetrieveTutorsView.as_view(), name="retrieve_tutors"),
     path(

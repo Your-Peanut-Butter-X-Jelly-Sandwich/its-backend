@@ -197,58 +197,16 @@ class ChangePasswordView(views.APIView):
         )
 
 
-"""
-API view for managers to retrieve all tutors and students.
-
-Example:
-    To retrieve all tutors:
-        Endpoint:
-            GET /managers?type=tutor
-        Response:
-            JSON array of all serialized tutors
-            e.g., { "user": [ serialized_tutors ] }
-
-    To retrieve all students:
-        Endpoint:
-            GET /managers?type=student
-        Response:
-            JSON array of all serialized students
-            e.g., { "user": [ serialized_students ] }
-"""
-class RetrieveCustomUsersView(views.APIView):
-    permission_classes = [IsManager]
-    serializer_class = RetrieveUserSerializer
-
-    def get(self, request: HttpRequest):
-        url_query = request.GET
-        user_type = url_query.get("type")
-
-        if not user_type:
-            return Response(
-                {"error": "No user type provided"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        if user_type != "tutor" and user_type != "student":
-            return Response(
-                {"error": f"Invalid user type: {user_type}"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        user_type = f"is_{user_type}"
-        users = CustomUser.objects.filter({user_type: True, "is_superuser": False})
-        serialized_users = [
-            self.serializer_class(u) for u in users
-        ]
-
-        return Response({"user": serialized_users}, status=status.HTTP_200_OK)
-
-
 class RetrieveStudentsView(views.APIView):
-    permission_classes = [
-        IsAuthenticated,
-    ]
+    permission_classes = [IsTutor | IsManager]
     serializer_class = RetrieveUserSerializer
+
+    def get_all_students(self):
+        students = CustomUser.objects.filter(is_student=True)
+        serialized_students = [
+            self.serializer_class(s) for s in students
+        ]
+        return Response({"user": serialized_students}, status=status.HTTP_200_OK)
 
     def get_students_by_ids(self, student_ids: list[str]):
         """
@@ -330,24 +288,30 @@ class RetrieveStudentsView(views.APIView):
     def get(self, request: HttpRequest):
         """
         Example url query string
-        1. /students?student_ids=1
-        2. /students?student_ids=1,2,3
-        3. /students?student_ids=1&student_ids=2&student_ids=3
-        4. /students?tutor_id=10
-        5. /students?tutor_id=10&invert=true
+        1. /students
+        2. /students?student_ids=1
+        3. /students?student_ids=1,2,3
+        4. /students?student_ids=1&student_ids=2&student_ids=3
+        5. /students?tutor_id=10
+        6. /students?tutor_id=10&invert=true
 
         Example response for each query (assuming all are valid queries)
-        1. CustomUser with id=1 and is_student=True
-        2. Three CustomUsers with id in (1, 2, 3) and is_student=True
-        3. Same as the above
-        4. n CustomUsers that are taught by tutor with id=10
-        5. m CustomUsers that are NOT taught by tutor with id=10
+        1. All CustomUsers with is_student=True
+        2. CustomUser with id=1 and is_student=True
+        3. Three CustomUsers with id in (1, 2, 3) and is_student=True
+        4. Same as the above
+        5. n CustomUsers that are taught by tutor with id=10
+        6. m CustomUsers that are NOT taught by tutor with id=10
             -> so that tutors can potentially add them in their class (?)
 
         If multiple GET params are specified, it will be evaluated in the
         order mentioned above
         """
         url_query = request.GET
+
+        if not url_query:
+            return self.get_all_students()
+
         student_ids = url_query.getlist("student_ids")
         tutor_id = url_query.get("tutor_id")
         invert = url_query.get("invert", default="false")
@@ -364,10 +328,15 @@ class RetrieveStudentsView(views.APIView):
 
 
 class RetrieveTutorsView(views.APIView):
-    permission_classes = [
-        IsAuthenticated,
-    ]
+    permission_classes = [IsTutor | IsManager]
     serializer_class = RetrieveUserSerializer
+
+    def get_all_tutors(self):
+        tutors = CustomUser.objects.filter(is_tutor=True)
+        serialized_tutors = [
+            self.serializer_class(t) for t in tutors
+        ]
+        return Response({"user": serialized_tutors}, status=status.HTTP_200_OK)
 
     def get_tutors_by_ids(self, tutor_ids: list[str]):
         """
@@ -443,21 +412,27 @@ class RetrieveTutorsView(views.APIView):
     def get(self, request: HttpRequest):
         """
         Example url query string
-        1. /tutors?tutor_ids=10
-        2. /tutors?tutor_ids=10,20,30
-        3. /tutors?tutor_ids=10&tutor_ids=20&tutor_ids=30
-        4. /tutors?student_id=1
+        1. /tutors
+        2. /tutors?tutor_ids=10
+        3. /tutors?tutor_ids=10,20,30
+        4. /tutors?tutor_ids=10&tutor_ids=20&tutor_ids=30
+        5. /tutors?student_id=1
 
         Example response for each query (assuming all are valid queries)
-        1. CustomUser with id=10 and is_tutor=True
-        2. Three CustomUsers with id in (10, 20, 30) and is_tutor=True
-        3. Same as the above
-        4. n CustomUsers that teach student with id=1
+        1. All CustomUsers with is_tutor=True
+        2. CustomUser with id=10 and is_tutor=True
+        3. Three CustomUsers with id in (10, 20, 30) and is_tutor=True
+        4. Same as the above
+        5. n CustomUsers that teach student with id=1
 
         If multiple GET params are specified, it will be evaluated in the
         order mentioned above
         """
         url_query = request.GET
+
+        if not url_query:
+            return self.get_all_tutors()
+
         tutor_ids = url_query.getlist("tutor_ids")
         student_id = url_query.get("student_id")
 
