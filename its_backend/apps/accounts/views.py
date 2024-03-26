@@ -204,7 +204,7 @@ class RetrieveStudentsView(views.APIView):
     def get_all_students(self):
         students = CustomUser.objects.filter(is_student=True)
         serialized_students = [
-            self.serializer_class(s) for s in students
+            self.serializer_class(s).data for s in students
         ]
         return Response({"user": serialized_students}, status=status.HTTP_200_OK)
 
@@ -334,7 +334,7 @@ class RetrieveTutorsView(views.APIView):
     def get_all_tutors(self):
         tutors = CustomUser.objects.filter(is_tutor=True)
         serialized_tutors = [
-            self.serializer_class(t) for t in tutors
+            self.serializer_class(t).data for t in tutors
         ]
         return Response({"user": serialized_tutors}, status=status.HTTP_200_OK)
 
