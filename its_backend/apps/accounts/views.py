@@ -203,9 +203,7 @@ class RetrieveStudentsView(views.APIView):
 
     def get_all_students(self):
         students = CustomUser.objects.filter(is_student=True)
-        serialized_students = [
-            self.serializer_class(s).data for s in students
-        ]
+        serialized_students = [self.serializer_class(s).data for s in students]
         return Response({"user": serialized_students}, status=status.HTTP_200_OK)
 
     def get_students_by_ids(self, student_ids: list[str]):
@@ -333,9 +331,7 @@ class RetrieveTutorsView(views.APIView):
 
     def get_all_tutors(self):
         tutors = CustomUser.objects.filter(is_tutor=True)
-        serialized_tutors = [
-            self.serializer_class(t).data for t in tutors
-        ]
+        serialized_tutors = [self.serializer_class(t).data for t in tutors]
         return Response({"user": serialized_tutors}, status=status.HTTP_200_OK)
 
     def get_tutors_by_ids(self, tutor_ids: list[str]):
@@ -454,7 +450,7 @@ class AddTutorStudentRelationshipView(views.APIView):
         # No point in adding if tutor ID is invalid
         if not isinstance(tutor_id, int):
             return [], []
-        
+
         messages = []  # students successfully added
         errors = []  # students not successfully added
         for s_id in student_ids:
@@ -488,7 +484,7 @@ class AddTutorStudentRelationshipView(views.APIView):
         payload = request.data
         if request.user.is_tutor:
             payload["tutor_id"] = request.user.id
-        
+
         if not isinstance(payload, list):
             payload = [payload]
 
@@ -496,7 +492,11 @@ class AddTutorStudentRelationshipView(views.APIView):
         errors = []  # students not successfully added
         for teaches in payload:
             # Skip invalid teaches relation
-            if not isinstance(teaches, dict) or "tutor_id" not in teaches or "student_ids" not in teaches:
+            if (
+                not isinstance(teaches, dict)
+                or "tutor_id" not in teaches
+                or "student_ids" not in teaches
+            ):
                 continue
             # Add teaches relation and update response messages
             tutor_id = teaches["tutor_id"]
