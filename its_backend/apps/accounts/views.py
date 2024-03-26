@@ -197,6 +197,53 @@ class ChangePasswordView(views.APIView):
         )
 
 
+"""
+API view for managers to retrieve all tutors and students.
+
+Example:
+    To retrieve all tutors:
+        Endpoint:
+            GET /managers?type=tutor
+        Response:
+            JSON array of all serialized tutors
+            e.g., { "user": [ serialized_tutors ] }
+
+    To retrieve all students:
+        Endpoint:
+            GET /managers?type=student
+        Response:
+            JSON array of all serialized students
+            e.g., { "user": [ serialized_students ] }
+"""
+class RetrieveCustomUsersView(views.APIView):
+    permission_classes = [IsManager]
+    serializer_class = RetrieveUserSerializer
+
+    def get(self, request: HttpRequest):
+        url_query = request.GET
+        user_type = url_query.get("type")
+
+        if not user_type:
+            return Response(
+                {"error": "No user type provided"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if user_type != "tutor" and user_type != "student":
+            return Response(
+                {"error": f"Invalid user type: {user_type}"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        user_type = f"is_{user_type}"
+        users = CustomUser.objects.filter({user_type: True, "is_superuser": False})
+        serialized_users = [
+            self.serializer_class(u) for u in users
+        ]
+
+        return Response({"user": serialized_users}, status=status.HTTP_200_OK)
+
+
 class RetrieveStudentsView(views.APIView):
     permission_classes = [
         IsAuthenticated,
