@@ -450,37 +450,18 @@ class RetrieveTutorsView(views.APIView):
 class AddTutorStudentRelationshipView(views.APIView):
     permission_classes = [IsManager | IsTutor]
 
-    def post(self, request: HttpRequest):
-        """
-        Example payload
-        {
-            "tutor_id": 10,
-            "student_ids": [1, 2, 3]
-        }
-        """
-        payload = request.data
-        tutor_id = payload.get("tutor_id")
-        student_ids = payload.get("student_ids")
-
-        if not tutor_id or not student_ids:
-            return Response(
-                {"error": "Tutor ID and student ID(s) must be provided"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        if (
-            not isinstance(tutor_id, int)
-            or not isinstance(student_ids, list)
-            or any(not isinstance(s_id, int) for s_id in student_ids)
-        ):
-            return Response(
-                {"error": "Tutor ID and student ID(s) must be integers"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
+    def add_teaches_relation(self, tutor_id: int, student_ids: list[int]):
+        # No point in adding if tutor ID is invalid
+        if not isinstance(tutor_id, int):
+            return [], []
+        
         messages = []  # students successfully added
         errors = []  # students not successfully added
         for s_id in student_ids:
+            # Skip invalid parameter values
+            if not isinstance(s_id, int):
+                continue
+
             ok, error_msg = Teaches.objects.add_teaching_relationship(tutor_id, s_id)
             if ok:
                 # e.g., "Added [tutor_id=10, s_id=1]"
@@ -488,6 +469,41 @@ class AddTutorStudentRelationshipView(views.APIView):
             else:
                 # e.g., "[tutor_id=10, s_id=1]: UNIQUE constraint failed: R.tutor_id, R.student_id"
                 errors.append(f"[{tutor_id=}, {s_id=}]: {error_msg}")
+        return messages, errors
+
+    def post(self, request: HttpRequest):
+        """
+        Example payload for managers
+        [
+            {"tutor_id": 10, "student_ids": [1, 2, 3]},
+            {"tutor_id": 11, "student_ids": [4, 5, 6]},
+            {"tutor_id": 12, "student_ids": [1, 3, 5]}
+        ]
+
+        Example payload for tutors
+        {
+            "student_ids": [1, 2, 3]
+        }
+        """
+        payload = request.data
+        if request.user.is_tutor:
+            payload["tutor_id"] = request.user.id
+        
+        if not isinstance(payload, list):
+            payload = [payload]
+
+        messages = []  # students successfully added
+        errors = []  # students not successfully added
+        for teaches in payload:
+            # Skip invalid teaches relation
+            if not isinstance(teaches, dict) or "tutor_id" not in teaches or "student_ids" not in teaches:
+                continue
+            # Add teaches relation and update response messages
+            tutor_id = teaches["tutor_id"]
+            student_ids = teaches["student_ids"]
+            msgs, errs = self.add_teaches_relation(tutor_id, student_ids)
+            messages.extend(msgs)
+            errors.extend(errs)
 
         response = {}
         if messages:
