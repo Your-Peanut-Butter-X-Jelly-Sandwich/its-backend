@@ -11,6 +11,7 @@ class SignUpSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = [
+            "id",
             "email",
             "password",
             "organisation",
@@ -37,6 +38,7 @@ class SignInSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = [
+            "id",
             "email",
             "password",
             "organisation",
@@ -66,6 +68,7 @@ class SocialCallbackSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = [
+            "id",
             "email",
             "organisation",
             "username",
@@ -79,6 +82,7 @@ class RetrieveUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = [
+            "id",
             "email",
             "organisation",
             "username",
@@ -92,6 +96,7 @@ class UpdateUserInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = [
+            "id",
             "email",
             "organisation",
             "username",
