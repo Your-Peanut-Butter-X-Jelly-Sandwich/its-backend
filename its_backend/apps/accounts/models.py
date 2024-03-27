@@ -108,25 +108,18 @@ class TeachesManager(models.Manager):
         except IntegrityError as e:
             return False, str(e)
 
-    """
-    Removes (tutor_id, student_id) pair from Teaches table
-    Returns whether operation was a success or not along with the error message
-            if operation failed
-    """
-
     def remove_teaching_relationship(self, tutor_id, student_id):
+        """
+        Removes (tutor_id, student_id) pair from Teaches table
+        Returns whether operation was a success or not along with the error message
+                if operation failed
+        """
         try:
             relationship: Teaches = self.get(tutor_id=tutor_id, student_id=student_id)
             relationship.delete()
             return True, None
         except Teaches.DoesNotExist:
             return False, "The teaching relationship does not exist"
-
-    def get_students_by_tutor_id(self, tutor_id):
-        return self.filter(tutor_id=tutor_id).values_list("student_id", flat=True)
-
-    def get_tutors_by_student_id(self, student_id):
-        return self.filter(student_id=student_id).values_list("tutor_id", flat=True)
 
 
 class Teaches(models.Model):
