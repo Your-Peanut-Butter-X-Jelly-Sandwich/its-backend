@@ -6,7 +6,11 @@ from rest_framework.exceptions import APIException
 
 from ..accounts.models import Teaches
 from ..questions.models import Question, TestCase
-from ..submissions.its_utils import ITSFeedbackException, ITSParserException, ITSInterpreterException
+from ..submissions.its_utils import (
+    ITSFeedbackException,
+    ITSInterpreterException,
+    ITSParserException,
+)
 from .its_utils import (
     its_request_feedback_fix,
     its_request_feedback_hint,
