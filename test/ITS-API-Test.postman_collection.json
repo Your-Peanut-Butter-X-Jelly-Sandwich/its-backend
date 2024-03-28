@@ -2466,7 +2466,203 @@
 							"response": []
 						},
 						{
-							"name": "[01] Student Add Submission to not Accessible Question",
+							"name": "[03] Student Add Submission (ITS Failed in Parser)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON\r",
+											"var responseBody = pm.response.json();\r",
+											"\r",
+											"// Check if the status code is 201 CREATED\r",
+											"pm.test(\"Status code is 201 CREATED\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"\r",
+											"pm.test(\"Submission Creation Response is correct\", function () {\r",
+											"    var expectedResponseSubmissionCreated = {\r",
+											"        \"qn_id\": 1,\r",
+											"        \"language\": \"python\",\r",
+											"        \"program\": \"numMap = {}\\n        n = len(nums)\\n        for i in range(n):\\n            complement = target - nums[i]\\n            if complement in numMap:\\n                return [numMap[complement], i]\\n            numMap[nums[i]] = i\\n        return []\",\r",
+											"        \"its_feedback_hint_student\": {\r",
+											"            \"message\": \"\"\r",
+											"        },\r",
+											"        \"its_feedback_fix_tutor\": {\r",
+											"            \"message\": \"\"\r",
+											"        },\r",
+											"        \"tutor_feedback\": null,\r",
+											"        \"status\": \"The ITS failed to parse Student Program.\",\r",
+											"        \"total_score\": 3,\r",
+											"        \"score\": 0,\r",
+											"        \"submitted_by\": {\r",
+											"            \"email\": \"stu01@student.com\",\r",
+											"            \"organisation\": \"\",\r",
+											"            \"username\": \"\",\r",
+											"            \"is_student\": true,\r",
+											"            \"is_tutor\": false,\r",
+											"            \"is_manager\": false\r",
+											"        }\r",
+											"    };\r",
+											"    delete responseBody.pk;\r",
+											"    delete responseBody.submission_date;\r",
+											"    delete responseBody.submission_number;\r",
+											"    pm.expect(responseBody).to.eql(expectedResponseSubmissionCreated, \"Response body doesn't match expected\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{student_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "qn_id",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "language",
+											"value": "python",
+											"type": "text"
+										},
+										{
+											"key": "program",
+											"value": "        numMap = {}\n        n = len(nums)\n        for i in range(n):\n            complement = target - nums[i]\n            if complement in numMap:\n                return [numMap[complement], i]\n            numMap[nums[i]] = i\n        return [] ",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/student/submission",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"student",
+										"submission"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[04] Student Add Submission (ITS Failed in Intepreter)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON\r",
+											"var responseBody = pm.response.json();\r",
+											"\r",
+											"// Check if the status code is 201 CREATED\r",
+											"pm.test(\"Status code is 201 CREATED\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"\r",
+											"pm.test(\"Submission Creation Response is correct\", function () {\r",
+											"    var expectedResponseSubmissionCreated = {\r",
+											"        \"qn_id\": 2,\r",
+											"        \"language\": \"python\",\r",
+											"        \"program\": \"def lengthOfLongestSubstring(s: str) -> int:\\n    n = len(s)\\n    maxLength = 0\\n    charMap = {}\\n    left = 0\\n\\n    for right in range(n):\\n        if s[right] not in charMap or charMap[s[right]] < left:\\n            charMap[s[right]] = right\\n            maxLength = max(maxLength, right - left + 1)\\n        else:\\n            left = charMap[s[right]] + 1\\n            charMap[s[right]] = right\\n\\n    return maxLength\",\r",
+											"        \"its_feedback_hint_student\": {\r",
+											"            \"message\": \"\"\r",
+											"        },\r",
+											"        \"its_feedback_fix_tutor\": {\r",
+											"            \"message\": \"\"\r",
+											"        },\r",
+											"        \"tutor_feedback\": null,\r",
+											"        \"status\": \"The ITS interpreter fails to interprete the Program and Testcases. The ITS fails to provide Feedback Fix. The ITS fails to provide Feedback Hint.\",\r",
+											"        \"total_score\": 0,\r",
+											"        \"score\": 0,\r",
+											"        \"submitted_by\": {\r",
+											"            \"email\": \"stu01@student.com\",\r",
+											"            \"organisation\": \"\",\r",
+											"            \"username\": \"\",\r",
+											"            \"is_student\": true,\r",
+											"            \"is_tutor\": false,\r",
+											"            \"is_manager\": false\r",
+											"        }\r",
+											"    };\r",
+											"    delete responseBody.pk;\r",
+											"    delete responseBody.submission_date;\r",
+											"    delete responseBody.submission_number;\r",
+											"    pm.expect(responseBody).to.eql(expectedResponseSubmissionCreated, \"Response body doesn't match expected\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{student_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "qn_id",
+											"value": "2",
+											"type": "text"
+										},
+										{
+											"key": "language",
+											"value": "python",
+											"type": "text"
+										},
+										{
+											"key": "program",
+											"value": "def lengthOfLongestSubstring(s: str) -> int:\n    n = len(s)\n    maxLength = 0\n    charMap = {}\n    left = 0\n\n    for right in range(n):\n        if s[right] not in charMap or charMap[s[right]] < left:\n            charMap[s[right]] = right\n            maxLength = max(maxLength, right - left + 1)\n        else:\n            left = charMap[s[right]] + 1\n            charMap[s[right]] = right\n\n    return maxLength",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/student/submission",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"student",
+										"submission"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[05] Student Add Submission to not Accessible Question",
 							"event": [
 								{
 									"listen": "test",
@@ -2537,7 +2733,7 @@
 							"response": []
 						},
 						{
-							"name": "[01] Student Add Submission to Missing Question",
+							"name": "[06] Student Add Submission to Missing Question",
 							"event": [
 								{
 									"listen": "test",
@@ -2607,7 +2803,7 @@
 							"response": []
 						},
 						{
-							"name": "[03] Student List Past Submissions of a Question",
+							"name": "[07] Student List Past Submissions of a Question",
 							"event": [
 								{
 									"listen": "test",
@@ -2670,7 +2866,7 @@
 							"response": []
 						},
 						{
-							"name": "[04] Student List Past Submissions of a Question without Past Submission",
+							"name": "[08] Student List Past Submissions of a Question without Past Submission",
 							"event": [
 								{
 									"listen": "test",
@@ -2707,7 +2903,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/student/submission?qn_id=2",
+									"raw": "{{base_url}}/student/submission?qn_id=7",
 									"host": [
 										"{{base_url}}"
 									],
@@ -2718,7 +2914,7 @@
 									"query": [
 										{
 											"key": "qn_id",
-											"value": "2"
+											"value": "7"
 										}
 									]
 								}
@@ -2726,7 +2922,7 @@
 							"response": []
 						},
 						{
-							"name": "[05] Student List Past Submissions of Missing Question",
+							"name": "[09] Student List Past Submissions of Missing Question",
 							"event": [
 								{
 									"listen": "test",
@@ -2796,7 +2992,7 @@
 							"response": []
 						},
 						{
-							"name": "[05] Student List Past Submissions of Not accessible Question",
+							"name": "[10] Student List Past Submissions of Not accessible Question",
 							"event": [
 								{
 									"listen": "test",
@@ -2859,7 +3055,7 @@
 							"response": []
 						},
 						{
-							"name": "[06] Student Retrieve Submission Feedback and Details",
+							"name": "[11] Student Retrieve Submission Feedback and Details",
 							"event": [
 								{
 									"listen": "test",
@@ -2926,7 +3122,7 @@
 							"response": []
 						},
 						{
-							"name": "[07] Student Retrieve Missing Submission's Details",
+							"name": "[12] Student Retrieve Missing Submission's Details",
 							"event": [
 								{
 									"listen": "test",
@@ -3053,7 +3249,7 @@
 							"response": []
 						},
 						{
-							"name": "[01] Tutor List all Student Submissions from a Question(not Owned by the Tutor)",
+							"name": "[02] Tutor List all Student Submissions from a Question(not Owned by the Tutor)",
 							"event": [
 								{
 									"listen": "test",
@@ -3124,7 +3320,7 @@
 							"response": []
 						},
 						{
-							"name": "[02] Tutor List all Student Submissions from a Missing Question",
+							"name": "[03] Tutor List all Student Submissions from a Missing Question",
 							"event": [
 								{
 									"listen": "test",
@@ -3187,7 +3383,7 @@
 							"response": []
 						},
 						{
-							"name": "[03] Tutor Retrieve Submission Details",
+							"name": "[04] Tutor Retrieve Submission Details",
 							"event": [
 								{
 									"listen": "test",
@@ -3253,7 +3449,7 @@
 							"response": []
 						},
 						{
-							"name": "[04] Tutor Retrieve Missing Submission Details",
+							"name": "[05] Tutor Retrieve Missing Submission Details",
 							"event": [
 								{
 									"listen": "test",
@@ -3304,7 +3500,7 @@
 							"response": []
 						},
 						{
-							"name": "[05] Tutor Add/Update feedback to a  Student Submission",
+							"name": "[06] Tutor Add/Update feedback to a  Student Submission",
 							"event": [
 								{
 									"listen": "test",
