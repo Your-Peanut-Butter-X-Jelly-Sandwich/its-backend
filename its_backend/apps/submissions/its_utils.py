@@ -58,7 +58,7 @@ def its_request_interpreter(language, program_model, function, inputs, arguments
         # API call failed
         print(f"Error: {response.status_code}, {response.text}")
         return "interpreter failed"
-    else:
+    else:  # noqa: RET505
         raise ITSInterpreterException()
 
 
