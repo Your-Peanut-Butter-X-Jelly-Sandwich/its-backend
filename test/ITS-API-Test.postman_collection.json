@@ -1,10 +1,9 @@
 {
 	"info": {
-		"_postman_id": "22c0d995-3ffe-4ef4-a45b-0cbe35ff5a41",
+		"_postman_id": "6c651715-9011-4b80-83b5-812d95d2c7cb",
 		"name": "ITS-API-Test",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "33356344",
-		"_collection_link": "https://cloudy-crater-900599.postman.co/workspace/ITS~82f810c1-83df-4c00-97b7-8bf416dc9d67/collection/33356344-22c0d995-3ffe-4ef4-a45b-0cbe35ff5a41?action=share&source=collection_link&creator=33356344"
+		"_exporter_id": "30394855"
 	},
 	"item": [
 		{
@@ -1692,7 +1691,62 @@
 							"response": []
 						},
 						{
-							"name": "[02]Tutor Add Question Missing Field",
+							"name": "[02] Tutor Add Question Default Due Date",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 201 CREATED",
+											"pm.test(\"Status code is 201 CREATED\", function () {",
+											"    pm.response.to.have.status(201);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tutor_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"language\": \"python\",\n    \"question_title\": \"Reverse Integer\",\n    \"question_statement\": \"Given a signed 32-bit integer x, return x with its digits reversed. If reversing x causes the value to go outside the signed 32-bit integer range [-231, 231 - 1], then return 0. Assume the environment does not allow you to store 64-bit integers (signed or unsigned).\",\n    \"ref_program\": \"def reverse(x):\\n\\tans = 0\\n\\twhile x != 0:\\n\\t\\tans = ans * 10 + x % 10\\n\\t\\tx //= 10\\n\\n\\tif ans > 2**31 - 1 or ans < -(2**31):\\n\\t\\treturn 0\\n\\n\\treturn ans\",\n    \"test_cases\": [\n        {\"input\": \"123\",\n        \"output\": \"321\"},\n        {\"input\": \"-123\",\n        \"output\": \"-321\"},\n        {\"input\": \"120\",\n        \"output\": \"21\"},\n        {\"input\": \"9990\",\n        \"output\": \"999\"}\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/tutor/question",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutor",
+										"question"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[03]Tutor Add Question Missing Field",
 							"event": [
 								{
 									"listen": "test",
@@ -1748,7 +1802,7 @@
 							"response": []
 						},
 						{
-							"name": "[03] Tutor Update Question",
+							"name": "[04] Tutor Update Question",
 							"event": [
 								{
 									"listen": "test",
@@ -1782,7 +1836,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"due_date\": \"2024-05-13\"\n}",
+									"raw": "{\n    \"due_date\": \"2024-06-27\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1804,7 +1858,70 @@
 							"response": []
 						},
 						{
-							"name": "[04] Tutor List All Questions",
+							"name": "[05] Tutor Update Question Wrong Data Format",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 400 Bad Request",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"// Check if the response contains the expected JSON message",
+											"pm.test(\"Error message is correct\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.message.due_date[0]).to.eql(\"Date has wrong format. Use one of these formats instead: YYYY-MM-DD.\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tutor_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"due_date\": \"2024-06\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/tutor/question/6",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutor",
+										"question",
+										"6"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[06] Tutor List All Questions",
 							"event": [
 								{
 									"listen": "test",
@@ -1850,7 +1967,7 @@
 							"response": []
 						},
 						{
-							"name": "[05] Tutor Retrieve Question",
+							"name": "[07] Tutor Retrieve Question",
 							"event": [
 								{
 									"listen": "test",
@@ -1897,7 +2014,7 @@
 							"response": []
 						},
 						{
-							"name": "[06] Tutor Retrieve Missing Question",
+							"name": "[08] Tutor Retrieve Missing Question",
 							"event": [
 								{
 									"listen": "test",
@@ -1944,7 +2061,7 @@
 							"response": []
 						},
 						{
-							"name": "[07] Tutor Delete Question",
+							"name": "[09] Tutor Delete Question",
 							"event": [
 								{
 									"listen": "test",
@@ -1993,7 +2110,7 @@
 							"response": []
 						},
 						{
-							"name": "[08] Tutor Delete Missing Question",
+							"name": "[10] Tutor Delete Missing Question",
 							"event": [
 								{
 									"listen": "test",
@@ -2235,6 +2352,62 @@
 										"student",
 										"question",
 										"2000"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[05] Student Retrieve Dashboard Stats",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Check existence of data fields\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.property(\"personal_info\");",
+											"    pm.expect(jsonData).to.have.property(\"tutors\");",
+											"    pm.expect(jsonData).to.have.property(\"total_question_assigned\");",
+											"    pm.expect(jsonData).to.have.property(\"attempted_questions\");",
+											"    pm.expect(jsonData).to.have.property(\"questions_due_in_a_week\");",
+											"    pm.expect(jsonData).to.have.property(\"questions_due_in_a_month\");",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{student_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/student/dashboard-stats",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"student",
+										"dashboard-stats"
 									]
 								}
 							},
