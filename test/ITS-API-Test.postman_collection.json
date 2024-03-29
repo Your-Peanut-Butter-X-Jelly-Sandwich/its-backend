@@ -3101,7 +3101,129 @@
 							"response": []
 						},
 						{
-							"name": "[06] Test User Status",
+							"name": "[06] Tutor Promotes Students - Failure (Unauthorized)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 403 Forbidden",
+											"pm.test(\"Status code is 403 Forbidden\", function () {",
+											"    pm.response.to.have.status(403);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Response body contains expected error message\", function () {",
+											"    pm.expect(responseBody.detail).to.eql(\"Only administrators are authorized to access this resource\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tutor_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"student_ids\": [1,2,3]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/students/promote",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"students",
+										"promote"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[07] Student Promotes Students - Failure (Unauthorized)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 403 Forbidden",
+											"pm.test(\"Status code is 403 Forbidden\", function () {",
+											"    pm.response.to.have.status(403);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Response body contains expected error message\", function () {",
+											"    pm.expect(responseBody.detail).to.eql(\"Only administrators are authorized to access this resource\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tutor_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"student_ids\": [1,2,3]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/students/promote",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"students",
+										"promote"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[08] Test User Status",
 							"event": [
 								{
 									"listen": "test",
