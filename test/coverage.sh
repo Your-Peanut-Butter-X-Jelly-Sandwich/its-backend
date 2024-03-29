@@ -80,7 +80,7 @@ newman_test() {
 
     # Kill server if still running
     if [[ -n $SERVER_PID ]]; then
-        kill -SIGINT $SERVER_PID
+        kill -INT $SERVER_PID
         SERVER_PID=""
     fi
 
