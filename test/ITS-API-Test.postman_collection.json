@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "acdcbc60-4c99-491b-a1e8-83e90506caf2",
+		"_postman_id": "6c651715-9011-4b80-83b5-812d95d2c7cb",
 		"name": "ITS-API-Test",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "33156727"
+		"_exporter_id": "30394855"
 	},
 	"item": [
 		{
@@ -3378,7 +3378,62 @@
 							"response": []
 						},
 						{
-							"name": "[02]Tutor Add Question Missing Field",
+							"name": "[02] Tutor Add Question Default Due Date",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 201 CREATED",
+											"pm.test(\"Status code is 201 CREATED\", function () {",
+											"    pm.response.to.have.status(201);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tutor_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"language\": \"python\",\n    \"question_title\": \"Reverse Integer\",\n    \"question_statement\": \"Given a signed 32-bit integer x, return x with its digits reversed. If reversing x causes the value to go outside the signed 32-bit integer range [-231, 231 - 1], then return 0. Assume the environment does not allow you to store 64-bit integers (signed or unsigned).\",\n    \"ref_program\": \"def reverse(x):\\n\\tans = 0\\n\\twhile x != 0:\\n\\t\\tans = ans * 10 + x % 10\\n\\t\\tx //= 10\\n\\n\\tif ans > 2**31 - 1 or ans < -(2**31):\\n\\t\\treturn 0\\n\\n\\treturn ans\",\n    \"test_cases\": [\n        {\"input\": \"123\",\n        \"output\": \"321\"},\n        {\"input\": \"-123\",\n        \"output\": \"-321\"},\n        {\"input\": \"120\",\n        \"output\": \"21\"},\n        {\"input\": \"9990\",\n        \"output\": \"999\"}\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/tutor/question",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutor",
+										"question"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[03]Tutor Add Question Missing Field",
 							"event": [
 								{
 									"listen": "test",
@@ -3434,7 +3489,7 @@
 							"response": []
 						},
 						{
-							"name": "[03] Tutor Update Question",
+							"name": "[04] Tutor Update Question",
 							"event": [
 								{
 									"listen": "test",
@@ -3468,7 +3523,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"due_date\": \"2024-05-13\"\n}",
+									"raw": "{\n    \"due_date\": \"2024-06-27\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -3490,7 +3545,70 @@
 							"response": []
 						},
 						{
-							"name": "[04] Tutor List All Questions",
+							"name": "[05] Tutor Update Question Wrong Data Format",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 400 Bad Request",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"// Check if the response contains the expected JSON message",
+											"pm.test(\"Error message is correct\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.message.due_date[0]).to.eql(\"Date has wrong format. Use one of these formats instead: YYYY-MM-DD.\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tutor_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"due_date\": \"2024-06\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/tutor/question/6",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutor",
+										"question",
+										"6"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[06] Tutor List All Questions",
 							"event": [
 								{
 									"listen": "test",
@@ -3536,7 +3654,7 @@
 							"response": []
 						},
 						{
-							"name": "[05] Tutor Retrieve Question",
+							"name": "[07] Tutor Retrieve Question",
 							"event": [
 								{
 									"listen": "test",
@@ -3583,7 +3701,7 @@
 							"response": []
 						},
 						{
-							"name": "[06] Tutor Retrieve Missing Question",
+							"name": "[08] Tutor Retrieve Missing Question",
 							"event": [
 								{
 									"listen": "test",
@@ -3630,7 +3748,7 @@
 							"response": []
 						},
 						{
-							"name": "[07] Tutor Delete Question",
+							"name": "[09] Tutor Delete Question",
 							"event": [
 								{
 									"listen": "test",
@@ -3679,7 +3797,7 @@
 							"response": []
 						},
 						{
-							"name": "[08] Tutor Delete Missing Question",
+							"name": "[10] Tutor Delete Missing Question",
 							"event": [
 								{
 									"listen": "test",
@@ -3925,6 +4043,62 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "[05] Student Retrieve Dashboard Stats",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Check existence of data fields\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.property(\"personal_info\");",
+											"    pm.expect(jsonData).to.have.property(\"tutors\");",
+											"    pm.expect(jsonData).to.have.property(\"total_question_assigned\");",
+											"    pm.expect(jsonData).to.have.property(\"attempted_questions\");",
+											"    pm.expect(jsonData).to.have.property(\"questions_due_in_a_week\");",
+											"    pm.expect(jsonData).to.have.property(\"questions_due_in_a_month\");",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{student_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/student/dashboard-stats",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"student",
+										"dashboard-stats"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				}
@@ -3943,13 +4117,64 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"// Parse the response body as JSON\r",
-											"var responseBody = pm.response.json();\r",
-											"\r",
-											"// Check if the status code is 201 CREATED\r",
-											"pm.test(\"Status code is 201 CREATED\", function () {\r",
-											"    pm.response.to.have.status(201);\r",
-											"});"
+											"var responseBody = pm.response.json();",
+											"",
+											"pm.test('Status code is 201 CREATED', function () {",
+											"    pm.response.to.have.status(201);",
+											"})",
+											"",
+											"var expectedResponseSubmissionCreated = {",
+											"    'qn_id': 1,",
+											"    'submission_number': 1,",
+											"    'language': 'python',",
+											"    'program': 'def twoSum(nums, target):\\n        numMap = {}\\n        n = len(nums)\\n        for i in range(n):\\n            complement = target - nums[i]\\n            if complement in numMap:\\n                return [numMap[complement], i]\\n            numMap[nums[i]] = i\\n        return []',",
+											"    'its_feedback_hint_student': { 'message': '' },",
+											"    'its_feedback_fix_tutor': { 'message': '' },",
+											"    'tutor_feedback': null,",
+											"    'status': 'The ITS fails to provide Feedback Fix. The ITS fails to provide Feedback Hint.',",
+											"    'total_score': 3,",
+											"    'score': 3,",
+											"    'submitted_by': {",
+											"        'email': 'stu02@student.com',",
+											"        'organisation': '',",
+											"        'username': '',",
+											"        'is_student': true,",
+											"        'is_tutor': false,",
+											"        'is_manager': false",
+											"    }",
+											"};",
+											"",
+											"pm.test(\"Submission Creation Response is correct\", function () {",
+											"    var expectedResponseSubmissionCreated = {",
+											"        \"qn_id\": 1,",
+											"        \"language\": \"python\",",
+											"        \"program\": \"def twoSum(nums, target):\\n        numMap = {}\\n        n = len(nums)\\n        for i in range(n):\\n            complement = target - nums[i]\\n            if complement in numMap:\\n                return [numMap[complement], i]\\n            numMap[nums[i]] = i\\n        return []\",",
+											"        \"its_feedback_hint_student\": {",
+											"            \"message\": \"\"",
+											"        },",
+											"        \"its_feedback_fix_tutor\": {",
+											"            \"message\": \"\"",
+											"        },",
+											"        \"tutor_feedback\": null,",
+											"        \"status\": \"The ITS fails to provide Feedback Fix. The ITS fails to provide Feedback Hint.\",",
+											"        \"total_score\": 3,",
+											"        \"score\": 3,",
+											"        \"submitted_by\": {",
+											"            \"email\": \"stu01@student.com\",",
+											"            \"organisation\": \"\",",
+											"            \"username\": \"\",",
+											"            \"is_student\": true,",
+											"            \"is_tutor\": false,",
+											"            \"is_manager\": false",
+											"        }",
+											"    };",
+											"    delete responseBody.pk;",
+											"    delete responseBody.submission_date;",
+											"    delete responseBody.submission_number;",
+											"    pm.expect(responseBody).to.eql(expectedResponseSubmissionCreated, \"Response body doesn't match expected\");",
+											"});",
+											"",
+											""
 										],
 										"type": "text/javascript",
 										"packages": {}
@@ -4015,7 +4240,39 @@
 											"// Check if the status code is 201 CREATED\r",
 											"pm.test(\"Status code is 201 CREATED\", function () {\r",
 											"    pm.response.to.have.status(201);\r",
-											"});"
+											"});\r",
+											"\r",
+											"\r",
+											"pm.test(\"Submission Creation Response is correct\", function () {\r",
+											"    var expectedResponseSubmissionCreated = {\r",
+											"        \"qn_id\": 1,\r",
+											"        \"language\": \"python\",\r",
+											"        \"program\": \"def twoSum(nums, target):\\n        numMap = {}\\n        n = len(nums)\\n        for i in range(n):\\n            complement = target - nums[i] - 1\\n            if complement in numMap:\\n                return [numMap[complement], i]\\n            numMap[nums[i]] = i\\n        return []\",\r",
+											"        \"its_feedback_hint_student\": {\r",
+											"            \"message\": \"\"\r",
+											"        },\r",
+											"        \"its_feedback_fix_tutor\": {\r",
+											"            \"message\": \"\"\r",
+											"        },\r",
+											"        \"tutor_feedback\": null,\r",
+											"        \"status\": \"The ITS fails to provide Feedback Fix. The ITS fails to provide Feedback Hint.\",\r",
+											"        \"total_score\": 3,\r",
+											"        \"score\": 0,\r",
+											"        \"submitted_by\": {\r",
+											"            \"email\": \"stu01@student.com\",\r",
+											"            \"organisation\": \"\",\r",
+											"            \"username\": \"\",\r",
+											"            \"is_student\": true,\r",
+											"            \"is_tutor\": false,\r",
+											"            \"is_manager\": false\r",
+											"        }\r",
+											"    };\r",
+											"    delete responseBody.pk;\r",
+											"    delete responseBody.submission_date;\r",
+											"    delete responseBody.submission_number;\r",
+											"    pm.expect(responseBody).to.eql(expectedResponseSubmissionCreated, \"Response body doesn't match expected\");\r",
+											"});\r",
+											""
 										],
 										"type": "text/javascript",
 										"packages": {}
@@ -4069,7 +4326,203 @@
 							"response": []
 						},
 						{
-							"name": "[01] Student Add Submission to not Accessible Question",
+							"name": "[03] Student Add Submission (ITS Failed in Parser)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON\r",
+											"var responseBody = pm.response.json();\r",
+											"\r",
+											"// Check if the status code is 201 CREATED\r",
+											"pm.test(\"Status code is 201 CREATED\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"\r",
+											"pm.test(\"Submission Creation Response is correct\", function () {\r",
+											"    var expectedResponseSubmissionCreated = {\r",
+											"        \"qn_id\": 1,\r",
+											"        \"language\": \"python\",\r",
+											"        \"program\": \"numMap = {}\\n        n = len(nums)\\n        for i in range(n):\\n            complement = target - nums[i]\\n            if complement in numMap:\\n                return [numMap[complement], i]\\n            numMap[nums[i]] = i\\n        return []\",\r",
+											"        \"its_feedback_hint_student\": {\r",
+											"            \"message\": \"\"\r",
+											"        },\r",
+											"        \"its_feedback_fix_tutor\": {\r",
+											"            \"message\": \"\"\r",
+											"        },\r",
+											"        \"tutor_feedback\": null,\r",
+											"        \"status\": \"The ITS failed to parse Student Program.\",\r",
+											"        \"total_score\": 3,\r",
+											"        \"score\": 0,\r",
+											"        \"submitted_by\": {\r",
+											"            \"email\": \"stu01@student.com\",\r",
+											"            \"organisation\": \"\",\r",
+											"            \"username\": \"\",\r",
+											"            \"is_student\": true,\r",
+											"            \"is_tutor\": false,\r",
+											"            \"is_manager\": false\r",
+											"        }\r",
+											"    };\r",
+											"    delete responseBody.pk;\r",
+											"    delete responseBody.submission_date;\r",
+											"    delete responseBody.submission_number;\r",
+											"    pm.expect(responseBody).to.eql(expectedResponseSubmissionCreated, \"Response body doesn't match expected\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{student_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "qn_id",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "language",
+											"value": "python",
+											"type": "text"
+										},
+										{
+											"key": "program",
+											"value": "        numMap = {}\n        n = len(nums)\n        for i in range(n):\n            complement = target - nums[i]\n            if complement in numMap:\n                return [numMap[complement], i]\n            numMap[nums[i]] = i\n        return [] ",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/student/submission",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"student",
+										"submission"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[04] Student Add Submission (ITS Failed in Intepreter)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON\r",
+											"var responseBody = pm.response.json();\r",
+											"\r",
+											"// Check if the status code is 201 CREATED\r",
+											"pm.test(\"Status code is 201 CREATED\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"\r",
+											"pm.test(\"Submission Creation Response is correct\", function () {\r",
+											"    var expectedResponseSubmissionCreated = {\r",
+											"        \"qn_id\": 2,\r",
+											"        \"language\": \"python\",\r",
+											"        \"program\": \"def lengthOfLongestSubstring(s: str) -> int:\\n    n = len(s)\\n    maxLength = 0\\n    charMap = {}\\n    left = 0\\n\\n    for right in range(n):\\n        if s[right] not in charMap or charMap[s[right]] < left:\\n            charMap[s[right]] = right\\n            maxLength = max(maxLength, right - left + 1)\\n        else:\\n            left = charMap[s[right]] + 1\\n            charMap[s[right]] = right\\n\\n    return maxLength\",\r",
+											"        \"its_feedback_hint_student\": {\r",
+											"            \"message\": \"\"\r",
+											"        },\r",
+											"        \"its_feedback_fix_tutor\": {\r",
+											"            \"message\": \"\"\r",
+											"        },\r",
+											"        \"tutor_feedback\": null,\r",
+											"        \"status\": \"The ITS interpreter fails to interprete the Program and Testcases. The ITS fails to provide Feedback Fix. The ITS fails to provide Feedback Hint.\",\r",
+											"        \"total_score\": 0,\r",
+											"        \"score\": 0,\r",
+											"        \"submitted_by\": {\r",
+											"            \"email\": \"stu01@student.com\",\r",
+											"            \"organisation\": \"\",\r",
+											"            \"username\": \"\",\r",
+											"            \"is_student\": true,\r",
+											"            \"is_tutor\": false,\r",
+											"            \"is_manager\": false\r",
+											"        }\r",
+											"    };\r",
+											"    delete responseBody.pk;\r",
+											"    delete responseBody.submission_date;\r",
+											"    delete responseBody.submission_number;\r",
+											"    pm.expect(responseBody).to.eql(expectedResponseSubmissionCreated, \"Response body doesn't match expected\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{student_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "qn_id",
+											"value": "2",
+											"type": "text"
+										},
+										{
+											"key": "language",
+											"value": "python",
+											"type": "text"
+										},
+										{
+											"key": "program",
+											"value": "def lengthOfLongestSubstring(s: str) -> int:\n    n = len(s)\n    maxLength = 0\n    charMap = {}\n    left = 0\n\n    for right in range(n):\n        if s[right] not in charMap or charMap[s[right]] < left:\n            charMap[s[right]] = right\n            maxLength = max(maxLength, right - left + 1)\n        else:\n            left = charMap[s[right]] + 1\n            charMap[s[right]] = right\n\n    return maxLength",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/student/submission",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"student",
+										"submission"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[05] Student Add Submission to not Accessible Question",
 							"event": [
 								{
 									"listen": "test",
@@ -4081,7 +4534,12 @@
 											"// Check if the status code is 201 CREATED\r",
 											"pm.test(\"Status code is 403 Forbidden\", function () {\r",
 											"    pm.response.to.have.status(403);\r",
-											"});"
+											"});\r",
+											"\r",
+											"pm.test(\"Response message is correct\", function () {\r",
+											"    pm.expect(responseBody.message).to.eql(\"Question with qn_id 5 is not available to the student\");\r",
+											"});\r",
+											""
 										],
 										"type": "text/javascript",
 										"packages": {}
@@ -4135,7 +4593,7 @@
 							"response": []
 						},
 						{
-							"name": "[01] Student Add Submission to Missing Question",
+							"name": "[06] Student Add Submission to Missing Question",
 							"event": [
 								{
 									"listen": "test",
@@ -4147,6 +4605,10 @@
 											"// Check if the status code is 201 CREATED\r",
 											"pm.test(\"Status code is 404 Not FOUND\", function () {\r",
 											"    pm.response.to.have.status(404);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response message is correct\", function () {\r",
+											"    pm.expect(responseBody.message).to.eql(\"Question with qn_id 10000 not found\");\r",
 											"});"
 										],
 										"type": "text/javascript",
@@ -4201,7 +4663,7 @@
 							"response": []
 						},
 						{
-							"name": "[03] Student List Past Submissions of a Question",
+							"name": "[07] Student List Past Submissions of a Question",
 							"event": [
 								{
 									"listen": "test",
@@ -4213,6 +4675,10 @@
 											"// Check if the status code is 200 OK\r",
 											"pm.test(\"Status code is 200 OK\", function () {\r",
 											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Check if 'submissions' array is not empty\", function () {\r",
+											"    pm.expect(responseBody.submissions.length).to.be.above(0, \"The 'submissions' array should not be empty\");\r",
 											"});"
 										],
 										"type": "text/javascript",
@@ -4260,7 +4726,7 @@
 							"response": []
 						},
 						{
-							"name": "[04] Student List Past Submissions of a Question without Past Submission",
+							"name": "[08] Student List Past Submissions of a Question without Past Submission",
 							"event": [
 								{
 									"listen": "test",
@@ -4272,6 +4738,10 @@
 											"// Check if the status code is 200 OK\r",
 											"pm.test(\"Status code is 200 OK\", function () {\r",
 											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response to list submission is correct\", function () {\r",
+											"    pm.expect(responseBody.submissions).to.eql([]);\r",
 											"});"
 										],
 										"type": "text/javascript",
@@ -4293,7 +4763,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/student/submission?qn_id=2",
+									"raw": "{{base_url}}/student/submission?qn_id=7",
 									"host": [
 										"{{base_url}}"
 									],
@@ -4304,7 +4774,7 @@
 									"query": [
 										{
 											"key": "qn_id",
-											"value": "2"
+											"value": "7"
 										}
 									]
 								}
@@ -4312,7 +4782,7 @@
 							"response": []
 						},
 						{
-							"name": "[05] Student List Past Submissions of Missing Question",
+							"name": "[09] Student List Past Submissions of Missing Question",
 							"event": [
 								{
 									"listen": "test",
@@ -4324,6 +4794,10 @@
 											"// Check if the status code is 404 NOT FOUND\r",
 											"pm.test(\"Status code is 404 NOT FOUND\", function () {\r",
 											"    pm.response.to.have.status(404);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response message is correct\", function () {\r",
+											"    pm.expect(responseBody.message).to.eql(\"Question with qn_id 100000 not found\");\r",
 											"});"
 										],
 										"type": "text/javascript",
@@ -4378,7 +4852,7 @@
 							"response": []
 						},
 						{
-							"name": "[05] Student List Past Submissions of Not accessible Question",
+							"name": "[10] Student List Past Submissions of Not accessible Question",
 							"event": [
 								{
 									"listen": "test",
@@ -4390,6 +4864,10 @@
 											"// Check if the status code is 404 NOT FOUND\r",
 											"pm.test(\"Status code is 403 Forbidden\", function () {\r",
 											"    pm.response.to.have.status(403);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response message is correct\", function () {\r",
+											"    pm.expect(responseBody.message).to.eql(\"Student does not have access to Question with qn_id 5\");\r",
 											"});"
 										],
 										"type": "text/javascript",
@@ -4437,7 +4915,7 @@
 							"response": []
 						},
 						{
-							"name": "[06] Student Retrieve Submission Feedback and Details",
+							"name": "[11] Student Retrieve Submission Feedback and Details",
 							"event": [
 								{
 									"listen": "test",
@@ -4449,6 +4927,26 @@
 											"// Check if the status code is 200 OK\r",
 											"pm.test(\"Status code is 200 OK\", function () {\r",
 											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Retrieve Submission Response is correct\", function () {\r",
+											"    var expectedResponseSubmission= {\r",
+											"        \"id\": 8,\r",
+											"        \"qn_id\": 1,\r",
+											"        \"language\": \"python\",\r",
+											"        \"submission_number\": 5,\r",
+											"        \"program\": \"def twoSum(nums, target):\\n        numMap = {}\\n        n = len(nums)\\n        for i in range(n):\\n            complement = target - nums[i]\\n            if complement in numMap:\\n                return [numMap[complement], i]\\n            numMap[nums[i]] = i\\n        return []\",\r",
+											"        \"status\": \"The ITS fails to provide Feedback Fix. The ITS fails to provide Feedback Hint.\",\r",
+											"        \"score\": 3,\r",
+											"        \"tutor_feedback\": null,\r",
+											"        \"its_feedback_hint_student\": {\r",
+											"            \"message\": \"\"\r",
+											"        },\r",
+											"        \"total_score\": 3,\r",
+											"        \"submitted_by\": 1\r",
+											"    };\r",
+											"    delete responseBody.submission_date\r",
+											"    pm.expect(responseBody).to.eql(expectedResponseSubmission, \"Response body doesn't match expected\");\r",
 											"});"
 										],
 										"type": "text/javascript",
@@ -4484,7 +4982,7 @@
 							"response": []
 						},
 						{
-							"name": "[07] Student Retrieve Missing Submission's Details",
+							"name": "[12] Student Retrieve Missing Submission's Details",
 							"event": [
 								{
 									"listen": "test",
@@ -4496,6 +4994,10 @@
 											"// Check if the status code is 404 NOT FOUND\r",
 											"pm.test(\"Status code is 404 NOT FOUND\", function () {\r",
 											"    pm.response.to.have.status(404);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response detail is correct\", function () {\r",
+											"    pm.expect(responseBody.detail).to.eql(\"Not found.\");\r",
 											"});"
 										],
 										"type": "text/javascript",
@@ -4548,6 +5050,10 @@
 											"// Check if the status code is 201 CREATED\r",
 											"pm.test(\"Status code is 200 OK\", function () {\r",
 											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Check if 'submissions' array is not empty\", function () {\r",
+											"    pm.expect(responseBody.submissions.length).to.be.above(0, \"The 'submissions' array should not be empty\");\r",
 											"});"
 										],
 										"type": "text/javascript",
@@ -4603,7 +5109,7 @@
 							"response": []
 						},
 						{
-							"name": "[01] Tutor List all Student Submissions from a Question(not Owned by the Tutor)",
+							"name": "[02] Tutor List all Student Submissions from a Question(not Owned by the Tutor)",
 							"event": [
 								{
 									"listen": "test",
@@ -4615,6 +5121,10 @@
 											"// Check if the status code is 404 NOT FOUND\r",
 											"pm.test(\"Status code is 403 Forbidden\", function () {\r",
 											"    pm.response.to.have.status(403);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response message is correct\", function () {\r",
+											"    pm.expect(responseBody.message).to.eql(\"You do not have the permission to access information for question 5\");\r",
 											"});"
 										],
 										"type": "text/javascript",
@@ -4670,7 +5180,7 @@
 							"response": []
 						},
 						{
-							"name": "[02] Tutor List all Student Submissions from a Missing Question",
+							"name": "[03] Tutor List all Student Submissions from a Missing Question",
 							"event": [
 								{
 									"listen": "test",
@@ -4682,6 +5192,10 @@
 											"// Check if the status code is 404 NOT FOUND\r",
 											"pm.test(\"Status code is 403 Forbidden\", function () {\r",
 											"    pm.response.to.have.status(403);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response message is correct\", function () {\r",
+											"    pm.expect(responseBody.message).to.eql(\"You do not have the permission to access information for question 10000\");\r",
 											"});"
 										],
 										"type": "text/javascript",
@@ -4729,7 +5243,7 @@
 							"response": []
 						},
 						{
-							"name": "[03] Tutor Retrieve Submission Details",
+							"name": "[04] Tutor Retrieve Submission Details",
 							"event": [
 								{
 									"listen": "test",
@@ -4741,6 +5255,25 @@
 											"// Check if the status code is 200 OK\r",
 											"pm.test(\"Status code is 200 OK\", function () {\r",
 											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Retrieve Submission Response is correct\", function () {\r",
+											"    var expectedResponseSubmission= {\r",
+											"        \"pk\": 8,\r",
+											"        \"qn_id\": 1,\r",
+											"        \"submission_number\": 5,\r",
+											"        \"language\": \"python\",\r",
+											"        \"program\": \"def twoSum(nums, target):\\n        numMap = {}\\n        n = len(nums)\\n        for i in range(n):\\n            complement = target - nums[i]\\n            if complement in numMap:\\n                return [numMap[complement], i]\\n            numMap[nums[i]] = i\\n        return []\",\r",
+											"        \"its_feedback_fix_tutor\": {\r",
+											"            \"message\": \"\"\r",
+											"        },\r",
+											"        \"tutor_feedback\": null,\r",
+											"        \"status\": \"The ITS fails to provide Feedback Fix. The ITS fails to provide Feedback Hint.\",\r",
+											"        \"total_score\": 3,\r",
+											"        \"score\": 3\r",
+											"    };\r",
+											"    delete responseBody.submission_date\r",
+											"    pm.expect(responseBody).to.eql(expectedResponseSubmission, \"Response body doesn't match expected\");\r",
 											"});"
 										],
 										"type": "text/javascript",
@@ -4776,7 +5309,7 @@
 							"response": []
 						},
 						{
-							"name": "[04] Tutor Retrieve Missing Submission Details",
+							"name": "[05] Tutor Retrieve Missing Submission Details",
 							"event": [
 								{
 									"listen": "test",
@@ -4788,6 +5321,10 @@
 											"// Check if the status code is 404 NOT FOUND\r",
 											"pm.test(\"Status code is 404 NOT FOUND\", function () {\r",
 											"    pm.response.to.have.status(404);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response message is correct\", function () {\r",
+											"    pm.expect(responseBody.message).to.eql(\"The submission requested does not exist\");\r",
 											"});"
 										],
 										"type": "text/javascript",
@@ -4823,7 +5360,7 @@
 							"response": []
 						},
 						{
-							"name": "[05] Tutor Add/Update feedback to a  Student Submission",
+							"name": "[06] Tutor Add/Update feedback to a  Student Submission",
 							"event": [
 								{
 									"listen": "test",
@@ -4835,6 +5372,10 @@
 											"// Check if the status code is 200 OK\r",
 											"pm.test(\"Status code is 200 OK\", function () {\r",
 											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Feedback Creation Response is correct\", function () {\r",
+											"    pm.expect(responseBody.tutor_feedback).to.eql(\"Great Job!\");\r",
 											"});"
 										],
 										"type": "text/javascript",
@@ -4892,6 +5433,10 @@
 											"// Check if the status code is 404 NOT FOUND\r",
 											"pm.test(\"Status code is 403 Forbidden\", function () {\r",
 											"    pm.response.to.have.status(403);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response detail is correct\", function () {\r",
+											"    pm.expect(responseBody.detail).to.eql(\"Authentication credentials were not provided.\");\r",
 											"});"
 										],
 										"type": "text/javascript",

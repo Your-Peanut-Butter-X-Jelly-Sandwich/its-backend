@@ -4,7 +4,7 @@ from django.utils import timezone
 
 
 def get_default_due_date():
-    return timezone.now() + relativedelta(days=30)
+    return timezone.now().date() + relativedelta(days=30)
 
 
 class Question(models.Model):

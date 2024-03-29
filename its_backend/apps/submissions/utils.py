@@ -6,7 +6,11 @@ from rest_framework.exceptions import APIException
 
 from ..accounts.models import Teaches
 from ..questions.models import Question, TestCase
-from ..submissions.its_utils import ITSFeedbackException, ITSParserException
+from ..submissions.its_utils import (
+    ITSFeedbackException,
+    ITSInterpreterException,
+    ITSParserException,
+)
 from .its_utils import (
     its_request_feedback_fix,
     its_request_feedback_hint,
@@ -113,6 +117,9 @@ def process_feedback_params(
 def get_feedback_for_tutor(
     language, parsed_ref_program, parsed_stu_program, function, failed_test_cases
 ):
+    if not failed_test_cases:
+        raise CannotGeneratedFeedbackException()
+    
     io_input, arguments, language, parsed_ref_program, parsed_stu_program = (
         process_feedback_params(
             language, parsed_ref_program, parsed_stu_program, failed_test_cases
@@ -136,6 +143,9 @@ def get_feedback_for_tutor(
 def get_feedback_for_student(
     language, parsed_ref_program, parsed_stu_program, function, failed_test_cases
 ):
+    if not failed_test_cases:
+        raise CannotGeneratedFeedbackException()
+    
     io_input, arguments, language, parsed_ref_program, parsed_stu_program = (
         process_feedback_params(
             language, parsed_ref_program, parsed_stu_program, failed_test_cases
@@ -204,9 +214,17 @@ def process_submission_request(request):
         else:
             function = next(iter(parsed_stu_program["fncs"].keys()))
             # number of test cases passed
-            total_score, score, failed_test_cases = compute_score(
-                qn_id, language, parsed_stu_program, function
-            )
+            try:
+                total_score, score, failed_test_cases = compute_score(
+                    qn_id, language, parsed_stu_program, function
+                )
+            except ITSInterpreterException:
+                test_cases = TestCase.objects.filter(question_id=qn_id)
+                total_score = test_cases.count()
+                total_score = 0
+                score = 0
+                failed_test_cases = None
+                status += ItsStatus.ITS_FEEDBACK_INTERPRETER_FAILURE.value
 
             try:
                 its_feedback_fix_tutor = get_feedback_for_tutor(
