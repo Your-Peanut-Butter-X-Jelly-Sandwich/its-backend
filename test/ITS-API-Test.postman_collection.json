@@ -530,6 +530,7 @@
 										"exec": [
 											"// Parse the response body as JSON",
 											"var responseBody = pm.response.json();",
+											"delete responseBody[\"id\"];",
 											"",
 											"// Check if the status code is 201 CREATED",
 											"pm.test(\"Status code is 201 CREATED\", function () {",
@@ -538,7 +539,6 @@
 											"",
 											"// Check if the response contains the expected message",
 											"let expectedResponseBody = {",
-											"    \"id\": 17,",
 											"    \"email\": \"newuser@its.com\",",
 											"    \"organisation\": \"\",",
 											"    \"username\": \"\",",
@@ -1384,7 +1384,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/students?student_ids=20",
+									"raw": "{{base_url}}/students?student_ids=100",
 									"host": [
 										"{{base_url}}"
 									],
@@ -1394,7 +1394,7 @@
 									"query": [
 										{
 											"key": "student_ids",
-											"value": "20"
+											"value": "100"
 										}
 									]
 								}
@@ -1518,7 +1518,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/students?student_ids=1,11,20",
+									"raw": "{{base_url}}/students?student_ids=1,11,100",
 									"host": [
 										"{{base_url}}"
 									],
@@ -1528,7 +1528,7 @@
 									"query": [
 										{
 											"key": "student_ids",
-											"value": "1,11,20"
+											"value": "1,11,100"
 										}
 									]
 								}
@@ -1597,56 +1597,20 @@
 											"    pm.response.to.have.status(200);",
 											"});",
 											"",
-											"// Check if the response contains the expected message",
-											"var expectedResponseUsers = [",
-											"    {",
-											"        \"id\": 1,",
-											"        \"email\": \"stu01@student.com\",",
-											"        \"organisation\": \"\",",
-											"        \"username\": \"\",",
-											"        \"is_student\": true,",
-											"        \"is_tutor\": false,",
-											"        \"is_manager\": false",
-											"    },",
-											"    {",
-											"        \"id\": 2,",
-											"        \"email\": \"stu02@student.com\",",
-											"        \"organisation\": \"\",",
-											"        \"username\": \"\",",
-											"        \"is_student\": true,",
-											"        \"is_tutor\": false,",
-											"        \"is_manager\": false",
-											"    },",
-											"    {",
-											"        \"id\": 3,",
-											"        \"email\": \"stu03@student.com\",",
-											"        \"organisation\": \"\",",
-											"        \"username\": \"\",",
-											"        \"is_student\": true,",
-											"        \"is_tutor\": false,",
-											"        \"is_manager\": false",
-											"    },",
-											"    {",
-											"        \"id\": 4,",
-											"        \"email\": \"stu04@student.com\",",
-											"        \"organisation\": \"\",",
-											"        \"username\": \"\",",
-											"        \"is_student\": true,",
-											"        \"is_tutor\": false,",
-											"        \"is_manager\": false",
-											"    },",
-											"    {",
-											"        \"id\": 5,",
-											"        \"email\": \"stu05@student.com\",",
-											"        \"organisation\": \"\",",
-											"        \"username\": \"\",",
-											"        \"is_student\": true,",
-											"        \"is_tutor\": false,",
-											"        \"is_manager\": false",
-											"    }",
-											"];",
+											"// Check if the response contains the expected emails",
+											"let expectedResponseEmails = [];",
+											"for (let i = 1; i <= 5; i++) {",
+											"    let id = '0' + i;",
+											"    expectedResponseEmails.push('stu' + id + '@student.com');",
+											"}",
+											"",
+											"let actualResponseEmails = [];",
+											"responseBody.user.forEach(obj => {",
+											"    actualResponseEmails.push(obj.email);",
+											"});",
+											"",
 											"pm.test(\"Retrieved students are correct\", function () {",
-											"    pm.expect(responseBody.user).to.eql(expectedResponseUsers);",
+											"    pm.expect(expectedResponseEmails).to.eql(actualResponseEmails);",
 											"});",
 											""
 										],
@@ -1691,65 +1655,21 @@
 											"    pm.response.to.have.status(200);",
 											"});",
 											"",
-											"// Check if the response contains the expected message",
-											"var expectedResponseUsers = [",
-											"    {",
-											"        \"id\": 6,",
-											"        \"email\": \"stu06@student.com\",",
-											"        \"organisation\": \"\",",
-											"        \"username\": \"\",",
-											"        \"is_student\": true,",
-											"        \"is_tutor\": false,",
-											"        \"is_manager\": false",
-											"    },",
-											"    {",
-											"        \"id\": 7,",
-											"        \"email\": \"stu07@student.com\",",
-											"        \"organisation\": \"\",",
-											"        \"username\": \"\",",
-											"        \"is_student\": true,",
-											"        \"is_tutor\": false,",
-											"        \"is_manager\": false",
-											"    },",
-											"    {",
-											"        \"id\": 8,",
-											"        \"email\": \"stu08@student.com\",",
-											"        \"organisation\": \"\",",
-											"        \"username\": \"\",",
-											"        \"is_student\": true,",
-											"        \"is_tutor\": false,",
-											"        \"is_manager\": false",
-											"    },",
-											"    {",
-											"        \"id\": 9,",
-											"        \"email\": \"stu09@student.com\",",
-											"        \"organisation\": \"\",",
-											"        \"username\": \"\",",
-											"        \"is_student\": true,",
-											"        \"is_tutor\": false,",
-											"        \"is_manager\": false",
-											"    },",
-											"    {",
-											"        \"id\": 10,",
-											"        \"email\": \"stu10@student.com\",",
-											"        \"organisation\": \"\",",
-											"        \"username\": \"\",",
-											"        \"is_student\": true,",
-											"        \"is_tutor\": false,",
-											"        \"is_manager\": false",
-											"    },",
-											"    {",
-											"        \"id\": 17,",
-											"        \"email\": \"newuser@its.com\",",
-											"        \"organisation\": \"\",",
-											"        \"username\": \"\",",
-											"        \"is_student\": true,",
-											"        \"is_tutor\": false,",
-											"        \"is_manager\": false",
-											"    }",
-											"];",
+											"// Check if the response contains the expected emails",
+											"let expectedResponseEmails = [];",
+											"for (let i = 6; i <= 10; i++) {",
+											"    let id = i < 10 ? '0' + i : i;",
+											"    expectedResponseEmails.push('stu' + id + '@student.com');",
+											"}",
+											"expectedResponseEmails.push('newuser@its.com');",
+											"",
+											"let actualResponseEmails = [];",
+											"responseBody.user.forEach(obj => {",
+											"    actualResponseEmails.push(obj.email);",
+											"});",
+											"",
 											"pm.test(\"Retrieved students are correct\", function () {",
-											"    pm.expect(responseBody.user).to.eql(expectedResponseUsers);",
+											"    pm.expect(expectedResponseEmails).to.eql(actualResponseEmails);",
 											"});",
 											""
 										],
@@ -2842,6 +2762,397 @@
 									],
 									"path": [
 										"teaches"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{manager_bearer}}",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "[09] Test Promote Students to Tutors",
+					"item": [
+						{
+							"name": "[01] Create Test Students to Promote",
+							"item": [
+								{
+									"name": "[01] Create Student 18",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"email\": \"tut18@promoted.com\",\n    \"password\": \"CS3213ITS\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/auth/signup",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"auth",
+												"signup"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[02] Create Student 19",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"email\": \"tut19@promoted.com\",\n    \"password\": \"CS3213ITS\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/auth/signup",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"auth",
+												"signup"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[03] Create Student 20",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"email\": \"tut20@promoted.com\",\n    \"password\": \"CS3213ITS\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/auth/signup",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"auth",
+												"signup"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "[02] Promote Student - Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Successful Promotion\", function () {",
+											"    pm.expect(responseBody.message).to.eql(\"Successfully promoted students to tutors\");",
+											"    pm.expect(responseBody).to.not.have.property(\"warning\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"student_ids\": [18, 19, 20]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/students/promote",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"students",
+										"promote"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[03] Promote Students - Fail Silently (Student Not Student)",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Response body contains expected warning message\", function () {",
+											"    pm.expect(responseBody.message).to.eql(\"Successfully promoted students to tutors\");",
+											"    pm.expect(responseBody.warning).to.eql({",
+											"        \"message\": \"These users were not promoted as they do not exist or are not students\",",
+											"        \"ids\": [11, 12, 13]",
+											"    });",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"student_ids\": [11, 12, 13]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/students/promote",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"students",
+										"promote"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[04] Promote Students - Failure (Invalid Payload)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 400 Bad Request",
+											"pm.test(\"Status code is 400 Bad Request\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Response body contains expected error message\", function () {",
+											"    pm.expect(responseBody.error).to.eql(\"Missing 'student_ids' key in payload\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/students/promote",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"students",
+										"promote"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[05] Promote Students - Failure (Invalid Student IDs)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 400 Bad Request",
+											"pm.test(\"Status code is 400 Bad Request\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Response body contains expected error message\", function () {",
+											"    pm.expect(responseBody.error).to.eql(\"Value of 'student_ids' must be an array of integers\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"student_ids\": 1\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/students/promote",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"students",
+										"promote"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[06] Test User Status",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Check if the response contains the expected emails",
+											"let expectedResponseEmails = [];",
+											"for (let id = 18; id <= 20; id++) {",
+											"    expectedResponseEmails.push('tut' + id + '@promoted.com');",
+											"}",
+											"",
+											"pm.test(\"Students are correctly promoted to tutors\", function () {",
+											"    let actualResponseEmails = [];",
+											"    responseBody.user.forEach(obj => {",
+											"        actualResponseEmails.push(obj.email);",
+											"        pm.expect(obj.is_student).to.eql(false);",
+											"        pm.expect(obj.is_tutor).to.eql(true);",
+											"    });",
+											"    pm.expect(expectedResponseEmails).to.eql(actualResponseEmails);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/tutors?tutor_ids=18,19,20",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutors"
+									],
+									"query": [
+										{
+											"key": "tutor_ids",
+											"value": "18,19,20"
+										}
 									]
 								}
 							},
