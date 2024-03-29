@@ -1,6 +1,7 @@
 from allauth.socialaccount.views import SignupView as AllauthSignupView
 from django.contrib.auth import logout
 from django.db import IntegrityError
+from django.db.models import F
 from django.http import HttpRequest, HttpResponsePermanentRedirect
 from rest_framework import generics, serializers, status, views
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -78,7 +79,7 @@ class LogoutView(views.APIView):
     ]
 
     def post(self, request):
-        refresh_token = request.data["tokens"]["refresh"]
+        refresh_token = request.data.get("tokens", {}).get("refresh")
         if not refresh_token:
             return Response(
                 {"error": "Refresh token is required"},
@@ -101,13 +102,12 @@ class CustomRedirect(HttpResponsePermanentRedirect):
     allowed_schemes = ["http", "https"]
 
 
-""" 
-Override allauth social signup view such that when a user attempts to third party signup with an existing email,
-they gets logged in directly and redirected back to frontend
-"""
-
-
 class CustomSignupView(AllauthSignupView):
+    """
+    Override allauth social signup view such that when a user attempts to third party signup with an existing email,
+    they gets logged in directly and redirected back to frontend
+    """
+
     http_method_names = ["get"]
 
     def dispatch(self, request, *args, **kwargs):
@@ -203,7 +203,7 @@ class RetrieveStudentsView(views.APIView):
 
     def get_all_students(self):
         students = CustomUser.objects.filter(is_student=True)
-        serialized_students = [self.serializer_class(s).data for s in students]
+        serialized_students = self.serializer_class(students, many=True).data
         return Response({"user": serialized_students}, status=status.HTTP_200_OK)
 
     def get_students_by_ids(self, student_ids: list[str]):
@@ -237,8 +237,6 @@ class RetrieveStudentsView(views.APIView):
             return Response(
                 data={"error": e.detail}, status=status.HTTP_400_BAD_REQUEST
             )
-        except AttributeError as e:
-            return Response(data={"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response({"user": serialized_data}, status=status.HTTP_200_OK)
 
@@ -273,13 +271,11 @@ class RetrieveStudentsView(views.APIView):
             students = CustomUser.objects.filter(id__in=students_taught_by_tutor)
 
         try:
-            serialized_data = [self.serializer_class(s).data for s in students]
+            serialized_data = self.serializer_class(students, many=True).data
         except serializers.ValidationError as e:
             return Response(
                 data={"error": e.detail}, status=status.HTTP_400_BAD_REQUEST
             )
-        except AttributeError as e:
-            return Response(data={"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response({"user": serialized_data}, status=status.HTTP_200_OK)
 
@@ -325,6 +321,68 @@ class RetrieveStudentsView(views.APIView):
         )
 
 
+class PromoteStudentsView(views.APIView):
+    """
+    Promotes students to tutors by managers only
+
+    HTTP Request
+        POST students/promote
+
+    Example Payloads
+        {"student_ids": [1]}
+        {"student_ids": [1, 2, 3]}
+    """
+
+    permission_classes = [IsManager]
+
+    def post(self, request: HttpRequest):
+        payload = request.data
+        ids = payload.get("student_ids")
+
+        if not ids:
+            return Response(
+                {"error": "Missing 'student_ids' key in payload"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if not isinstance(ids, list) or not any(isinstance(_id, int) for _id in ids):
+            return Response(
+                {"error": "Value of 'student_ids' must be an array of integers"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        # Retrieve unique IDs
+        ids = set(ids)
+
+        # Retrieve all CustomUsers with ID in student_ids
+        students = CustomUser.objects.filter(id__in=ids, is_student=True)
+        student_ids = set(students.values_list("id", flat=True))
+
+        # Promote students to tutors
+        #   If user is a superuser or a manager, keep their is_student status
+        #   Else, set to false
+        students.update(
+            is_student=F("is_superuser") or F("is_manager"),
+            is_tutor=True,
+        )
+
+        not_students = None
+        if len(ids) != len(student_ids):
+            not_students = ids - student_ids
+
+        data = {"message": "Successfully promoted students to tutors"}
+        if not_students:
+            data["warning"] = {
+                "message": "These users were not promoted as they do not exist or are not students",
+                "ids": not_students,
+            }
+
+        return Response(
+            data,
+            status=status.HTTP_200_OK,
+        )
+
+
 class RetrieveTutorsView(views.APIView):
     permission_classes = [IsTutor | IsManager]
     serializer_class = RetrieveUserSerializer
@@ -365,8 +423,6 @@ class RetrieveTutorsView(views.APIView):
             return Response(
                 data={"error": e.detail}, status=status.HTTP_400_BAD_REQUEST
             )
-        except AttributeError as e:
-            return Response(data={"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response({"user": serialized_data}, status=status.HTTP_200_OK)
 
@@ -400,8 +456,6 @@ class RetrieveTutorsView(views.APIView):
             return Response(
                 data={"error": e.detail}, status=status.HTTP_400_BAD_REQUEST
             )
-        except AttributeError as e:
-            return Response(data={"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response({"user": serialized_data}, status=status.HTTP_200_OK)
 
