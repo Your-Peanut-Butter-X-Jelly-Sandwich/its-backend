@@ -341,36 +341,39 @@ class PromoteStudentsView(views.APIView):
 
         if not ids:
             return Response(
-                {"error": "Missing student IDs"}, status=status.HTTP_400_BAD_REQUEST
+                {"error": "Missing 'student_ids' key in payload"},
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
         if not isinstance(ids, list) or not any(isinstance(_id, int) for _id in ids):
             return Response(
-                {"error": "student_ids must be a list of integers"},
+                {"error": "Value of 'student_ids' must be an array of integers"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
+        # Retrieve unique IDs
+        ids = set(ids)
+
         # Retrieve all CustomUsers with ID in student_ids
-        student_ids = CustomUser.objects.filter(
-            id__in=ids, is_student=True
-        ).values_list("id", flat=True)
+        students = CustomUser.objects.filter(id__in=ids, is_student=True)
+        student_ids = set(students.values_list("id", flat=True))
 
         # Promote students to tutors
         #   If user is a superuser or a manager, keep their is_student status
         #   Else, set to false
-        CustomUser.objects.filter(id__in=student_ids).update(
+        students.update(
             is_student=F("is_superuser") or F("is_manager"),
             is_tutor=True,
         )
 
         not_students = None
         if len(ids) != len(student_ids):
-            not_students = set(ids) - set(student_ids)
+            not_students = ids - student_ids
 
         data = {"message": "Successfully promoted students to tutors"}
         if not_students:
             data["warning"] = {
-                "message": "These users were not promoted as they are not students",
+                "message": "These users were not promoted as they do not exist or are not students",
                 "ids": not_students,
             }
 
