@@ -1,6 +1,7 @@
 from allauth.socialaccount.views import SignupView as AllauthSignupView
 from django.contrib.auth import logout
 from django.db import IntegrityError
+from django.db.models import F
 from django.http import HttpRequest, HttpResponsePermanentRedirect
 from rest_framework import generics, serializers, status, views
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -317,6 +318,65 @@ class RetrieveStudentsView(views.APIView):
         return Response(
             {"error": "No student or tutor ids provided"},
             status=status.HTTP_400_BAD_REQUEST,
+        )
+
+
+class PromoteStudentsView(views.APIView):
+    """
+    Promotes students to tutors by managers only
+
+    HTTP Request
+        POST students/promote
+
+    Example Payloads
+        {"student_ids": [1]}
+        {"student_ids": [1, 2, 3]}
+    """
+
+    permission_classes = [IsManager]
+
+    def post(self, request: HttpRequest):
+        payload = request.data
+        ids = payload.get("student_ids")
+
+        if not ids:
+            return Response(
+                {"error": "Missing student IDs"}, status=status.HTTP_400_BAD_REQUEST
+            )
+
+        if not isinstance(ids, list) or not any(isinstance(_id, int) for _id in ids):
+            return Response(
+                {"error": "student_ids must be a list of integers"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        # Retrieve all CustomUsers with ID in student_ids
+        student_ids = CustomUser.objects.filter(
+            id__in=ids, is_student=True
+        ).values_list("id", flat=True)
+
+        # Promote students to tutors
+        #   If user is a superuser or a manager, keep their is_student status
+        #   Else, set to false
+        CustomUser.objects.filter(id__in=student_ids).update(
+            is_student=F("is_superuser") or F("is_manager"),
+            is_tutor=True,
+        )
+
+        not_students = None
+        if len(ids) != len(student_ids):
+            not_students = set(ids) - set(student_ids)
+
+        data = {"message": "Successfully promoted students to tutors"}
+        if not_students:
+            data["warning"] = {
+                "message": "These users were not promoted as they are not students",
+                "ids": not_students,
+            }
+
+        return Response(
+            data,
+            status=status.HTTP_200_OK,
         )
 
 
