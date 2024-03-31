@@ -1,5 +1,4 @@
 import json
-from ast import literal_eval
 from enum import Enum
 
 from rest_framework.exceptions import APIException
@@ -85,7 +84,7 @@ def compute_score(qn_id, language, student_solution, function):
         )
         try:
             result = its_interpreter_response["entries"][-1]["mem"]["$ret'"]
-        except:
+        except Exception:
             failed_test_cases.append(test_case.pk)
             continue
 
