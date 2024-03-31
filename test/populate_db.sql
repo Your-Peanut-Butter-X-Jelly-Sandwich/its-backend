@@ -77,7 +77,7 @@ Roman numerals are usually written largest to smallest from left to right. Howev
 I can be placed before V (5) and X (10) to make 4 and 9. 
 X can be placed before L (50) and C (100) to make 40 and 90. 
 C can be placed before D (500) and M (1000) to make 400 and 900.
-Given an integer, convert it to a roman numeral.', 'def intToRoman(num):
+Given an integer, convert it to a roman numeral.', '
     # Paso #1: Listas de valores romanos
     listado_unidad = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"]
     listado_decena = ["", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"]
@@ -222,25 +222,9 @@ INSERT INTO submissions_submissiondata ("qn_id", "submission_number", "submissio
 			Roman += storeIntRoman[i][1]
 			num -= storeIntRoman[i][0]
 	return Roman', 'no status yet', '0', '', '"{\"hint\": [{\"lineNumber\": 3, \"hintStrings\": [\"Incorrect else-block for if ( a > 0 )\"]}]}"', '"{\"fix\": [{\"lineNumber\": 5, \"oldExpr\": \"b = (b - 1)\", \"newExpr\": \"b = (b + 1)\", \"repairStrings\": [\"Wrong expression. Change b = (b - 1) to b = (b + 1);\"]}]}"', '3', '1', 'python'),
-('3', '3', '2024-03-15 14:16:40.151735', 'def intToRoman(num: int) -> str:
-	Roman = ""
-	storeIntRoman = [
-		[1000, "M"],
-		[900, "CM"],
-		[500, "D"],
-		[400, "CD"],
-		[100, "C"],
-		[90, "XC"],
-		[50, "L"],
-		[40, "XL"],
-		[10, "X"],
-		[9, "IX"],
-		[5, "V"],
-		[4, "IV"],
-		[1, "I"],
-	]
-	for i in range(len(storeIntRoman)):
-		while num >= storeIntRoman[i][0]:
-			Roman += storeIntRoman[i][1]
-			num -= storeIntRoman[i][0]
-	return Roman', 'no stau yet', '3', '', '"{\"hint\": [{\"lineNumber\": 3, \"hintStrings\": [\"Incorrect else-block for if ( a > 0 )\"]}]}"', '"{\"fix\": [{\"lineNumber\": 5, \"oldExpr\": \"b = (b - 1)\", \"newExpr\": \"b = (b + 1)\", \"repairStrings\": [\"Wrong expression. Change b = (b - 1) to b = (b + 1);\"]}]}"', '3', '1', 'python');
+('5', '1', '2024-03-15 14:16:40.151735', 'def main():
+    a = 10
+    b = 0
+    for i in range(0, a):
+        b = b + 1
+    return b', 'no status yet', '3', '', '"{\"message\": \"\"}"', '"{\"message\": \"\"}"', '3', '7', 'python');
