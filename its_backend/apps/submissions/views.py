@@ -17,6 +17,7 @@ from .utils import (
     QuestionNotAvailableToStudentError,
     QuestionNotFoundError,
     process_submission_request,
+    MissingFieldError,
 )
 
 
@@ -59,22 +60,20 @@ class StudentSubmissionViewSet(
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
-        except serializers.ValidationError as e:
-            return Response(
-                data={"message": e.detail}, status=status.HTTP_400_BAD_REQUEST
-            )
+        except MissingFieldError as e:
+            return Response(data={"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)   
         except QuestionNotAvailableToStudentError as e:
             return Response(data={"message": str(e)}, status=status.HTTP_403_FORBIDDEN)
         except QuestionNotFoundError as e:
             return Response(data={"message": str(e)}, status=status.HTTP_404_NOT_FOUND)
-        except Exception as e:  # Catch any other exceptions
-            return Response(
+        except Exception as e: 
+            return Response( 
                 data={"message": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+            ) 
 
     def list(self, request):
         qn_id = request.query_params.get("qn_id")
-        if qn_id is None:
+        if qn_id is None or qn_id == '':
             return Response(
                 data={"message": "You need to supply a question id"},
                 status=status.HTTP_400_BAD_REQUEST,
@@ -132,6 +131,7 @@ class TutorSubmissionViewSet(
         return self.serializer_class.get(self.action)
 
     def get_queryset(self):
+
         # Filter for submissions to questions created by the authenticated user
         qn_id = self.request.query_params.get("qn_id")
         try:
@@ -142,8 +142,8 @@ class TutorSubmissionViewSet(
 
     def list(self, request):
         qn_id = request.query_params.get("qn_id")
-        if qn_id is None:
-            return Response(
+        if qn_id is None or qn_id == '':
+            return Response(  
                 data={"message": "You need to supply a question id"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
@@ -165,7 +165,7 @@ class TutorSubmissionViewSet(
                 status=status.HTTP_403_FORBIDDEN,
             )
 
-    def retrieve(self, request, pk):
+    def retrieve(self, request, pk=None):
         queryset = self.queryset
         try:
             submission = queryset.get(pk=pk)
@@ -175,7 +175,7 @@ class TutorSubmissionViewSet(
 
         except Question.DoesNotExist:
             # If the question is not created by the authenticated user
-            return Response(
+            return Response( 
                 data={
                     "message": f"You do not have the permission to access information for submission {pk}"
                 },
@@ -188,7 +188,7 @@ class TutorSubmissionViewSet(
                 status=status.HTTP_404_NOT_FOUND,
             )
 
-    def update(self, request, partial=True, pk=None):
+    def update(self, request, partial=True, pk = None):
         queryset = self.queryset
         submision_pk = pk
         try:
@@ -202,12 +202,11 @@ class TutorSubmissionViewSet(
                 },
                 status=status.HTTP_403_FORBIDDEN,
             )
-        except Submissiondata.DoesNotExist:
-            return Response(
+        except Submissiondata.DoesNotExist: 
+            return Response( 
                 data={"message": "The submission requested does not exist"},
                 status=status.HTTP_404_NOT_FOUND,
             )
-
         serializer = self.get_serializer_class()(
             submission,
             data=request.data,
@@ -223,5 +222,5 @@ class TutorSubmissionViewSet(
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         except serializers.ValidationError as e:
             return Response(
-                data={"message": e.detail}, status=status.HTTP_400_BAD_REQUEST
+                data={"message": e.detail}, status=status.HTTP_400_BAD_REQUEST 
             )

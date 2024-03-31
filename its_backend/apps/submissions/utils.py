@@ -22,15 +22,15 @@ from .models import Submissiondata
 
 class ItsStatus(Enum):
     ITS_SUCCESS = "ITS SUCCESS"
-    ITS_STUDENT_SUBMISSION_PARSER_FAILURE = "The ITS failed to parse Student Program. "
-    ITS_REF_PROGRAM_PARSER_FAILURE = "The ITS failed to parse Reference Program. "
+    ITS_STUDENT_SUBMISSION_PARSER_FAILURE = "The ITS failed to parse Student Program and raises 500 Internal Error. "
+    ITS_REF_PROGRAM_PARSER_FAILURE = "The ITS failed to parse Reference Program and raises 500 Internal Error. "
     ITS_FEEDBACK_INTERPRETER_FAILURE = (
         "The ITS interpreter fails to interprete the Program and Testcases. "
     )
     ITS_FEEDBACK_HINT_FAILURE = "The ITS fails to provide Feedback Hint. "
     ITS_FEEDBACK_FIX_FAILURE = "The ITS fails to provide Feedback Fix. "
     ITS_STUDENT_SUBMISSION_PROGRAM_INVALID = (
-        "The ITS parser failed to evaluate the Student Submission Program"
+        "The ITS parser generates empty parsed result for the Student Submission Program. "
     )
 
 
@@ -39,6 +39,10 @@ class QuestionNotFoundError(Exception):
 
 
 class QuestionNotAvailableToStudentError(Exception):
+    pass
+
+
+class MissingFieldError(Exception):
     pass
 
 
@@ -56,7 +60,7 @@ def get_parsed_ref_program(question):
         parsed_program = its_request_parser(language, ref_program, "Reference Program")
         return parsed_program
     except ITSParserException:
-        return None
+        return None 
 
 
 def get_parsed_stu_program(program, language):
@@ -79,11 +83,14 @@ def compute_score(qn_id, language, student_solution, function):
         its_interpreter_response = its_request_interpreter(
             language, student_solution, function, inputs, arguments
         )
-        if not its_interpreter_response:
+        try:
+            result = its_interpreter_response["entries"][-1]["mem"]["$ret'"]
+        except:
+            failed_test_cases.append(test_case.pk)
             continue
-        result = its_interpreter_response["entries"][-1]["mem"]["$ret'"]
+
         result = str(result)
-        if literal_eval(result) == literal_eval(test_case.output):
+        if result == test_case.output:
             score += 1
         else:
             failed_test_cases.append(test_case.pk)
@@ -97,10 +104,7 @@ def get_submission_number(user, qn_id):
 
 def get_failed_test_case_arg(failed_test_cases):
     sample_test_case = TestCase.objects.filter(pk__in=failed_test_cases)
-    if sample_test_case.count() == 0:
-        return ""
-    else:  # noqa: RET505
-        return sample_test_case[0].input
+    return sample_test_case[0].input
 
 
 def process_feedback_params(
@@ -134,7 +138,7 @@ def get_feedback_for_tutor(
             io_input,
             arguments,
         )
-        its_feedback_fix_tutor = {"fixes": feedback_fix_array}
+        its_feedback_fix_tutor = {"fixes": feedback_fix_array} 
         return json.dumps(its_feedback_fix_tutor)
     except ITSFeedbackException as err:
         raise CannotGeneratedFeedbackException() from err
@@ -161,7 +165,7 @@ def get_feedback_for_student(
             arguments,
         )
         its_feedback_hint_student = {"hints": feedback_hint_array}
-        return json.dumps(its_feedback_hint_student)
+        return json.dumps(its_feedback_hint_student) 
     except ITSFeedbackException as err:
         raise CannotGeneratedFeedbackException() from err
 
@@ -182,6 +186,15 @@ def process_submission_request(request):
     qn_id = request.data.get("qn_id")
     status = ""
 
+    if not language:
+        raise MissingFieldError("Missing 'language' field in the request")
+    
+    if not program:
+        raise MissingFieldError("Missing 'program' field in the request")
+
+    if not qn_id:
+        raise MissingFieldError("Missing 'qn_id' field in the request")
+
     try:
         question = Question.objects.get(pk=qn_id)
     except Question.DoesNotExist:
@@ -194,23 +207,23 @@ def process_submission_request(request):
         ) from None
 
     mutable_data = request.data.copy()
+
     # parsed student and reference program
     parsed_stu_program = get_parsed_stu_program(program, language)
     parsed_ref_program = get_parsed_ref_program(question)
-
     # parse both ref program and student program successfully
     if parsed_ref_program and parsed_stu_program:
         # the entry function of the program
         if not parsed_stu_program["fncs"]:
             status += ItsStatus.ITS_STUDENT_SUBMISSION_PROGRAM_INVALID.value
-            total_score = 0
+            total_score = 0 
             score = 0
             its_feedback_hint_student = {"message": ""}
             its_feedback_hint_student = json.dumps(its_feedback_hint_student)
             its_feedback_fix_tutor = {"message": ""}
             its_feedback_fix_tutor = json.dumps(its_feedback_fix_tutor)
             test_cases = TestCase.objects.filter(question_id=qn_id)
-            total_score = test_cases.count()
+            total_score = test_cases.count() 
         else:
             function = next(iter(parsed_stu_program["fncs"].keys()))
             # number of test cases passed
@@ -225,33 +238,40 @@ def process_submission_request(request):
                 score = 0
                 failed_test_cases = None
                 status += ItsStatus.ITS_FEEDBACK_INTERPRETER_FAILURE.value
+        
+            # if all testcases are passed
+            if not failed_test_cases and score == total_score and score > 0: 
+                its_feedback = {"message": ""}
+                its_feedback_fix_tutor = json.dumps(its_feedback)
+                its_feedback_hint_student = json.dumps(its_feedback)
+                status += ItsStatus.ITS_SUCCESS.value 
+            else:
+                try:
+                    its_feedback_fix_tutor = get_feedback_for_tutor(
+                        language,
+                        parsed_ref_program,
+                        parsed_stu_program,
+                        function,
+                        failed_test_cases,
+                    )
+                    status += ItsStatus.ITS_SUCCESS.value 
+                except CannotGeneratedFeedbackException:
+                    its_feedback_fix_tutor = {"message": ""}
+                    its_feedback_fix_tutor = json.dumps(its_feedback_fix_tutor)
+                    status += ItsStatus.ITS_FEEDBACK_FIX_FAILURE.value
 
-            try:
-                its_feedback_fix_tutor = get_feedback_for_tutor(
-                    language,
-                    parsed_ref_program,
-                    parsed_stu_program,
-                    function,
-                    failed_test_cases,
-                )
-                status += ItsStatus.ITS_SUCCESS.value
-            except CannotGeneratedFeedbackException:
-                its_feedback_fix_tutor = {"message": ""}
-                its_feedback_fix_tutor = json.dumps(its_feedback_fix_tutor)
-                status += ItsStatus.ITS_FEEDBACK_FIX_FAILURE.value
-
-            try:
-                its_feedback_hint_student = get_feedback_for_student(
-                    language,
-                    parsed_ref_program,
-                    parsed_stu_program,
-                    function,
-                    failed_test_cases,
-                )
-            except CannotGeneratedFeedbackException:
-                its_feedback_hint_student = {"message": ""}
-                its_feedback_hint_student = json.dumps(its_feedback_hint_student)
-                status += ItsStatus.ITS_FEEDBACK_HINT_FAILURE.value
+                try:
+                    its_feedback_hint_student = get_feedback_for_student(
+                        language,
+                        parsed_ref_program,
+                        parsed_stu_program,
+                        function,
+                        failed_test_cases,
+                    )
+                except CannotGeneratedFeedbackException:
+                    its_feedback_hint_student = {"message": ""}
+                    its_feedback_hint_student = json.dumps(its_feedback_hint_student)
+                    status += ItsStatus.ITS_FEEDBACK_HINT_FAILURE.value
 
     # its parse refprogram/ stundet program failed
     else:
@@ -266,7 +286,7 @@ def process_submission_request(request):
         if not parsed_stu_program:
             status += ItsStatus.ITS_STUDENT_SUBMISSION_PARSER_FAILURE.value
         if not parsed_ref_program:
-            status += ItsStatus.ITS_REF_PROGRAM_PARSER_FAILURE.value
+            status += ItsStatus.ITS_REF_PROGRAM_PARSER_FAILURE.value 
 
     # get submission number
     submission_number = get_submission_number(request.user, qn_id)

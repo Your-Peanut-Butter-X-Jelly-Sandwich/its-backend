@@ -27,12 +27,3 @@ class Submissiondata(models.Model):
     def __str__(self) -> str:
         qn_title = Question.objects.get(pk=self.qn_id).question_title
         return f"Question {self.qn_id}: {qn_title} | Submission ID: {str(self.pk)} | By: {str(self.submitted_by.pk)}"
-
-
-# class ITSFeedback(models.Model):
-#     submission = models.ForeignKey(Submissiondata, on_delete=models.CASCADE)
-#     line = models.IntegerField(null = True)
-#     feedback = models.CharField(max_length=10000)
-
-#     def __str__(self):
-#         return ', '.join(self.feedback) if self.feedback else "No feedback"
