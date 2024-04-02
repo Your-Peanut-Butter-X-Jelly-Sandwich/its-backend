@@ -1,9 +1,9 @@
 import json
 from enum import Enum
 
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.exceptions import APIException
 
-from ..accounts.models import Teaches
 from ..questions.models import Question, TestCase
 from ..submissions.its_utils import (
     ITSFeedbackException,
@@ -21,28 +21,18 @@ from .models import Submissiondata
 
 class ItsStatus(Enum):
     ITS_SUCCESS = "ITS SUCCESS"
-    ITS_STUDENT_SUBMISSION_PARSER_FAILURE = "The ITS failed to parse Student Program and raises 500 Internal Error. "
-    ITS_REF_PROGRAM_PARSER_FAILURE = "The ITS failed to parse Reference Program and raises 500 Internal Error. "
+    ITS_STUDENT_SUBMISSION_PARSER_FAILURE = (
+        "The ITS failed to parse Student Program and raises 500 Internal Error. "
+    )
+    ITS_REF_PROGRAM_PARSER_FAILURE = (
+        "The ITS failed to parse Reference Program and raises 500 Internal Error. "
+    )
     ITS_FEEDBACK_INTERPRETER_FAILURE = (
         "The ITS interpreter fails to interprete the Program and Testcases. "
     )
     ITS_FEEDBACK_HINT_FAILURE = "The ITS fails to provide Feedback Hint. "
     ITS_FEEDBACK_FIX_FAILURE = "The ITS fails to provide Feedback Fix. "
-    ITS_STUDENT_SUBMISSION_PROGRAM_INVALID = (
-        "The ITS parser generates empty parsed result for the Student Submission Program. "
-    )
-
-
-class QuestionNotFoundError(Exception):
-    pass
-
-
-class QuestionNotAvailableToStudentError(Exception):
-    pass
-
-
-class MissingFieldError(Exception):
-    pass
+    ITS_STUDENT_SUBMISSION_PROGRAM_INVALID = "The ITS parser generates empty parsed result for the Student Submission Program. "
 
 
 class CannotGeneratedFeedbackException(APIException):
@@ -59,7 +49,7 @@ def get_parsed_ref_program(question):
         parsed_program = its_request_parser(language, ref_program, "Reference Program")
         return parsed_program
     except ITSParserException:
-        return None 
+        return None
 
 
 def get_parsed_stu_program(program, language):
@@ -122,7 +112,7 @@ def get_feedback_for_tutor(
 ):
     if not failed_test_cases:
         raise CannotGeneratedFeedbackException()
-    
+
     io_input, arguments, language, parsed_ref_program, parsed_stu_program = (
         process_feedback_params(
             language, parsed_ref_program, parsed_stu_program, failed_test_cases
@@ -137,7 +127,7 @@ def get_feedback_for_tutor(
             io_input,
             arguments,
         )
-        its_feedback_fix_tutor = {"fixes": feedback_fix_array} 
+        its_feedback_fix_tutor = {"fixes": feedback_fix_array}
         return json.dumps(its_feedback_fix_tutor)
     except ITSFeedbackException as err:
         raise CannotGeneratedFeedbackException() from err
@@ -148,7 +138,7 @@ def get_feedback_for_student(
 ):
     if not failed_test_cases:
         raise CannotGeneratedFeedbackException()
-    
+
     io_input, arguments, language, parsed_ref_program, parsed_stu_program = (
         process_feedback_params(
             language, parsed_ref_program, parsed_stu_program, failed_test_cases
@@ -164,48 +154,25 @@ def get_feedback_for_student(
             arguments,
         )
         its_feedback_hint_student = {"hints": feedback_hint_array}
-        return json.dumps(its_feedback_hint_student) 
+        return json.dumps(its_feedback_hint_student)
     except ITSFeedbackException as err:
         raise CannotGeneratedFeedbackException() from err
 
 
-def check_is_question_accessible(request, question):
-    # check if student has access to the question
-    tutors = Teaches.objects.filter(student_id=request.user.pk).values_list(
-        "tutor_id", flat=True
-    )
-    question_pub_by = question.pub_by.pk
-    result = question_pub_by in tutors
-    return result
-
-
-def process_submission_request(request):
-    language = request.data.get("language")
-    program = request.data.get("program")
-    qn_id = request.data.get("qn_id")
+def process_submission_request(submission_pk):
+    instance = Submissiondata.objects.get(pk=submission_pk)
+    language = instance.language
+    program = instance.program
+    qn_id = instance.qn_id
+    student = instance.submitted_by
     status = ""
-
-    if not language:
-        raise MissingFieldError("Missing 'language' field in the request")
-    
-    if not program:
-        raise MissingFieldError("Missing 'program' field in the request")
-
-    if not qn_id:
-        raise MissingFieldError("Missing 'qn_id' field in the request")
 
     try:
         question = Question.objects.get(pk=qn_id)
     except Question.DoesNotExist:
-        raise QuestionNotFoundError(f"Question with qn_id {qn_id} not found") from None
+        raise ObjectDoesNotExist(f"Question with qn_id {qn_id} not found") from None
 
-    # check if student can submit to question
-    if not check_is_question_accessible(request, question):
-        raise QuestionNotAvailableToStudentError(
-            f"Question with qn_id {qn_id} is not available to the student"
-        ) from None
-
-    mutable_data = request.data.copy()
+    mutable_data = {}
 
     # parsed student and reference program
     parsed_stu_program = get_parsed_stu_program(program, language)
@@ -215,14 +182,14 @@ def process_submission_request(request):
         # the entry function of the program
         if not parsed_stu_program["fncs"]:
             status += ItsStatus.ITS_STUDENT_SUBMISSION_PROGRAM_INVALID.value
-            total_score = 0 
+            total_score = 0
             score = 0
             its_feedback_hint_student = {"message": ""}
             its_feedback_hint_student = json.dumps(its_feedback_hint_student)
             its_feedback_fix_tutor = {"message": ""}
             its_feedback_fix_tutor = json.dumps(its_feedback_fix_tutor)
             test_cases = TestCase.objects.filter(question_id=qn_id)
-            total_score = test_cases.count() 
+            total_score = test_cases.count()
         else:
             function = next(iter(parsed_stu_program["fncs"].keys()))
             # number of test cases passed
@@ -237,13 +204,13 @@ def process_submission_request(request):
                 score = 0
                 failed_test_cases = None
                 status += ItsStatus.ITS_FEEDBACK_INTERPRETER_FAILURE.value
-        
+
             # if all testcases are passed
-            if not failed_test_cases and score == total_score and score > 0: 
+            if not failed_test_cases and score == total_score and score > 0:
                 its_feedback = {"message": ""}
                 its_feedback_fix_tutor = json.dumps(its_feedback)
                 its_feedback_hint_student = json.dumps(its_feedback)
-                status += ItsStatus.ITS_SUCCESS.value 
+                status += ItsStatus.ITS_SUCCESS.value
             else:
                 try:
                     its_feedback_fix_tutor = get_feedback_for_tutor(
@@ -253,7 +220,7 @@ def process_submission_request(request):
                         function,
                         failed_test_cases,
                     )
-                    status += ItsStatus.ITS_SUCCESS.value 
+                    status += ItsStatus.ITS_SUCCESS.value
                 except CannotGeneratedFeedbackException:
                     its_feedback_fix_tutor = {"message": ""}
                     its_feedback_fix_tutor = json.dumps(its_feedback_fix_tutor)
@@ -285,10 +252,10 @@ def process_submission_request(request):
         if not parsed_stu_program:
             status += ItsStatus.ITS_STUDENT_SUBMISSION_PARSER_FAILURE.value
         if not parsed_ref_program:
-            status += ItsStatus.ITS_REF_PROGRAM_PARSER_FAILURE.value 
+            status += ItsStatus.ITS_REF_PROGRAM_PARSER_FAILURE.value
 
     # get submission number
-    submission_number = get_submission_number(request.user, qn_id)
+    submission_number = get_submission_number(student, qn_id)
 
     # reform the request data
     mutable_data["qn_id"] = qn_id

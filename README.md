@@ -32,6 +32,18 @@ It is suggested to have a dedicated virtual environment for each Django project,
     pip install -r requirements.txt
     ```
 
+## Install redis
+
+- This project uses redis, so make sure you have it installed on your local machine for development
+- For MacOS:
+
+  - ```bash
+    brew install redis
+    ```
+
+- For Windows
+  - You can download a Redis installer for Windows from the Redis website or use the Microsoft archive.
+
 ## Database Migration
 
 - Create migrations by running `python manage.py makemigrations`
@@ -41,8 +53,8 @@ It is suggested to have a dedicated virtual environment for each Django project,
   - refer to this [post](https://stackoverflow.com/questions/65562875/migration-admin-0001-initial-is-applied-before-its-dependency-app-0001-initial-o) for solution
 
 ```shell
-$ python manage.py makemigrations
-$ python manage.py migrate
+python manage.py makemigrations
+python manage.py migrate
 ```
 
 ## Run Django Server
@@ -50,7 +62,7 @@ $ python manage.py migrate
 Run the server by running:
 
 ```shell
-$ python manage.py runserver
+python manage.py runserver
 ```
 
 The server will be running on `http://127.0.0.1:8000`
@@ -85,7 +97,16 @@ The server will be running on `http://127.0.0.1:8000`
 
 ## Start Application
 
+- Start the redis server by running `redis-server`
+- Start the celery worker by running `celery -A its_backend worker -l info`
 - Start server by running `python manage.py runserver`
+
+- Alternatively for MacOS users:
+
+  - ```bash
+    chmod +x start_project.sh
+    sh start_project.sh
+    ```
 
 ## View all urls created
 
@@ -107,28 +128,28 @@ $ newman --version
 If your shell cannot find the `newman` package, download it using NPM or Homebrew:
 
 ```shell
-$ npm install [-g] newman  # include -g flag to download globally
-$ brew install newman
+npm install [-g] newman  # include -g flag to download globally
+brew install newman
 ```
 
 Alternatively, you can `cd` into `test` folder and install dependencies:
 
 ```shell
-$ cd test
-$ npm install
+cd test
+npm install
 ```
 
 After the package is downloaded, run your Postman collection by running either the schell script:
 
 ```shell
-$ chmod +x ./test/test.sh  # if necessary
-$ ./test/test.sh           # or ./test.sh if you cd-ed into test
+chmod +x ./test/test.sh  # if necessary
+./test/test.sh           # or ./test.sh if you cd-ed into test
 ```
 
 Or the Python script:
 
 ```shell
-$ python test/test.py      # or test.py if you cd-ed into test
+python test/test.py      # or test.py if you cd-ed into test
 ```
 
 A sample [test Postman collection](./test/ITS-API-Test.postman_collection.json) is already included under the `test` folder. If you want to test your own collection, add your collection under the `test` folder and update the `POSTMAN_COLLECTION` value inside the [shell test script](./test/test.sh) or [python test script](./test/test.py).
@@ -211,24 +232,24 @@ Our project's code coverage is tested using the [Coverage.py](https://coverage.r
 To test and generate reports on the code coverage of the Postman tests, you can run the following:
 
 ```shell
-$ cd test
-$ chmod +x coverage.sh
-$ ./coverage.sh
+cd test
+chmod +x coverage.sh
+./coverage.sh
 ```
 
 This will generate 3 artifacts:
 
-| Name | Description |
-|------|-------------|
-| `.coverage` | File containing the data of the last run coverage result |
-| `htmlcov/` | Folder containing the coverage report in HTML format <br><br> Open `index.html` under this directory in your browser to see more in-depth code coverage analysis |
-| `coverage.json` | Coverage report in JSON format |
+| Name            | Description                                                                                                                                                      |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `.coverage`     | File containing the data of the last run coverage result                                                                                                         |
+| `htmlcov/`      | Folder containing the coverage report in HTML format <br><br> Open `index.html` under this directory in your browser to see more in-depth code coverage analysis |
+| `coverage.json` | Coverage report in JSON format                                                                                                                                   |
 
 These can be cleaned up by running:
 
 ```shell
-$ chmod +x clean.sh  # ./test/clean.sh if not in test directory
-$ ./clean.sh         # ./test/clean.sh if not in test directory
+chmod +x clean.sh  # ./test/clean.sh if not in test directory
+./clean.sh         # ./test/clean.sh if not in test directory
 ```
 
 We generate coverage reports for only the following files
@@ -249,19 +270,19 @@ Our project uses [`ruff`](https://docs.astral.sh/ruff/) to lint our code and mai
 Run the following to lint your whole code base:
 
 ```shell
-$ ruff check .
+ruff check .
 ```
 
 Or the following to lint certain files or directories:
 
 ```shell
-$ ruff check /path/to/file_or_folder
+ruff check /path/to/file_or_folder
 ```
 
 You can also select certain rules to test for:
 
 ```shell
-$ ruff check --select F .
+ruff check --select F .
 ```
 
 If there is no output, it means your codebase passes all lint checks.
@@ -269,20 +290,20 @@ If there is no output, it means your codebase passes all lint checks.
 To fix fixable lint errors, you can also run:
 
 ```shell
-$ ruff check --fix .
+ruff check --fix .
 ```
 
 Or to fix certain set of lint rules, run:
 
 ```shell
-$ ruff check --select I --fix .  # fixes imports
+ruff check --select I --fix .  # fixes imports
 ```
 
 You can also format files based on format rules defined in [`ruff.toml`](./ruff.toml):
 
 ```shell
-$ ruff format .                 # format all files in codebase
-$ ruff format /path/to/file.py  # format a single file
+ruff format .                 # format all files in codebase
+ruff format /path/to/file.py  # format a single file
 ```
 
 ### Lint Rules used in ITS Backend

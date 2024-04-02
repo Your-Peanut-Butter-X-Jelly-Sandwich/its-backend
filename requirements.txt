@@ -9,3 +9,5 @@ djangorestframework-simplejwt==5.3.1
 drf-nested-routers==0.93.5
 python-dateutil==2.9.0.post0
 ruff==0.3.2
+celery==5.3.6
+redis==5.0.3

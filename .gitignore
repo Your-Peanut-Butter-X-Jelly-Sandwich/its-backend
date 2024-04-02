@@ -12,7 +12,7 @@ its_env/
 # DB artifact
 db.sqlite3
 **/temp.sqlite3
-
+dump.rdb
 # js dependencies
 **/node_modules
 
