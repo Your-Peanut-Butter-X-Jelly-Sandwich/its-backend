@@ -8,6 +8,7 @@
 # virtual env
 venv
 its_env/
+static
 
 # DB artifact
 db.sqlite3

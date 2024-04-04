@@ -1,5 +1,27 @@
 version: '3.8'
 services:
+  redis:
+    image: "redis:alpine"
+    restart: always
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  celery:
+    build: .
+    container_name: celery
+    command: sh -c "celery -A its_backend worker --loglevel=info"
+    restart: always
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+
   backend:
     build: 
       context: .
@@ -7,7 +29,16 @@ services:
     container_name: backend
     command: sh -c "python3 manage.py migrate --noinput && python3 manage.py collectstatic --noinput && python manage.py runserver 0.0.0.0:8000"
     restart: always
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
     volumes:
       - .:/app
     ports:
       - "8000:8000"
+    depends_on:
+      - redis
+      - celery
+
+volumes:
+  redis_data:
