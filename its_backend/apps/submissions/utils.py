@@ -184,9 +184,9 @@ def process_submission_request(submission_pk):
             status += ItsStatus.ITS_STUDENT_SUBMISSION_PROGRAM_INVALID.value
             total_score = 0
             score = 0
-            its_feedback_hint_student = {"message": ""}
+            its_feedback_hint_student = {"hints": []}
             its_feedback_hint_student = json.dumps(its_feedback_hint_student)
-            its_feedback_fix_tutor = {"message": ""}
+            its_feedback_fix_tutor = {"fixes": []}
             its_feedback_fix_tutor = json.dumps(its_feedback_fix_tutor)
             test_cases = TestCase.objects.filter(question_id=qn_id)
             total_score = test_cases.count()
@@ -207,9 +207,10 @@ def process_submission_request(submission_pk):
 
             # if all testcases are passed
             if not failed_test_cases and score == total_score and score > 0:
-                its_feedback = {"message": ""}
-                its_feedback_fix_tutor = json.dumps(its_feedback)
-                its_feedback_hint_student = json.dumps(its_feedback)
+                its_feedback_fixes = {"fixes": []}
+                its_feedback_hints = {"hints": []}
+                its_feedback_fix_tutor = json.dumps(its_feedback_fixes)
+                its_feedback_hint_student = json.dumps(its_feedback_hints)
                 status += ItsStatus.ITS_SUCCESS.value
             else:
                 try:
@@ -222,7 +223,7 @@ def process_submission_request(submission_pk):
                     )
                     status += ItsStatus.ITS_SUCCESS.value
                 except CannotGeneratedFeedbackException:
-                    its_feedback_fix_tutor = {"message": ""}
+                    its_feedback_fix_tutor = {"fixes": []}
                     its_feedback_fix_tutor = json.dumps(its_feedback_fix_tutor)
                     status += ItsStatus.ITS_FEEDBACK_FIX_FAILURE.value
 
@@ -235,7 +236,7 @@ def process_submission_request(submission_pk):
                         failed_test_cases,
                     )
                 except CannotGeneratedFeedbackException:
-                    its_feedback_hint_student = {"message": ""}
+                    its_feedback_hint_student = {"hints": []}
                     its_feedback_hint_student = json.dumps(its_feedback_hint_student)
                     status += ItsStatus.ITS_FEEDBACK_HINT_FAILURE.value
 
@@ -243,9 +244,9 @@ def process_submission_request(submission_pk):
     else:
         total_score = 0
         score = 0
-        its_feedback_hint_student = {"message": ""}
+        its_feedback_hint_student = {"hints": []}
         its_feedback_hint_student = json.dumps(its_feedback_hint_student)
-        its_feedback_fix_tutor = {"message": ""}
+        its_feedback_fix_tutor = {"fixes": []}
         its_feedback_fix_tutor = json.dumps(its_feedback_fix_tutor)
         test_cases = TestCase.objects.filter(question_id=qn_id)
         total_score = test_cases.count()
