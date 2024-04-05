@@ -70,15 +70,16 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         )
 
     def __str__(self):
+        s = f"User: {self.email}"
         if self.is_superuser:
-            return f"Superuser: {self.email}"
+            s = f"Superuser: {self.email}"
         if self.is_tutor:
-            return f"Tutor: {self.email}"
+            s = f"Tutor: {self.email}"
         if self.is_student:
-            return f"Student: {self.email}"
+            s = f"Student: {self.email}"
         if self.is_manager:
-            return f"Manager: {self.email}"
-        return f"User: {self.email}"
+            s = f"Manager: {self.email}"
+        return s + f"pk: {self.pk}"
 
 
 class TeachesManager(models.Manager):

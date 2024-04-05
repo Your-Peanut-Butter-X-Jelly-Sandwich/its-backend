@@ -174,8 +174,6 @@ class StudentQuestionViewSet(
         queryset = self.get_queryset()
         offset = int(request.query_params.get("offset", 0))
         limit = int(request.query_params.get("limit", 10))
-        # student = request.user
-        # tutors = Teaches.objects.filter(student=student)
         questions = queryset.order_by("-pub_date")[offset : offset + limit]
         serializer = self.get_serializer_class()(
             questions, many=True, context={"user": request.user}
@@ -203,7 +201,7 @@ class StudentDashboardStatisticsView(generics.RetrieveAPIView):
         return tutors
 
     def get_tutor_list(self, tutors):
-        tutor_ids = tutors.values("pk")
+        tutor_ids = tutors.values("tutor_id")
         tutors = CustomUser.objects.filter(pk__in=tutor_ids)
         serializer = RetrieveUserSerializer(tutors, many=True)
         return serializer.data
@@ -224,13 +222,13 @@ class StudentDashboardStatisticsView(generics.RetrieveAPIView):
 
     def get_due_questions(self, questions, student):
         questions_due_in_a_week = questions.filter(
-            due_date__lte=date.today() + timedelta(weeks=1)
+            due_date__lte=date.today() + timedelta(weeks=1), due_date__gte=date.today()
         ).order_by("due_date")
         serializer_week = StudentQuestionListSerializer(
             questions_due_in_a_week, many=True, context={"user": student}
         )
         questions_due_in_a_month = questions.filter(
-            due_date__lte=date.today() + timedelta(days=30)
+            due_date__lte=date.today() + timedelta(days=30), due_date__gte=date.today()
         ).order_by("due_date")
         serializer_month = StudentQuestionListSerializer(
             questions_due_in_a_month, many=True, context={"user": student}
@@ -251,6 +249,63 @@ class StudentDashboardStatisticsView(generics.RetrieveAPIView):
             "tutors": tutor_list,
             "total_question_assigned": total_questions_count,
             "attempted_questions": attempted_questions_count,
+            "questions_due_in_a_week": due_in_week,
+            "questions_due_in_a_month": due_in_month,
+        }
+        return Response(data=data, status=status.HTTP_200_OK)
+
+
+class TutorDashboardStatisticsView(generics.RetrieveAPIView):
+    permission_classes = [
+        IsTutor,
+    ]
+
+    def get_personal_info(self, tutor):
+        serializer = RetrieveUserSerializer(tutor)
+        return serializer.data
+
+    def get_students(self, tutor):
+        students = Teaches.objects.filter(tutor=tutor).values("student")
+        return students
+
+    def get_student_list(self, students):
+        for s in students.values():
+            print(s)
+        students_ids = students.values("student_id")
+        students = CustomUser.objects.filter(pk__in=students_ids)
+        serializer = RetrieveUserSerializer(students, many=True)
+        return serializer.data
+
+    def get_all_questions_created(self, tutor):
+        questions = Question.objects.filter(pub_by=tutor)
+        return questions
+
+    def get_questions_due(self, questions):
+        questions_due_in_a_week = questions.filter(
+            due_date__lte=date.today() + timedelta(weeks=1), due_date__gte=date.today()
+        ).order_by("due_date")
+        serializer_week = TutorQuestionListSerializer(
+            questions_due_in_a_week, many=True
+        )
+        questions_due_in_a_month = questions.filter(
+            due_date__lte=date.today() + timedelta(days=30), due_date__gte=date.today()
+        ).order_by("due_date")
+        serializer_month = TutorQuestionListSerializer(
+            questions_due_in_a_month, many=True
+        )
+
+        return serializer_week.data, serializer_month.data
+
+    def get(self, request):
+        tutor = request.user
+        personal_info = self.get_personal_info(tutor)
+        students = self.get_students(tutor)
+        student_list = self.get_student_list(students)
+        questions = self.get_all_questions_created(tutor)
+        due_in_week, due_in_month = self.get_questions_due(questions)
+        data = {
+            "personal_info": personal_info,
+            "students": student_list,
             "questions_due_in_a_week": due_in_week,
             "questions_due_in_a_month": due_in_month,
         }
