@@ -3315,10 +3315,10 @@
 					]
 				},
 				{
-					"name": "[09] Test Promote Students to Tutors Copy",
+					"name": "[10] Test Demote Tutors to Students",
 					"item": [
 						{
-							"name": "[02] Demote Tutor - Success",
+							"name": "[01] Demote Tutor - Success",
 							"event": [
 								{
 									"listen": "test",
@@ -3370,7 +3370,7 @@
 							"response": []
 						},
 						{
-							"name": "[03] Demote Tutors - Fail Silently (Tutor Not Tutor)",
+							"name": "[02] Demote Tutors - Fail Silently (Tutor Not Tutor)",
 							"event": [
 								{
 									"listen": "prerequest",
@@ -3435,7 +3435,7 @@
 							"response": []
 						},
 						{
-							"name": "[04] Demote Tutors - Failure (Invalid Payload)",
+							"name": "[03] Demote Tutors - Failure (Invalid Payload)",
 							"event": [
 								{
 									"listen": "test",
@@ -3477,7 +3477,7 @@
 							"response": []
 						},
 						{
-							"name": "[05] Demote Tutors - Failure (Invalid Tutor IDs)",
+							"name": "[04] Demote Tutors - Failure (Invalid Tutor IDs)",
 							"event": [
 								{
 									"listen": "test",
@@ -3528,7 +3528,7 @@
 							"response": []
 						},
 						{
-							"name": "[06] Tutor Demotes Tutors - Failure (Unauthorized)",
+							"name": "[05] Tutor Demotes Tutors - Failure (Unauthorized)",
 							"event": [
 								{
 									"listen": "test",
@@ -3589,7 +3589,7 @@
 							"response": []
 						},
 						{
-							"name": "[07] Student Demotes Tutors - Failure (Unauthorized)",
+							"name": "[06] Student Demotes Tutors - Failure (Unauthorized)",
 							"event": [
 								{
 									"listen": "test",
@@ -3650,7 +3650,7 @@
 							"response": []
 						},
 						{
-							"name": "[08] Test User Status",
+							"name": "[07] Test User Status",
 							"event": [
 								{
 									"listen": "test",
