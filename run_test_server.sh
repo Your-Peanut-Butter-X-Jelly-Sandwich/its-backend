@@ -50,4 +50,6 @@ fi
 sqlite3 "${ROOT_DIR}/db.sqlite3" ".read ${TEST_DIR}/populate_db.sql"
 
 # Run test server
+redis-server --port 6379 &
+celery -A its_backend worker -l info &
 python "${ROOT_DIR}/manage.py" runserver

@@ -1,10 +1,9 @@
 {
 	"info": {
-		"_postman_id": "31a88161-80db-4f3c-bc5f-8d7cdf8af264",
+		"_postman_id": "acdcbc60-4c99-491b-a1e8-83e90506caf2",
 		"name": "ITS-API-Test",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "33356344",
-		"_collection_link": "https://cloudy-crater-900599.postman.co/workspace/ITS~82f810c1-83df-4c00-97b7-8bf416dc9d67/collection/33356344-31a88161-80db-4f3c-bc5f-8d7cdf8af264?action=share&source=collection_link&creator=33356344"
+		"_exporter_id": "33156727"
 	},
 	"item": [
 		{
@@ -3314,6 +3313,433 @@
 							}
 						}
 					]
+				},
+				{
+					"name": "[09] Test Promote Students to Tutors Copy",
+					"item": [
+						{
+							"name": "[02] Demote Tutor - Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Successful Promotion\", function () {",
+											"    pm.expect(responseBody.message).to.eql(\"Successfully demoted tutors to students\");",
+											"    pm.expect(responseBody).to.not.have.property(\"warning\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"tutor_ids\": [18, 19, 20]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/tutors/demote",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutors",
+										"demote"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[03] Demote Tutors - Fail Silently (Tutor Not Tutor)",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Response body contains expected warning message\", function () {",
+											"    pm.expect(responseBody.message).to.eql(\"Successfully demoted tutors to students\");",
+											"    pm.expect(responseBody.warning).to.eql({",
+											"        \"message\": \"These users were not demoted as they do not exist or are not tutors\",",
+											"        \"ids\": [1, 2, 3]",
+											"    });",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"tutor_ids\": [1, 2, 3]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/tutors/demote",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutors",
+										"demote"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[04] Demote Tutors - Failure (Invalid Payload)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 400 Bad Request",
+											"pm.test(\"Status code is 400 Bad Request\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Response body contains expected error message\", function () {",
+											"    pm.expect(responseBody.error).to.eql(\"Missing 'tutor_ids' key in payload\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/tutors/demote",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutors",
+										"demote"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[05] Demote Tutors - Failure (Invalid Tutor IDs)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 400 Bad Request",
+											"pm.test(\"Status code is 400 Bad Request\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Response body contains expected error message\", function () {",
+											"    pm.expect(responseBody.error).to.eql(\"Value of 'tutor_ids' must be an array of integers\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"tutor_ids\": 1\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/tutors/demote",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutors",
+										"demote"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[06] Tutor Demotes Tutors - Failure (Unauthorized)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 403 Forbidden",
+											"pm.test(\"Status code is 403 Forbidden\", function () {",
+											"    pm.response.to.have.status(403);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Response body contains expected error message\", function () {",
+											"    pm.expect(responseBody.detail).to.eql(\"Only administrators are authorized to access this resource\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tutor_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"tutor_ids\": [11,12,13]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/tutors/demote",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutors",
+										"demote"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[07] Student Demotes Tutors - Failure (Unauthorized)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 403 Forbidden",
+											"pm.test(\"Status code is 403 Forbidden\", function () {",
+											"    pm.response.to.have.status(403);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Response body contains expected error message\", function () {",
+											"    pm.expect(responseBody.detail).to.eql(\"Only administrators are authorized to access this resource\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tutor_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"tutor_ids\": [11,12,13]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/tutors/demote",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutors",
+										"demote"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[08] Test User Status",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Check if the response contains the expected emails",
+											"let expectedResponseEmails = [];",
+											"for (let id = 18; id <= 20; id++) {",
+											"    expectedResponseEmails.push('tut' + id + '@promoted.com');",
+											"}",
+											"",
+											"pm.test(\"Students are correctly promoted to tutors\", function () {",
+											"    let actualResponseEmails = [];",
+											"    responseBody.user.forEach(obj => {",
+											"        actualResponseEmails.push(obj.email);",
+											"        pm.expect(obj.is_student).to.eql(true);",
+											"        pm.expect(obj.is_tutor).to.eql(false);",
+											"    });",
+											"    pm.expect(expectedResponseEmails).to.eql(actualResponseEmails);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/students?student_ids=18,19,20",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"students"
+									],
+									"query": [
+										{
+											"key": "student_ids",
+											"value": "18,19,20"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{manager_bearer}}",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
 				}
 			]
 		},
@@ -3413,7 +3839,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"language\": \"python\",\n    \"question_title\": \"Is Odd\",\n    \"question_statement\": \"Given a Integer, return True if it is an odd number and False otherwise\",\n    \"ref_program\": \"def is_odd(x):\\n\\tif x % 2 == 0:\\n\\t\\treturn False\\n\\telse:\\n\\t\\treturn True\",\n    \"test_cases\": [\n        {\"input\": \"123\",\n        \"output\": \"True\"},\n        {\"input\": \"1\",\n        \"output\": \"True\"},\n        {\"input\": \"120\",\n        \"output\": \"False\"},\n        {\"input\": \"9990\",\n        \"output\": \"False\"}\n    ]\n}",
+									"raw": "{\n    \"language\": \"python\",\n    \"question_title\": \"Reverse Integer\",\n    \"question_statement\": \"Given a signed 32-bit integer x, return x with its digits reversed. If reversing x causes the value to go outside the signed 32-bit integer range [-231, 231 - 1], then return 0. Assume the environment does not allow you to store 64-bit integers (signed or unsigned).\",\n    \"ref_program\": \"def reverse(x):\\n\\tans = 0\\n\\twhile x != 0:\\n\\t\\tans = ans * 10 + x % 10\\n\\t\\tx //= 10\\n\\n\\tif ans > 2**31 - 1 or ans < -(2**31):\\n\\t\\treturn 0\\n\\n\\treturn ans\",\n    \"test_cases\": [\n        {\"input\": \"123\",\n        \"output\": \"321\"},\n        {\"input\": \"-123\",\n        \"output\": \"-321\"},\n        {\"input\": \"120\",\n        \"output\": \"21\"},\n        {\"input\": \"9990\",\n        \"output\": \"999\"}\n    ]\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -3755,11 +4181,6 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"// Parse the response body as JSON",
-											"console.log(pm.response);",
-											"var responseBody = pm.response.json();",
-											"console.log(responseBody);",
-											"",
 											"// Check if the status code is 204 NO CONTENT",
 											"pm.test(\"Status code is 204 NO CONTENT\", function () {",
 											"    pm.response.to.have.status(204);",
@@ -3804,9 +4225,6 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"// Parse the response body as JSON",
-											"var responseBody = pm.response.json();",
-											"",
 											"// Check if the status code is 404 NOT FOUND",
 											"pm.test(\"Status code is 404 NOT FOUND\", function () {",
 											"    pm.response.to.have.status(404);",

@@ -141,7 +141,6 @@ class TutorQuestionViewSet(
             question = queryset.get(pk=pk)
             question.delete()
             return Response(
-                data={"message": f"question {pk} deleted"},
                 status=status.HTTP_204_NO_CONTENT,
             )
         except ObjectDoesNotExist:

@@ -5,6 +5,7 @@ from .views import (
     AddTutorStudentRelationshipView,
     ChangePasswordView,
     CustomSignupView,
+    DemoteStudentsView,
     LoginView,
     LogoutView,
     PromoteStudentsView,
@@ -32,6 +33,7 @@ urlpatterns = [
     path("students", RetrieveStudentsView.as_view(), name="retrieve_students"),
     path("students/promote", PromoteStudentsView.as_view(), name="promote_to_tutors"),
     path("tutors", RetrieveTutorsView.as_view(), name="retrieve_tutors"),
+    path("tutors/demote", DemoteStudentsView.as_view(), name="demote_to_students"),
     path(
         "teaches",
         AddTutorStudentRelationshipView.as_view(),
