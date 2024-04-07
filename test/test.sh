@@ -5,7 +5,9 @@ trap cleanup EXIT
 
 TEST_DIR="$( cd "$( dirname "$0" )" && pwd )"
 ROOT_DIR="$(dirname "$TEST_DIR")"
-SERVER_PID=""
+DJANGO_PID=""
+REDIS_PID=""
+CELERY_PID=""
 POSTMAN_COLLECTION="ITS-API-Test.postman_collection.json"
 
 if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
@@ -19,10 +21,18 @@ cleanup() {
         mv "${TEST_DIR}/temp.sqlite3" "${ROOT_DIR}/db.sqlite3"
     fi
 
-    # Kill server if running
-    if [ -n "$SERVER_PID" ]; then
-        kill "$SERVER_PID"
+
+    # Kill servers if running
+    if [ -n "$REDIS_PID" ]; then
+        kill "$REDIS_PID"
     fi
+    if [ -n "$CELERY_PID" ]; then
+        kill "$CELERY_PID"
+    fi
+    if [ -n "$DJANGO_PID" ]; then
+        kill "$DJANGO_PID"
+    fi
+
 }
 
 # Backup original database if exists
@@ -49,11 +59,15 @@ fi
 sqlite3 "${ROOT_DIR}/db.sqlite3" ".read ${TEST_DIR}/populate_db.sql"
 
 # Run development server in background and save PID
+redis-server --port 6379 &
+REDIS_PID=$!
+celery -A its_backend worker -l info &
+CELERY_PID=$!
 python "${ROOT_DIR}/manage.py" runserver &
-SERVER_PID=$!
+DJANGO_PID=$!
 
 # Wait for server startup
 sleep 5
 
-# # Run postman tests
+# Run postman tests
 newman run "${TEST_DIR}/${POSTMAN_COLLECTION}"

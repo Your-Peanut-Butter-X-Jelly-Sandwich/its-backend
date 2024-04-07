@@ -5,8 +5,10 @@ trap cleanup EXIT
 TEST_DIR="$( cd "$( dirname "$0" )" && pwd )"
 ROOT_DIR="$(dirname "$TEST_DIR")"
 POSTMAN_COLLECTION="ITS-API-Test.postman_collection.json"
-SERVER_PID=""
+DJANGO_PID=""
 NEWMAN_PID=""
+REDIS_PID=""
+CELERY_PID=""
 
 if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
     ROOT_DIR="${ROOT_DIR///c/C:}"
@@ -19,9 +21,15 @@ cleanup() {
         mv "${TEST_DIR}/temp.sqlite3" "${ROOT_DIR}/db.sqlite3"
     fi
 
-    # Kill server if running
-    if [[ -n $SERVER_PID ]]; then
-        kill $SERVER_PID
+    # Kill servers if running
+    if [ -n "$REDIS_PID" ]; then
+        kill "$REDIS_PID"
+    fi
+    if [ -n "$CELERY_PID" ]; then
+        kill "$CELERY_PID"
+    fi
+    if [[ -n $DJANGO_PID ]]; then
+        kill $DJANGO_PID
     fi
 
     # Kill newman test if running
@@ -70,18 +78,18 @@ sqlite3 "${ROOT_DIR}/db.sqlite3" ".read ${TEST_DIR}/populate_db.sql"
 
 newman_test() {
     # Wait for server startup
-    sleep 5
+    sleep 10
 
     # Run postman tests
     newman run "${TEST_DIR}/${POSTMAN_COLLECTION}"
 
     # Get PID listening on port 8000
-    SERVER_PID=$(lsof -n -i :8000 | grep LISTEN | awk '{print $2}')
+    DJANGO_PID=$(lsof -n -i :8000 | grep LISTEN | awk '{print $2}')
 
     # Kill server if still running
-    if [[ -n $SERVER_PID ]]; then
-        kill -INT $SERVER_PID
-        SERVER_PID=""
+    if [[ -n $DJANGO_PID ]]; then
+        kill -INT $DJANGO_PID
+        DJANGO_PID=""
     fi
 
     # Wait for server to end
@@ -91,6 +99,10 @@ newman_test &
 NEWMAN_PID=$!
 
 # Run development server in background with coverage.py
+redis-server --port 6379 &
+REDIS_PID=$!
+celery -A its_backend worker -l info &
+CELERY_PID=$!
 coverage run --branch ${ROOT_DIR}/manage.py runserver --noreload
 
 # Generate report only for models.py and views.py
