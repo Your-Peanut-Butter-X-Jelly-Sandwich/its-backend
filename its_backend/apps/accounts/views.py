@@ -383,6 +383,68 @@ class PromoteStudentsView(views.APIView):
         )
 
 
+class DemoteStudentsView(views.APIView):
+    """
+    Demotes tutors to students by managers only
+
+    HTTP Request
+        POST tutors/promote
+
+    Example Payloads
+        {"tutor_ids": [11]}
+        {"tutor_ids": [11, 12, 13]}
+    """
+
+    permission_classes = [IsManager]
+
+    def post(self, request: HttpRequest):
+        payload = request.data
+        ids = payload.get("tutor_ids")
+
+        if not ids:
+            return Response(
+                {"error": "Missing 'tutor_ids' key in payload"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if not isinstance(ids, list) or not any(isinstance(_id, int) for _id in ids):
+            return Response(
+                {"error": "Value of 'tutor_ids' must be an array of integers"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        # Retrieve unique IDs
+        ids = set(ids)
+
+        # Retrieve all CustomUsers with ID in tutor_ids
+        tutors = CustomUser.objects.filter(id__in=ids, is_tutor=True)
+        tutor_ids = set(tutors.values_list("id", flat=True))
+
+        # Demote tutors to students
+        #   If user is a superuser or a manager, keep their is_tutor status
+        #   Else, set to false
+        tutors.update(
+            is_student=True,
+            is_tutor=F("is_superuser") or F("is_manager"),
+        )
+
+        not_tutors = None
+        if len(ids) != len(tutor_ids):
+            not_tutors = ids - tutor_ids
+
+        data = {"message": "Successfully demoted tutors to students"}
+        if not_tutors:
+            data["warning"] = {
+                "message": "These users were not demoted as they do not exist or are not tutors",
+                "ids": not_tutors,
+            }
+
+        return Response(
+            data,
+            status=status.HTTP_200_OK,
+        )
+
+
 class RetrieveTutorsView(views.APIView):
     permission_classes = [IsTutor | IsManager]
     serializer_class = RetrieveUserSerializer

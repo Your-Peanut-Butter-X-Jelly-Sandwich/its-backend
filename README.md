@@ -261,7 +261,7 @@ We generate coverage reports for only the following files
 
 because these are the only files related to the actual logic of the backend server.
 
-We check for both statement and branch coverage. To only test for statement coverage, you can remove the `--branch` flag from the `coverage run` command inside the [coverage script](./test/coverage.sh). `Coverage.py` checks for statement branch by default, and there is no way to force it to test for only branch coverage as of now.
+We check for both statement and branch coverage. To only test for statement coverage, you can remove the `--branch` flag from the `coverage run` command inside the [coverage script](./test/coverage.sh). `Coverage.py` checks for statement coverage by default, and there is no way to force it to test for only branch coverage as of now.
 
 ## Ruff Linter
 
