@@ -567,7 +567,7 @@ class AddTutorStudentRelationshipView(views.APIView):
         if not isinstance(tutor_id, int):
             return [], []
 
-        messages = []  # students successfully added
+        success = []  # students successfully added
         errors = []  # students not successfully added
         for s_id in student_ids:
             # Skip invalid parameter values
@@ -576,12 +576,10 @@ class AddTutorStudentRelationshipView(views.APIView):
 
             ok, error_msg = Teaches.objects.add_teaching_relationship(tutor_id, s_id)
             if ok:
-                # e.g., "Added [tutor_id=10, s_id=1]"
-                messages.append(f"Added [{tutor_id=}, {s_id=}]")
+                success.append([tutor_id, s_id])
             else:
-                # e.g., "[tutor_id=10, s_id=1]: UNIQUE constraint failed: R.tutor_id, R.student_id"
-                errors.append(f"[{tutor_id=}, {s_id=}]: {error_msg}")
-        return messages, errors
+                errors.append({"pair": [tutor_id, s_id], "reason": error_msg})
+        return success, errors
 
     def post(self, request: HttpRequest):
         """
@@ -604,28 +602,36 @@ class AddTutorStudentRelationshipView(views.APIView):
         if not isinstance(payload, list):
             payload = [payload]
 
-        messages = []  # students successfully added
-        errors = []  # students not successfully added
+        # Payload sanity check
         for teaches in payload:
-            # Skip invalid teaches relation
             if (
                 not isinstance(teaches, dict)
                 or "tutor_id" not in teaches
+                or not isinstance(teaches["tutor_id"], int)
                 or "student_ids" not in teaches
+                or not isinstance(teaches["student_ids"], list)
+                or not all(isinstance(s_id, int) for s_id in teaches["student_ids"])
             ):
-                continue
+                return Response(
+                    {"error": "Payload in wrong format"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+        success = []  # students successfully added
+        errors = []  # students not successfully added
+        for teaches in payload:
             # Add teaches relation and update response messages
             tutor_id = teaches["tutor_id"]
             student_ids = teaches["student_ids"]
-            msgs, errs = self.add_teaches_relation(tutor_id, student_ids)
-            messages.extend(msgs)
+            scs, errs = self.add_teaches_relation(tutor_id, student_ids)
+            success.extend(scs)
             errors.extend(errs)
 
         response = {}
-        if messages:
-            response |= {"message": messages}
+        if success:
+            response["success"] = success
         if errors:
-            response |= {"error": errors}
+            response["error"] = errors
 
         return Response(response, status=status.HTTP_200_OK)
 
