@@ -85,9 +85,14 @@ class CreateUpdateSubmissionSerializer(serializers.ModelSerializer):
             "submitted_by",
         ]
 
+    def get_submission_number(self, user, qn_id):
+        submissions = Submissiondata.objects.filter(submitted_by=user, qn_id=qn_id)
+        return submissions.count() + 1
+
     def create(self, validated_data):
         user = self.context["user"]
         qn_id = validated_data["qn_id"]
+        submission_number = self.get_submission_number(user, qn_id)
         try:
             question = Question.objects.get(pk=qn_id)
         except Question.DoesNotExist:
@@ -100,6 +105,7 @@ class CreateUpdateSubmissionSerializer(serializers.ModelSerializer):
             ) from None
         return Submissiondata.objects.create(
             **validated_data,
+            submission_number=submission_number,
             submitted_by=user,
             status=self.context["status"],
         )

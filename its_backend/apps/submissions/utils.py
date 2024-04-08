@@ -86,11 +86,6 @@ def compute_score(qn_id, language, student_solution, function):
     return total_score, score, failed_test_cases
 
 
-def get_submission_number(user, qn_id):
-    submissions = Submissiondata.objects.filter(submitted_by=user, qn_id=qn_id)
-    return submissions.count()
-
-
 def get_failed_test_case_arg(failed_test_cases):
     sample_test_case = TestCase.objects.filter(pk__in=failed_test_cases)
     return sample_test_case[0].input
@@ -178,8 +173,7 @@ def process_submission_request(submission_pk):
     parsed_stu_program = get_parsed_stu_program(program, language)
     parsed_ref_program = get_parsed_ref_program(question)
     # parse both ref program and student program successfully
-    if parsed_ref_program and parsed_stu_program:
-        # the entry function of the program
+    if parsed_ref_program and parsed_stu_program:  # the entry function of the program
         if not parsed_stu_program["fncs"]:
             status += ItsStatus.ITS_STUDENT_SUBMISSION_PROGRAM_INVALID.value
             total_score = 0
@@ -256,13 +250,13 @@ def process_submission_request(submission_pk):
             status += ItsStatus.ITS_REF_PROGRAM_PARSER_FAILURE.value
 
     # get submission number
-    submission_number = get_submission_number(student, qn_id)
+    # submission_number = get_submission_number(student, qn_id)
 
     # reform the request data
     mutable_data["qn_id"] = qn_id
     mutable_data["total_score"] = total_score
     mutable_data["score"] = score
-    mutable_data["submission_number"] = submission_number
+    # mutable_data["submission_number"] = submission_number
     mutable_data["its_feedback_hint_student"] = its_feedback_hint_student
     mutable_data["its_feedback_fix_tutor"] = its_feedback_fix_tutor
     mutable_data["status"] = status
