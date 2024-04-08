@@ -94,9 +94,14 @@ class StudentSubmissionViewSet(
             )
 
         offset = int(request.query_params.get("offset", 0))
-        limit = int(request.query_params.get("limit", 10))
+        limit = request.query_params.get("limit", float('inf'))
         queryset = self.get_queryset().filter(qn_id=qn_id)
-        submissions = queryset.order_by("submission_number")[offset : limit + offset]
+        if limit == float('inf'):
+            # Return all submissions
+            submissions = queryset.order_by("submission_number")
+        else:
+            submissions = queryset.order_by("submission_number")[offset:int(limit) + offset]        
+        
         serializer = self.get_serializer_class()(submissions, many=True)
         return Response(
             data={"submissions": serializer.data}, status=status.HTTP_200_OK
@@ -146,10 +151,17 @@ class TutorSubmissionViewSet(
             )
         try:
             offset = int(request.query_params.get("offset", 0))
-            limit = int(request.query_params.get("limit", 10))
-            queryset = self.get_queryset().order_by(
-                "-submission_date", "submitted_by__email"
-            )[offset : limit + offset]
+            limit = request.query_params.get("limit", float('inf'))
+            if limit == float('inf'):
+                # Return all submissions
+                queryset = self.get_queryset().order_by(
+                    "-submission_date", "submitted_by__email"
+                    )
+            else:
+                queryset = self.get_queryset().order_by(
+                    "-submission_date", "submitted_by__email"
+                    )[offset : int(limit) + offset]
+    
             serializer = self.get_serializer_class()(queryset, many=True)
             return Response(
                 data={"submissions": serializer.data}, status=status.HTTP_200_OK

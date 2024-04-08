@@ -236,7 +236,8 @@ def process_submission_request(submission_pk):
 
     # its parse refprogram/ stundet program failed
     else:
-        total_score = 0
+        test_cases = TestCase.objects.filter(question_id=qn_id)
+        total_score = test_cases.count()        
         score = 0
         its_feedback_hint_student = {"hints": []}
         its_feedback_hint_student = json.dumps(its_feedback_hint_student)
