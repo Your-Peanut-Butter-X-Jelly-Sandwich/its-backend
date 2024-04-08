@@ -1,0 +1,27 @@
+# VSCode settings
+.vscode
+
+# Cache files
+.ruff_cache
+**/__pycache__
+
+# virtual env
+venv
+its_env/
+static
+
+# DB artifact
+db.sqlite3
+**/temp.sqlite3
+dump.rdb
+# js dependencies
+**/node_modules
+
+# under test/
+./test/node_modules/
+./test/package-lock.json
+
+# Code coverage test
+.coverage
+htmlcov/
+coverage.json

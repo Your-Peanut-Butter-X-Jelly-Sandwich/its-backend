@@ -57,16 +57,6 @@ python manage.py makemigrations
 python manage.py migrate
 ```
 
-## Run Django Server
-
-Run the server by running:
-
-```shell
-python manage.py runserver
-```
-
-The server will be running on `http://127.0.0.1:8000`
-
 ## Set up third party login
 
 - Navigate to `http://127.0.0.1:8000/admin`
@@ -97,16 +87,47 @@ The server will be running on `http://127.0.0.1:8000`
 
 ## Start Application
 
-- Start the redis server by running `redis-server`
-- Start the celery worker by running `celery -A its_backend worker -l info`
-- Start server by running `python manage.py runserver`
+### Using `Docker`
 
-- Alternatively for MacOS users:
+1. Install `Docker` into your system
+1. Run `docker compose up --build backend` to run the Django server
+    - The server will be running on `http://127.0.0.1:8000`
+1. Alternatively, you can run `docker compose up --build backend-test` to run the Django server with the test entities populated into the database
 
-  - ```bash
-    chmod +x start_project.sh
-    sh start_project.sh
-    ```
+See [Dockerfile](./Dockerfile) and [Docker compose file](./docker-compose.yml)
+
+```shell
+docker compose up --build backend       # start Django server
+docker compose up --build backend-test  # start server with test data
+```
+
+### Using shell scripts
+
+If you have a terminal that can run bash, you can run the following
+
+```bash
+./start_project.sh    # run Django server
+./run_test_server.sh  # run server with test data
+```
+
+### Build Manually
+
+The following steps are basically what happens inside the [Docker compose file](./docker-compose.yml)
+
+1. Migrate the database
+    - Additionally, populate the database with test data
+1. Start the redis server
+1. Start the celery worker
+1. Start the Django server
+
+Together, it looks like this:
+```shell
+python manage.py migrate
+python manage.py loaddata test/test_data.json  # optional
+redis-server --port 6379 &
+celery -A its_backend worker -l info &
+python manage.py runserver
+```
 
 ## View all urls created
 

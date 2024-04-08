@@ -22,19 +22,19 @@ cleanup() {
     fi
 
     # Kill servers if running
-    if [ -n "$REDIS_PID" ]; then
+    if kill -0 "$REDIS_PID" 2> /dev/null; then
         kill "$REDIS_PID"
     fi
-    if [ -n "$CELERY_PID" ]; then
+    if kill -0 "$CELERY_PID" 2> /dev/null; then
         kill "$CELERY_PID"
     fi
-    if [[ -n $DJANGO_PID ]]; then
-        kill $DJANGO_PID
+    if kill -0 "$DJANGO_PID" 2> /dev/null; then
+        kill "$DJANGO_PID"
     fi
 
     # Kill newman test if running
-    if [[ -n $NEWMAN_PID ]]; then
-        kill $NEWMAN_PID
+    if kill -0 "$NEWMAN_PID" 2> /dev/null; then
+        kill "$NEWMAN_PID"
     fi
 }
 
@@ -74,7 +74,7 @@ if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
 fi
 
 # Populate database with test data
-sqlite3 "${ROOT_DIR}/db.sqlite3" ".read ${TEST_DIR}/populate_db.sql"
+python manage.py loaddata "${TEST_DIR}/test_data.json"
 
 newman_test() {
     # Wait for server startup

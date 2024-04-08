@@ -159,7 +159,7 @@ def process_submission_request(submission_pk):
     language = instance.language
     program = instance.program
     qn_id = instance.qn_id
-    student = instance.submitted_by
+    # student = instance.submitted_by
     status = ""
 
     try:
@@ -237,7 +237,7 @@ def process_submission_request(submission_pk):
     # its parse refprogram/ stundet program failed
     else:
         test_cases = TestCase.objects.filter(question_id=qn_id)
-        total_score = test_cases.count()        
+        total_score = test_cases.count()
         score = 0
         its_feedback_hint_student = {"hints": []}
         its_feedback_hint_student = json.dumps(its_feedback_hint_student)

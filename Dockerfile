@@ -7,7 +7,7 @@ ENV PYTHONUNBUFFERED 1
 # Set the working directory
 WORKDIR /app
 
-# Install dependencies
+# Install pip dependencies
 COPY requirements.txt /app/
 RUN pip install -r requirements.txt
 

@@ -23,16 +23,15 @@ cleanup() {
 
 
     # Kill servers if running
-    # if [ -n "$REDIS_PID" ]; then
-    #     kill "$REDIS_PID"
-    # fi
-    # if [ -n "$CELERY_PID" ]; then
-    #     kill "$CELERY_PID"
-    # fi
-    # if [ -n "$DJANGO_PID" ]; then
-    #     kill "$DJANGO_PID"
-    # fi
-
+    if kill -0 "$REDIS_PID" 2> /dev/null; then
+        kill "$REDIS_PID"
+    fi
+    if kill -0 "$CELERY_PID" 2> /dev/null; then
+        kill "$CELERY_PID"
+    fi
+    if kill -0 "$DJANGO_PID" 2> /dev/null; then
+        kill "$DJANGO_PID"
+    fi
 }
 
 # Backup original database if exists
@@ -56,7 +55,7 @@ if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
 fi
 
 # Populate database with test data
-sqlite3 "${ROOT_DIR}/db.sqlite3" ".read ${TEST_DIR}/populate_db.sql"
+python manage.py loaddata "${TEST_DIR}/test_data.json"
 
 # Run development server in background and save PID
 redis-server --port 6379 &
