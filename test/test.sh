@@ -23,15 +23,15 @@ cleanup() {
 
 
     # Kill servers if running
-    if [ -n "$REDIS_PID" ]; then
-        kill "$REDIS_PID"
-    fi
-    if [ -n "$CELERY_PID" ]; then
-        kill "$CELERY_PID"
-    fi
-    if [ -n "$DJANGO_PID" ]; then
-        kill "$DJANGO_PID"
-    fi
+    # if [ -n "$REDIS_PID" ]; then
+    #     kill "$REDIS_PID"
+    # fi
+    # if [ -n "$CELERY_PID" ]; then
+    #     kill "$CELERY_PID"
+    # fi
+    # if [ -n "$DJANGO_PID" ]; then
+    #     kill "$DJANGO_PID"
+    # fi
 
 }
 
