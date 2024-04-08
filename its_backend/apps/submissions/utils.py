@@ -88,7 +88,7 @@ def compute_score(qn_id, language, student_solution, function):
 
 def get_submission_number(user, qn_id):
     submissions = Submissiondata.objects.filter(submitted_by=user, qn_id=qn_id)
-    return submissions.count() + 1
+    return submissions.count()
 
 
 def get_failed_test_case_arg(failed_test_cases):
