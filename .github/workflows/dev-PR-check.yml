@@ -31,7 +31,7 @@ jobs:
       uses: actions/setup-node@v3
     - name: Start Django server
       run: |
-        docker-compose up --build backend-test -d
+        docker compose up -d --build backend-test
     - name: Test Postman collections
       run: |
         cd test
