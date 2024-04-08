@@ -36,5 +36,5 @@ jobs:
       run: |
         cd test
         npm install
-        newman ITS-API-Test.postman_collection.json
+        newman run ITS-API-Test.postman_collection.json
 
