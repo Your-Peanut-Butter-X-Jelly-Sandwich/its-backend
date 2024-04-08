@@ -57,6 +57,8 @@ INSTALLED_APPS = [
     "its_backend.apps.accounts",
     "its_backend.apps.submissions",
     "its_backend.apps.questions",
+    # swagger tools
+    "drf_yasg",
 ]
 
 MIDDLEWARE = [
@@ -216,3 +218,6 @@ CELERY_ACCEPT_CONTENT = [
     "json",
 ]
 CELERY_TASK_SERIALIZER = "json"
+
+# drf-yasg settings
+SWAGGER_SETTINGS = {"SECURITY_DEFINITIONS": {"Basic": {"type": "basic"}}}

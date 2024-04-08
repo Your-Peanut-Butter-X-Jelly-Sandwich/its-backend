@@ -112,6 +112,10 @@ The server will be running on `http://127.0.0.1:8000`
 
 run `python manage.py show_urls`
 
+## Swagger Documentation
+
+After running the Django server, nagivate to `http://127.0.0.1:8000/swagger` to see our API documentation.
+
 ## Test APIs
 
 Our project uses Postman collections and [`newman`](https://www.npmjs.com/package/newman) to test our Django APIs.
