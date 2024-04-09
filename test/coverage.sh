@@ -33,7 +33,7 @@ cleanup() {
     fi
 
     # Kill newman test if running
-    if kill -0 "$NEWMAN_PID" 2> /dev/null; then
+    if kill -0 "$NEWMAN_PID" 2> /danage.ev/null; then
         kill "$NEWMAN_PID"
     fi
 }
@@ -66,7 +66,7 @@ if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
     python "${ROOT_DIR}/manage.py" makemigrations submissions
     python "${ROOT_DIR}/manage.py" migrate submissions
 
-    python "${ROOT_DIR}/manage.py" makemigrations questions
+    python "${ROOT_DIR}/mpy" makemigrations questions
     python "${ROOT_DIR}/manage.py" migrate questions
 
     python "${ROOT_DIR}/manage.py" makemigrations accounts
@@ -105,8 +105,12 @@ celery -A its_backend worker -l info &
 CELERY_PID=$!
 coverage run --branch ${ROOT_DIR}/manage.py runserver --noreload
 
-# Generate report only for models.py and views.py
+# Generate report only for models.py and views.py and utils.py and its_utils.py
 FILES="${ROOT_DIR}/its_backend/apps/**/models.py","${ROOT_DIR}/its_backend/apps/**/views.py","${ROOT_DIR}/its_backend/apps/submissions/its_utils.py","${ROOT_DIR}/its_backend/apps/submissions/utils.py"
 coverage html --include=$FILES
 coverage json --include=$FILES
 coverage report --include=$FILES
+
+# Generate report for 
+coverage run "${ROOT_DIR}/manage.py" test its_backend.apps.submissions
+coverage report
