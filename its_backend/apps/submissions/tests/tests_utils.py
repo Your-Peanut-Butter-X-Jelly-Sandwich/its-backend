@@ -1,8 +1,8 @@
-from django.test import TestCase
-from ..utils import process_submission
-from ...questions.models import Question
-from ..models import Submissiondata
 from django.core.management import call_command
+from django.test import TestCase
+
+from ..utils import process_submission
+
 
 class SubmissionUtilsTest(TestCase):
     def setUp(self):
