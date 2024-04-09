@@ -153,13 +153,14 @@ def get_feedback_for_student(
     except ITSFeedbackException as err:
         raise CannotGeneratedFeedbackException() from err
 
-
 def process_submission_request(submission_pk):
     instance = Submissiondata.objects.get(pk=submission_pk)
     language = instance.language
     program = instance.program
     qn_id = instance.qn_id
-    # student = instance.submitted_by
+    return process_submission(qn_id, language, program)
+
+def process_submission(qn_id, language, program):
     status = ""
 
     try:
