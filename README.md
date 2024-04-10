@@ -238,7 +238,15 @@ pm.collectionVariables.set("message", "Hello World");
 
 ### Populate DB with test data
 
-There is an [SQL script](./test/populate_db.sql) that currently populates `db.sqlite3` file with the following test data:
+To populate the `db.sqlite3` file with test data, run:
+
+```shell
+# Either command works
+sqlite3 db.sqlite3 ".read ./test/populate_db.sql"
+python manage.py loaddata ./test/test_data.json
+```
+
+Currently, the `db.sqlite3` file is pre-populated with the following test data:
 
 - 10 students
 - 5 tutors
@@ -249,6 +257,12 @@ There is an [SQL script](./test/populate_db.sql) that currently populates `db.sq
 > `teaches` relations are added through Postman collection (see `[02] Add teaches relations` in our [collection](./test/ITS-API-Test.postman_collection.json)).
 
 If you need to populate more test data to the DB (e.g., sample questions and submissions), write more `INSERT INTO` SQL statements inside the [script](./test/populate_db.sql).
+
+If you want to save the current state of the `db.sqlite3` file as test data to use in the future, run:
+
+```shell
+python manage.py dumpdata --exclude socialaccount --output ./test/test_data.json
+```
 
 ## Test Code Coverage
 
