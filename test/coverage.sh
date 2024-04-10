@@ -33,7 +33,7 @@ cleanup() {
     fi
 
     # Kill newman test if running
-    if kill -0 "$NEWMAN_PID" 2> /danage.ev/null; then
+    if kill -0 "$NEWMAN_PID" 2> /dev/null; then
         kill "$NEWMAN_PID"
     fi
 }
