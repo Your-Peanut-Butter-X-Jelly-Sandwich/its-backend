@@ -46,11 +46,8 @@ It is suggested to have a dedicated virtual environment for each Django project,
 
 ## Database Migration
 
-- Create migrations by running `python manage.py makemigrations`
-- Sometimes Django might now detect the changes in individual apps, in that case, do `python manage.py makemigrations --empty [APP_NAME]
-- Run migrations  `python manage.py migrate`
-- You might encounter this issue: `django.db.migrations.exceptions.InconsistentMigrationHistory: Migration accounts.0001_initial is applied before its dependency auth.0012_alter_user_first_name_max_length on database 'default'.`
-  - refer to this [post](https://stackoverflow.com/questions/65562875/migration-admin-0001-initial-is-applied-before-its-dependency-app-0001-initial-o) for solution
+- Create migration files by running `python manage.py makemigrations`
+- Run migrations to database with `python manage.py migrate`
 
 ```shell
 python manage.py makemigrations
@@ -375,3 +372,25 @@ You can find out more configurations [here](https://docs.astral.sh/ruff/configur
 - The typical usage to break into the debugger is to insert
   - `import pdb; pdb.set_trace()` or
   - `breakpoint()`
+
+## FAQs
+
+1. Django is not creating migration files for one Django app X. What should I do?
+
+    Sometimes Django might now detect the changes in individual apps, in that case, run:
+    
+    ```shell
+    python manage.py makemigrations --empty [APP_NAME]
+    ```
+
+1. When I try to migrate to database, Django throws the following:
+    
+    ```shell
+    django.db.migrations.exceptions.InconsistentMigrationHistory: Migration X is applied before its dependency Y
+    ```
+
+    Refer to this [Stack Overflow post](https://stackoverflow.com/questions/65562875/migration-admin-0001-initial-is-applied-before-its-dependency-app-0001-initial-o) for solution. We find that deleting conflicting migration file sometimes works as well.
+
+1. Can the application run without third-party authentication properly set up?
+
+    Yes, the application will work, but as of now, our website will still have two nonfunctional buttons for Google and GitHub sign in.
