@@ -10,7 +10,7 @@ It is suggested to have a dedicated virtual environment for each Django project,
     pyenv install 3.11.4
     ```
 
-  - If you do not have `pyenv` , follow the guide [here](https://github.com/pyenv/pyenv#installation) to install it on your machine and set up your shell environment
+  - If you do not have `pyenv`, follow the guide [here](https://github.com/pyenv/pyenv#installation) to install it on your machine and set up your shell environment
 
 - Create a virtual environment to isolate our package dependencies locally.
 
@@ -67,7 +67,7 @@ python manage.py migrate
 - Create new project
 - Authorized redirect URIs = `http://127.0.0.1:8000/auth/google/login/callback/`
 - Authorized JavaScript origins = `http://127.0.0.1:8000` and `http://localhost:3000`
-- Naviage to `http://127.0.0.1:8000/admin`
+- Navigate to `http://127.0.0.1:8000/admin`
 - Use the `client ID` and `client secret` generated to create a database entry in the `Social application` table with `Provider`: Google
 - Select `http://127.0.0.1:8000/` into the `Chosen sites`
 - To see a list of all OAuth Apps created: open the console left side menu and select APIs & services -> `Credentials`
@@ -75,7 +75,7 @@ python manage.py migrate
 ### Github
 
 - Navigate to `https://github.com/settings/applications/new`
-- Application Name: `Intellient Tutoring System`
+- Application Name: `Intelligent Tutoring System`
 - Homepage URL: `http://localhost:8000/`
 - Authorization callback URL: `http://localhost:8000/auth/social/callback`
 - Use the client ID and client secret generated to create another entry in the `Social application` table with `Provider`: Github
@@ -132,7 +132,7 @@ run `python manage.py show_urls`
 
 ## Swagger Documentation
 
-After running the Django server, nagivate to `http://127.0.0.1:8000/swagger` to see our API documentation.
+After running the Django server, navigate to `http://127.0.0.1:8000/swagger` to see our API documentation.
 
 ## Test APIs
 
@@ -161,7 +161,7 @@ cd test
 npm install
 ```
 
-After the package is downloaded, run your Postman collection by running either the schell script:
+After the package is downloaded, run your Postman collection by running either the shell script:
 
 ```shell
 chmod +x ./test/test.sh  # if necessary
