@@ -176,7 +176,7 @@ python test/test.py      # or test.py if you cd-ed into test
 
 A sample [test Postman collection](./test/ITS-API-Test.postman_collection.json) is already included under the `test` folder. If you want to test your own collection, add your collection under the `test` folder and update the `POSTMAN_COLLECTION` value inside the [shell test script](./test/test.sh) or [python test script](./test/test.py).
 
-### Add test cases
+### Add test cases to Postman Collection
 
 To add test cases to the existing Postman collection, download the json file and import it to your local (or web) Postman application.
 
@@ -260,6 +260,12 @@ If you want to save the current state of the `db.sqlite3` file as test data to u
 ```shell
 python manage.py dumpdata --exclude socialaccount --output ./test/test_data.json
 ```
+
+### Add test cases to Django Unit Test 
+The Postman Collection is unable to test the correctness of utils.py and its_utils.py files within the submission app using Postman Collection tests. These files are involved in an asynchronous process in the API call, rendering them unreachable by the test cases.
+
+To add more testcases about utils.py and its_utils.py files within the submission app, add more functions to the tests_utils.py file under tests folder under the submission app. 
+
 
 ## Test Code Coverage
 
