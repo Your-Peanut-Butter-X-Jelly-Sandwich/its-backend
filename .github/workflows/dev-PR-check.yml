@@ -37,4 +37,7 @@ jobs:
         cd test
         npm install
         newman run ITS-API-Test.postman_collection.json
+    - name: Test Django tests
+      run: |
+        python manage.py test its_backend.apps.submissions
 
