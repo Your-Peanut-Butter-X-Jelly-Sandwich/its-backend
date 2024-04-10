@@ -104,13 +104,10 @@ REDIS_PID=$!
 celery -A its_backend worker -l info &
 CELERY_PID=$!
 coverage run --branch ${ROOT_DIR}/manage.py runserver --noreload
+coverage run --branch -a "${ROOT_DIR}/manage.py" test its_backend.apps.submissions
 
 # Generate report only for models.py and views.py and utils.py and its_utils.py
 FILES="${ROOT_DIR}/its_backend/apps/**/models.py","${ROOT_DIR}/its_backend/apps/**/views.py","${ROOT_DIR}/its_backend/apps/submissions/its_utils.py","${ROOT_DIR}/its_backend/apps/submissions/utils.py"
 coverage html --include=$FILES
 coverage json --include=$FILES
 coverage report --include=$FILES
-
-# Generate report for 
-coverage run "${ROOT_DIR}/manage.py" test its_backend.apps.submissions
-coverage report

@@ -67,11 +67,9 @@ DJANGO_PID=$!
 
 # Wait for server startup
 sleep 5
-echo 1111
 
 # Run postman tests
 newman run "${TEST_DIR}/${POSTMAN_COLLECTION}"
-echo 222
 
 # Run tests for utils.py and its_utils under submission app
 python "${ROOT_DIR}/manage.py" test its_backend.apps.submissions
