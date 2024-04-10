@@ -1,6 +1,7 @@
 version: '3.8'
 services:
   redis:
+    # TODO: Provide version of redis as alpine is latest version
     image: "redis:alpine"
     restart: always
     container_name: redis
@@ -40,6 +41,8 @@ services:
     depends_on:
       - redis
       - celery
+    volumes:
+      - db_data:/app
 
   backend-test:
     build:
@@ -63,3 +66,4 @@ services:
 
 volumes:
   redis_data:
+  db_data:
