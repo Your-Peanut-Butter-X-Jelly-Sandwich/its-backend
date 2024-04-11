@@ -10,7 +10,7 @@ It is suggested to have a dedicated virtual environment for each Django project,
     pyenv install 3.11.4
     ```
 
-  - If you do not have `pyenv` , follow the guide [here](https://github.com/pyenv/pyenv#installation) to install it on your machine and set up your shell environment
+  - If you do not have `pyenv`, follow the guide [here](https://github.com/pyenv/pyenv#installation) to install it on your machine and set up your shell environment
 
 - Create a virtual environment to isolate our package dependencies locally.
 
@@ -46,11 +46,8 @@ It is suggested to have a dedicated virtual environment for each Django project,
 
 ## Database Migration
 
-- Create migrations by running `python manage.py makemigrations`
-- Sometimes Django might now detect the changes in individual apps, in that case, do `python manage.py makemigrations --empty [APP_NAME]
-- Run migrations  `python manage.py migrate`
-- You might encounter this issue: `django.db.migrations.exceptions.InconsistentMigrationHistory: Migration accounts.0001_initial is applied before its dependency auth.0012_alter_user_first_name_max_length on database 'default'.`
-  - refer to this [post](https://stackoverflow.com/questions/65562875/migration-admin-0001-initial-is-applied-before-its-dependency-app-0001-initial-o) for solution
+- Create migration files by running `python manage.py makemigrations`
+- Run migrations to database with `python manage.py migrate`
 
 ```shell
 python manage.py makemigrations
@@ -70,7 +67,7 @@ python manage.py migrate
 - Create new project
 - Authorized redirect URIs = `http://127.0.0.1:8000/auth/google/login/callback/`
 - Authorized JavaScript origins = `http://127.0.0.1:8000` and `http://localhost:3000`
-- Naviage to `http://127.0.0.1:8000/admin`
+- Navigate to `http://127.0.0.1:8000/admin`
 - Use the `client ID` and `client secret` generated to create a database entry in the `Social application` table with `Provider`: Google
 - Select `http://127.0.0.1:8000/` into the `Chosen sites`
 - To see a list of all OAuth Apps created: open the console left side menu and select APIs & services -> `Credentials`
@@ -78,7 +75,7 @@ python manage.py migrate
 ### Github
 
 - Navigate to `https://github.com/settings/applications/new`
-- Application Name: `Intellient Tutoring System`
+- Application Name: `Intelligent Tutoring System`
 - Homepage URL: `http://localhost:8000/`
 - Authorization callback URL: `http://localhost:8000/auth/social/callback`
 - Use the client ID and client secret generated to create another entry in the `Social application` table with `Provider`: Github
@@ -135,7 +132,7 @@ run `python manage.py show_urls`
 
 ## Swagger Documentation
 
-After running the Django server, nagivate to `http://127.0.0.1:8000/swagger` to see our API documentation.
+After running the Django server, navigate to `http://127.0.0.1:8000/swagger` to see our API documentation.
 
 ## Test APIs
 
@@ -164,7 +161,7 @@ cd test
 npm install
 ```
 
-After the package is downloaded, run your Postman collection by running either the schell script:
+After the package is downloaded, run your Postman collection by running either the shell script:
 
 ```shell
 chmod +x ./test/test.sh  # if necessary
@@ -179,7 +176,7 @@ python test/test.py      # or test.py if you cd-ed into test
 
 A sample [test Postman collection](./test/ITS-API-Test.postman_collection.json) is already included under the `test` folder. If you want to test your own collection, add your collection under the `test` folder and update the `POSTMAN_COLLECTION` value inside the [shell test script](./test/test.sh) or [python test script](./test/test.py).
 
-### Add test cases
+### Add test cases to Postman Collection
 
 To add test cases to the existing Postman collection, download the json file and import it to your local (or web) Postman application.
 
@@ -263,6 +260,12 @@ If you want to save the current state of the `db.sqlite3` file as test data to u
 ```shell
 python manage.py dumpdata --exclude socialaccount --output ./test/test_data.json
 ```
+
+### Add test cases to Django Unit Test 
+The Postman Collection is unable to test the correctness of utils.py and its_utils.py files within the submission app using Postman Collection tests. These files are involved in an asynchronous process in the API call, rendering them unreachable by the test cases.
+
+To add more testcases about utils.py and its_utils.py files within the submission app, add more functions to the tests_utils.py file under tests folder under the submission app. 
+
 
 ## Test Code Coverage
 
@@ -375,3 +378,25 @@ You can find out more configurations [here](https://docs.astral.sh/ruff/configur
 - The typical usage to break into the debugger is to insert
   - `import pdb; pdb.set_trace()` or
   - `breakpoint()`
+
+## FAQs
+
+1. Django is not creating migration files for one Django app X. What should I do?
+
+    Sometimes Django might now detect the changes in individual apps, in that case, run:
+    
+    ```shell
+    python manage.py makemigrations --empty [APP_NAME]
+    ```
+
+1. When I try to migrate to database, Django throws the following:
+    
+    ```shell
+    django.db.migrations.exceptions.InconsistentMigrationHistory: Migration X is applied before its dependency Y
+    ```
+
+    Refer to this [Stack Overflow post](https://stackoverflow.com/questions/65562875/migration-admin-0001-initial-is-applied-before-its-dependency-app-0001-initial-o) for solution. We find that deleting conflicting migration file sometimes works as well.
+
+1. Can the application run without third-party authentication properly set up?
+
+    Yes, the application will work, but as of now, our website will still have two nonfunctional buttons for Google and GitHub sign in.
