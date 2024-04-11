@@ -320,6 +320,22 @@
         }
     },
     {
+        "model": "accounts.teaches",
+        "pk": 1,
+        "fields": {
+            "tutor": 11,
+            "student": 1
+        }
+    },
+    {
+        "model": "accounts.teaches",
+        "pk": 2,
+        "fields": {
+            "tutor": 12,
+            "student": 7
+        }
+    },
+    {
         "model": "submissions.submissiondata",
         "pk": 1,
         "fields": {

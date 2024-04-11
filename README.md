@@ -87,9 +87,9 @@ python manage.py migrate
 ### Using `Docker`
 
 1. Install `Docker` into your system
-1. Run `docker compose up --build backend` to run the Django server
+2. Run `docker compose up --build backend` to run the Django server
     - The server will be running on `http://127.0.0.1:8000`
-1. Alternatively, you can run `docker compose up --build backend-test` to run the Django server with the test entities populated into the database
+3. Alternatively, you can run `docker compose up --build backend-test` to run the Django server with the test entities populated into the database
 
 See [Dockerfile](./Dockerfile) and [Docker compose file](./docker-compose.yml)
 
@@ -118,6 +118,7 @@ The following steps are basically what happens inside the [Docker compose file](
 1. Start the Django server
 
 Together, it looks like this:
+
 ```shell
 python manage.py migrate
 python manage.py loaddata test/test_data.json  # optional
@@ -261,11 +262,11 @@ If you want to save the current state of the `db.sqlite3` file as test data to u
 python manage.py dumpdata --exclude socialaccount --output ./test/test_data.json
 ```
 
-### Add test cases to Django Unit Test 
+### Add test cases to Django Unit Test
+
 The Postman Collection is unable to test the correctness of utils.py and its_utils.py files within the submission app using Postman Collection tests. These files are involved in an asynchronous process in the API call, rendering them unreachable by the test cases.
 
-To add more testcases about utils.py and its_utils.py files within the submission app, add more functions to the tests_utils.py file under tests folder under the submission app. 
-
+To add more testcases about utils.py and its_utils.py files within the submission app, add more functions to the tests_utils.py file under tests folder under the submission app.
 
 ## Test Code Coverage
 
@@ -384,13 +385,13 @@ You can find out more configurations [here](https://docs.astral.sh/ruff/configur
 1. Django is not creating migration files for one Django app X. What should I do?
 
     Sometimes Django might now detect the changes in individual apps, in that case, run:
-    
+
     ```shell
     python manage.py makemigrations --empty [APP_NAME]
     ```
 
 1. When I try to migrate to database, Django throws the following:
-    
+
     ```shell
     django.db.migrations.exceptions.InconsistentMigrationHistory: Migration X is applied before its dependency Y
     ```
