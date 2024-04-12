@@ -47,7 +47,7 @@ if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
 fi
 
 # Populate database with test data
-sqlite3 "${ROOT_DIR}/db.sqlite3" ".read ${TEST_DIR}/populate_db.sql"
+python "${ROOT_DIR}/manage.py" loaddata "${TEST_DIR}/test_data.json"
 
 # Run test server
 redis-server --port 6379 &

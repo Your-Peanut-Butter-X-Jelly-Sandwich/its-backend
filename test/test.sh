@@ -55,7 +55,7 @@ if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
 fi
 
 # Populate database with test data
-python manage.py loaddata "${TEST_DIR}/test_data.json"
+python "${ROOT_DIR}/manage.py" loaddata "${TEST_DIR}/test_data.json"
 
 # Run development server in background and save PID
 redis-server --port 6379 &

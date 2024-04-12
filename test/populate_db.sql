@@ -28,6 +28,11 @@ INSERT INTO accounts_customuser (email, password, username, organisation, is_act
 INSERT INTO accounts_customuser (email, password, username, organisation, is_active, is_superuser, is_staff, date_joined, is_tutor, is_student, is_manager) VALUES
 ('man16@manager.com', 'pbkdf2_sha256$720000$cp2TzSkZWwFe6Ztj8zU0cu$RnmYUQ1IX7Nr3gZtyvW42sGJNHBHOWttpyUhsZKCE64=', '', '', 1, 0, 0, CURRENT_DATE, 0, 0, 1);  -- id = 16
 
+-- Populate 2 Teaches relation
+INSERT INTO accounts_teaches (student_id, tutor_id) VALUES
+(1, 11),
+(7, 12);
+
 -- Populate 6 questions
 INSERT INTO questions_question ("question_title", "question_statement", "ref_program", "language", "pub_date", "pub_by_id", "due_date") VALUES
 ('Two Sum', 'Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.
