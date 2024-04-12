@@ -87,7 +87,7 @@ class TutorQuestionViewSet(
     def list(self, request):
         queryset = self.get_queryset()
         offset = int(request.query_params.get("offset", 0))
-        limit = int(request.query_params.get("limit", 10))
+        limit = int(request.query_params.get("limit", 1000))
         questions = queryset.order_by("-pub_date")[offset : offset + limit]
         serializer = self.get_serializer_class()(questions, many=True)
         return Response(data={"questions": serializer.data}, status=status.HTTP_200_OK)
@@ -172,7 +172,7 @@ class StudentQuestionViewSet(
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         offset = int(request.query_params.get("offset", 0))
-        limit = int(request.query_params.get("limit", 10))
+        limit = int(request.query_params.get("limit", 1000))
         questions = queryset.order_by("-pub_date")[offset : offset + limit]
         serializer = self.get_serializer_class()(
             questions, many=True, context={"user": request.user}
@@ -210,9 +210,10 @@ class StudentDashboardStatisticsView(generics.RetrieveAPIView):
         count = questions.count()
         return questions, count
 
-    def get_attempted_questions_count(self, student):
+    def get_attempted_questions_count(self, student, questions):
+        qn_ids = questions.values("pk")
         submissions = (
-            Submissiondata.objects.filter(submitted_by=student)
+            Submissiondata.objects.filter(submitted_by=student, qn_id__in=qn_ids)
             .values("qn_id")
             .distinct()
         )
@@ -241,7 +242,9 @@ class StudentDashboardStatisticsView(generics.RetrieveAPIView):
         tutors = self.get_tutors(student)
         tutor_list = self.get_tutor_list(tutors)
         questions, total_questions_count = self.get_all_questions_assigned(tutors)
-        attempted_questions_count = self.get_attempted_questions_count(student)
+        attempted_questions_count = self.get_attempted_questions_count(
+            student, questions
+        )
         due_in_week, due_in_month = self.get_due_questions(questions, student)
         data = {
             "personal_info": personal_info,
