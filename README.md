@@ -382,6 +382,10 @@ You can find out more configurations [here](https://docs.astral.sh/ruff/configur
 
 ## FAQs
 
+1. I followed all the instructions for third party login setup, but it is still not working. What is wrong?
+
+    The `allauth` package creates a placeholder OAuth provider (`example.com`) by default, which may take primary key value of `1` in the `Sites` table. Try changing the value of the `SITE_ID` variable in [`settings.py`](./its_backend/settings.py) to `1`, `2`, `3`, and so on until it works. Or you can download a database browser (like `DB Browser for SQLite`) to see how the table is configured.
+
 1. Django is not creating migration files for one Django app X. What should I do?
 
     Sometimes Django might now detect the changes in individual apps, in that case, run:
