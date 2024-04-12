@@ -59,28 +59,48 @@ python manage.py migrate
 - Navigate to `http://127.0.0.1:8000/admin`
 - Modify the entry in `Sites` table to be
   - Domain name: `http://127.0.0.1:8000/`
-  - Display name: `http://127.0.0.1:8000/`
+  - Display name: Django Server (or anything else)
 
 ### Google
 
-- Navigate to [Google Cloud Console](https://console.cloud.google.com)
-- Create new project
-- Authorized redirect URIs = `http://127.0.0.1:8000/auth/google/login/callback/`
-- Authorized JavaScript origins = `http://127.0.0.1:8000` and `http://localhost:3000`
-- Navigate to `http://127.0.0.1:8000/admin`
-- Use the `client ID` and `client secret` generated to create a database entry in the `Social application` table with `Provider`: Google
-- Select `http://127.0.0.1:8000/` into the `Chosen sites`
-- To see a list of all OAuth Apps created: open the console left side menu and select APIs & services -> `Credentials`
+1. Navigate to [Google Cloud Developer Console](https://console.developers.google.com/)
+1. Go to 'Credentials' -> 'Create Credentials' -> 'OAuth client ID'
+1. Choose 'Web application' as `Application Type`
+1. Add the following URLS under 'Authorized JavaScript origins'
+    - `http://127.0.0.1:8000`
+    - `http://localhost:3000`
+1. Add the following URLS under 'Authorized redirect URIs'
+    - `http://127.0.0.1:8000/auth/google/login/callback/`
+    - `http://127.0.0.1:8000/auth/social`
+1. Click 'Create' at the bottom
+1. Note down the `client ID` and `client secret` values
 
-### Github
+>  To see a list of all OAuth Apps created: open the console left side menu and select APIs & services -> `Credentials`
 
-- Navigate to `https://github.com/settings/applications/new`
-- Application Name: `Intelligent Tutoring System`
-- Homepage URL: `http://localhost:8000/`
-- Authorization callback URL: `http://localhost:8000/auth/social/callback`
-- Use the client ID and client secret generated to create another entry in the `Social application` table with `Provider`: Github
-- Select `http://127.0.0.1:8000/` into the `Chosen sites`
-- To see a list of all OAuth Apps created: `settings` -> `<> Developer settings` -> `OAuth Apps`
+### GitHub
+
+1. Navigate to `https://github.com/settings/applications/new`
+1. Application Name: `Intelligent Tutoring System`
+1. Homepage URL: `http://127.0.0.1:8000/`
+1. Authorization callback URL: `http://127.0.0.1:8000/auth/social/callback`
+1. Click 'Register Application'
+1. Note down the `client ID` and `client secret` values
+
+> To see a list of all OAuth Apps created: `settings` -> `<> Developer settings` -> `OAuth Apps`
+
+### Register the Third Party OAuth Providers to Django
+
+1. Navigate to Django admin site (`http://127.0.0.1:8000/admin`) and log in as superuser
+    - If you have not created a superuser, create one by running `python manage.py createsuperuser`
+1. Click on `+ Add` button next to `Social applications`
+1. Choose the 'Provider' (either `Google` or `GitHub`)
+1. Enter the corresponding `client ID` and `client secret` generated before
+1. Move `http://127.0.0.1:8000/` into the `Chosen sites`
+1. Click `Save`
+
+### Add More Third Party Login Providers
+
+See [`allauth` library's documentation](https://docs.allauth.org/en/latest/socialaccount/providers/index.html) to see all available third party OAuth providers. Follow the guideline and update the `SOCIALACCOUNT_PROVIDERS` dictionary in the [settings.py file](./its_backend/settings.py) and the [SocialApp table](http://127.0.0.1:8000/admin/socialaccount/socialapp/) on Django admin site accordingly.
 
 ## Start Application
 
