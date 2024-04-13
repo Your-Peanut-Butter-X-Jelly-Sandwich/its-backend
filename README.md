@@ -110,7 +110,7 @@ See [`allauth` library's documentation](https://docs.allauth.org/en/latest/socia
 2. Run `docker compose up --build backend` to run the Django server
     - The server will be running on `http://127.0.0.1:8000`
 3. Alternatively, you can run `docker compose up --build backend-test` to run the Django server with the test entities populated into the database
-4. A superuser account with email=`admin0@system.com` and password=`CS3213ITS` is created for you to access the admin site.
+4. A superuser account with email=`admin0@system.com` and password=`CS3213ITS` is created for you to access the admin site when you run `backend` service.
 
 See [Dockerfile](./Dockerfile) and [Docker compose file](./docker-compose.yml)
 
