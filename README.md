@@ -111,6 +111,11 @@ See [`allauth` library's documentation](https://docs.allauth.org/en/latest/socia
     - The server will be running on `http://127.0.0.1:8000`
 3. Alternatively, you can run `docker compose up --build backend-test` to run the Django server with the test entities populated into the database
 4. A superuser account with email=`admin0@system.com` and password=`CS3213ITS` is created for you to access the admin site when you run `backend` service.
+5. If you wish to start the service from a clean state, you can run the following command to remove any new data entries:
+
+```bash
+docker-compose down -v [SERVICE_NAMES] # remove containers and any associated volumes
+```
 
 See [Dockerfile](./Dockerfile) and [Docker compose file](./docker-compose.yml)
 
