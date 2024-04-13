@@ -158,7 +158,7 @@ INSERT INTO submissions_submissiondata ("qn_id", "submission_number", "submissio
 	for i in range(len(nums)):
 		complement = target - nums[i]
 		if complement in hashmap and hashmap[complement] != i:
-			return [i, hashmap[complement]]', 'no status yet', '3', '', '""', '""', '3', '1', 'python'),
+			return [i, hashmap[complement]]', 'no status yet', '3', '', '"{\"hints\": []}"', '"{\"fixes\": []}"', '3', '1', 'python'),
 ('1', '2', '2024-03-16 09:35:36.663842', 'def twoSum(nums, target):
 	hashmap = {}
 	for i in range(len(nums)):
@@ -166,7 +166,7 @@ INSERT INTO submissions_submissiondata ("qn_id", "submission_number", "submissio
 	for i in range(len(nums)):
 		complement = target - nums[i]
 		if complement in hashmap and hashmap[complement] != i:
-			return [i, hashmap[complement]]', 'no status yet', '3', '', '""', '""', '3', '1', 'python'),
+			return [i, hashmap[complement]]', 'no status yet', '3', '', '"{\"hints\": []}"', '"{\"fixes\": []}"', '3', '1', 'python'),
 ('1', '3', '2024-03-16 12:26:33.709593', 'def twoSum(nums, target):
 	hashmap = {}
 	for i in range(len(nums)):
@@ -174,7 +174,7 @@ INSERT INTO submissions_submissiondata ("qn_id", "submission_number", "submissio
 	for i in range(len(nums)):
 		complement = target - nums[i]
 		if complement in hashmap and hashmap[complement] != i:
-			return [i, hashmap[complement]]', 'no status yet', '3', '', '"{\"hints\": \"\"}"', '"{\"fixes\": \"\"}"', '3', '1', 'python'),
+			return [i, hashmap[complement]]', 'no status yet', '3', '', '"{\"hints\": []}"', '"{\"fixes\": []}"', '3', '1', 'python'),
 ('1', '4', '2024-03-16 12:28:13.108628', 'def twoSum(nums, target):
 	hashmap = {}
 	for i in range(len(nums)):
@@ -182,7 +182,7 @@ INSERT INTO submissions_submissiondata ("qn_id", "submission_number", "submissio
 	for i in range(len(nums)):
 		complement = target - nums[i]
 		if complement in hashmap and hashmap[complement] != i:
-			return [i, hashmap[complement]]', 'no status yet', '3', '', '"{\"hints\": \"\"}"', '"{\"fixes\": \"\"}"', '3', '1', 'python'),
+			return [i, hashmap[complement]]', 'no status yet', '3', '', '"{\"hints\": []}"', '"{\"fixes\": []}"', '3', '1', 'python'),
 ('3', '1', '2024-03-15 14:02:50.594625', 'def intToRoman(num: int) -> str:
 	Roman = ""
 	storeIntRoman = [
@@ -232,4 +232,4 @@ INSERT INTO submissions_submissiondata ("qn_id", "submission_number", "submissio
     b = 0
     for i in range(0, a):
         b = b + 1
-    return b', 'no status yet', '3', '', '"{\"hints\": \"\"}"', '"{\"fixes\": \"\"}"', '3', '7', 'python');
+    return b', 'no status yet', '3', '', '"{\"hints\": []}"', '"{\"fixes\": []}"', '3', '7', 'python');

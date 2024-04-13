@@ -367,8 +367,8 @@
             "status": "no status yet",
             "score": 3,
             "tutor_feedback": "",
-            "its_feedback_hint_student": "",
-            "its_feedback_fix_tutor": "",
+            "its_feedback_hint_student": "{\"hints\": []}",
+            "its_feedback_fix_tutor": "{\"fixes\": []}",
             "total_score": 3,
             "submitted_by": 1
         }
@@ -385,8 +385,8 @@
             "status": "no status yet",
             "score": 3,
             "tutor_feedback": "",
-            "its_feedback_hint_student": "",
-            "its_feedback_fix_tutor": "",
+            "its_feedback_hint_student": "{\"hints\": []}",
+            "its_feedback_fix_tutor": "{\"fixes\": []}",
             "total_score": 3,
             "submitted_by": 1
         }
@@ -403,12 +403,8 @@
             "status": "no status yet",
             "score": 3,
             "tutor_feedback": "",
-            "its_feedback_hint_student": {
-                "hints": ""
-            },
-            "its_feedback_fix_tutor": {
-                "fixes": ""
-            },
+            "its_feedback_hint_student": "{\"hints\": []}",
+            "its_feedback_fix_tutor": "{\"fixes\": []}",
             "total_score": 3,
             "submitted_by": 1
         }
@@ -425,12 +421,8 @@
             "status": "no status yet",
             "score": 3,
             "tutor_feedback": "",
-            "its_feedback_hint_student": {
-                "hints": ""
-            },
-            "its_feedback_fix_tutor": {
-                "fixes": ""
-            },
+            "its_feedback_hint_student": "{\"hints\": []}",
+            "its_feedback_fix_tutor": "{\"fixes\": []}",
             "total_score": 3,
             "submitted_by": 1
         }
@@ -447,28 +439,8 @@
             "status": "no status yet",
             "score": 0,
             "tutor_feedback": "",
-            "its_feedback_hint_student": {
-                "hints": [
-                    {
-                        "lineNumber": 3,
-                        "hintStrings": [
-                            "Incorrect else-block for if ( a > 0 )"
-                        ]
-                    }
-                ]
-            },
-            "its_feedback_fix_tutor": {
-                "fixes": [
-                    {
-                        "lineNumber": 5,
-                        "oldExpr": "b = (b - 1)",
-                        "newExpr": "b = (b + 1)",
-                        "repairStrings": [
-                            "Wrong expression. Change b = (b - 1) to b = (b + 1);"
-                        ]
-                    }
-                ]
-            },
+            "its_feedback_hint_student": "{\"hints\": [{\"lineNumber\": 3,\"hintStrings\": [\"Incorrect else-block for if ( a > 0 )\"]}]}",
+            "its_feedback_fix_tutor": "{\"fixes\": [{\"lineNumber\": 5,\"oldExpr\": \"b = (b - 1)\",\"newExpr\": \"b = (b + 1)\",\"repairStrings\": [\"Wrong expression. Change b = (b - 1) to b = (b + 1);\"]}]}",
             "total_score": 3,
             "submitted_by": 1
         }
@@ -485,28 +457,8 @@
             "status": "no status yet",
             "score": 0,
             "tutor_feedback": "",
-            "its_feedback_hint_student": {
-                "hints": [
-                    {
-                        "lineNumber": 3,
-                        "hintStrings": [
-                            "Incorrect else-block for if ( a > 0 )"
-                        ]
-                    }
-                ]
-            },
-            "its_feedback_fix_tutor": {
-                "fixes": [
-                    {
-                        "lineNumber": 5,
-                        "oldExpr": "b = (b - 1)",
-                        "newExpr": "b = (b + 1)",
-                        "repairStrings": [
-                            "Wrong expression. Change b = (b - 1) to b = (b + 1);"
-                        ]
-                    }
-                ]
-            },
+            "its_feedback_hint_student": "{\"hints\": [{\"lineNumber\": 3,\"hintStrings\": [\"Incorrect else-block for if ( a > 0 )\"]}]}",
+            "its_feedback_fix_tutor": "{\"fixes\": [{\"lineNumber\": 5,\"oldExpr\": \"b = (b - 1)\",\"newExpr\": \"b = (b + 1)\",\"repairStrings\": [\"Wrong expression. Change b = (b - 1) to b = (b + 1);\"]}]}",
             "total_score": 3,
             "submitted_by": 1
         }
@@ -523,12 +475,8 @@
             "status": "no status yet",
             "score": 3,
             "tutor_feedback": "",
-            "its_feedback_hint_student": {
-                "hints": ""
-            },
-            "its_feedback_fix_tutor": {
-                "fixes": ""
-            },
+            "its_feedback_hint_student": "{\"hints\": []}",
+            "its_feedback_fix_tutor": "{\"fixes\": []}",
             "total_score": 3,
             "submitted_by": 7
         }
