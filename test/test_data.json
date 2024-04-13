@@ -347,8 +347,12 @@
             "status": "no status yet",
             "score": 3,
             "tutor_feedback": "",
-            "its_feedback_hint_student": "",
-            "its_feedback_fix_tutor": "",
+            "its_feedback_hint_student": {
+                "hints": []
+            },
+            "its_feedback_fix_tutor": {
+                "fixes": []
+            },
             "total_score": 3,
             "submitted_by": 1
         }
@@ -365,8 +369,12 @@
             "status": "no status yet",
             "score": 3,
             "tutor_feedback": "",
-            "its_feedback_hint_student": "",
-            "its_feedback_fix_tutor": "",
+            "its_feedback_hint_student": {
+                "hints": []
+            },
+            "its_feedback_fix_tutor": {
+                "fixes": []
+            },
             "total_score": 3,
             "submitted_by": 1
         }
@@ -384,10 +392,10 @@
             "score": 3,
             "tutor_feedback": "",
             "its_feedback_hint_student": {
-                "hints": ""
+                "hints": []
             },
             "its_feedback_fix_tutor": {
-                "fixes": ""
+                "fixes": []
             },
             "total_score": 3,
             "submitted_by": 1
@@ -406,10 +414,10 @@
             "score": 3,
             "tutor_feedback": "",
             "its_feedback_hint_student": {
-                "hints": ""
+                "hints": []
             },
             "its_feedback_fix_tutor": {
-                "fixes": ""
+                "fixes": []
             },
             "total_score": 3,
             "submitted_by": 1
@@ -504,10 +512,10 @@
             "score": 3,
             "tutor_feedback": "",
             "its_feedback_hint_student": {
-                "hints": ""
+                "hints": []
             },
             "its_feedback_fix_tutor": {
-                "fixes": ""
+                "fixes": []
             },
             "total_score": 3,
             "submitted_by": 7
