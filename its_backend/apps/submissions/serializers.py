@@ -13,6 +13,7 @@ class RetrieveAllSubmissionSerializer(serializers.ModelSerializer):
         model = Submissiondata
         fields = [
             "pk",
+            "status",
             "submission_number",
             "submitted_by",
             "score",
