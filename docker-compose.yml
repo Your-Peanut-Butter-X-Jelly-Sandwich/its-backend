@@ -18,7 +18,7 @@ services:
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
     volumes:
-      - .:/app
+      - db_data:/app
     depends_on:
       - redis
 
@@ -43,6 +43,28 @@ services:
     volumes:
       - db_data:/app
 
+  redis-test:
+      image: "redis:7.2.4-alpine"
+      restart: always
+      container_name: redis-test
+      ports:
+        - "6379:6379"
+      volumes:
+        - redis_test_data:/data
+
+  celery-test:
+    build: .
+    container_name: celery-test
+    command: sh -c "celery -A its_backend worker --loglevel=info"
+    restart: always
+    environment:
+      - CELERY_BROKER_URL=redis://redis-test:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis-test:6379/0
+    volumes:
+      - db_test_data:/app
+    depends_on:
+      - redis-test
+  
   backend-test:
     build:
       context: .
@@ -55,14 +77,18 @@ services:
              python manage.py runserver 0.0.0.0:8000"
     restart: always
     environment:
-      - CELERY_BROKER_URL=redis://redis:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis-test:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis-test:6379/0
     ports:
       - "8000:8000"
     depends_on:
-      - redis
-      - celery
+      - redis-test
+      - celery-test
+    volumes:
+      - db_test_data:/app
 
 volumes:
   redis_data:
   db_data:
+  redis_test_data:
+  db_test_data:

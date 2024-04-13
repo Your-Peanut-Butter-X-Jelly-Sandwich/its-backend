@@ -319,6 +319,26 @@
             "user_permissions": []
         }
     },
+     {
+        "model": "accounts.customuser",
+        "pk": 17,
+        "fields": {
+            "password": "pbkdf2_sha256$720000$cp2TzSkZWwFe6Ztj8zU0cu$RnmYUQ1IX7Nr3gZtyvW42sGJNHBHOWttpyUhsZKCE64=",
+            "last_login": null,
+            "email": "admin@system.com",
+            "username": "",
+            "organisation": "",
+            "is_active": true,
+            "is_superuser": true,
+            "is_staff": true,
+            "date_joined": "2024-04-08",
+            "is_tutor": true,
+            "is_student": true,
+            "is_manager": true,
+            "groups": [],
+            "user_permissions": []
+        }
+    },
     {
         "model": "accounts.teaches",
         "pk": 1,
