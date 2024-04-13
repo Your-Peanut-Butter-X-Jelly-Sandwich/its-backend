@@ -75,7 +75,7 @@ python manage.py migrate
 1. Click 'Create' at the bottom
 1. Note down the `client ID` and `client secret` values
 
->  To see a list of all OAuth Apps created: open the console left side menu and select APIs & services -> `Credentials`
+> To see a list of all OAuth Apps created: open the console left side menu and select APIs & services -> `Credentials`
 
 ### GitHub
 
@@ -110,6 +110,7 @@ See [`allauth` library's documentation](https://docs.allauth.org/en/latest/socia
 2. Run `docker compose up --build backend` to run the Django server
     - The server will be running on `http://127.0.0.1:8000`
 3. Alternatively, you can run `docker compose up --build backend-test` to run the Django server with the test entities populated into the database
+4. A superuser account with email=`admin0@system.com` and password=`CS3213ITS` is created for you to access the admin site.
 
 See [Dockerfile](./Dockerfile) and [Docker compose file](./docker-compose.yml)
 
