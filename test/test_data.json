@@ -1,0 +1,703 @@
+[
+    {
+        "model": "accounts.customuser",
+        "pk": 1,
+        "fields": {
+            "password": "pbkdf2_sha256$720000$cp2TzSkZWwFe6Ztj8zU0cu$RnmYUQ1IX7Nr3gZtyvW42sGJNHBHOWttpyUhsZKCE64=",
+            "last_login": null,
+            "email": "stu01@student.com",
+            "username": "",
+            "organisation": "",
+            "is_active": true,
+            "is_superuser": false,
+            "is_staff": false,
+            "date_joined": "2024-04-08",
+            "is_tutor": false,
+            "is_student": true,
+            "is_manager": false,
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "accounts.customuser",
+        "pk": 2,
+        "fields": {
+            "password": "pbkdf2_sha256$720000$cp2TzSkZWwFe6Ztj8zU0cu$RnmYUQ1IX7Nr3gZtyvW42sGJNHBHOWttpyUhsZKCE64=",
+            "last_login": null,
+            "email": "stu02@student.com",
+            "username": "",
+            "organisation": "",
+            "is_active": true,
+            "is_superuser": false,
+            "is_staff": false,
+            "date_joined": "2024-04-08",
+            "is_tutor": false,
+            "is_student": true,
+            "is_manager": false,
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "accounts.customuser",
+        "pk": 3,
+        "fields": {
+            "password": "pbkdf2_sha256$720000$cp2TzSkZWwFe6Ztj8zU0cu$RnmYUQ1IX7Nr3gZtyvW42sGJNHBHOWttpyUhsZKCE64=",
+            "last_login": null,
+            "email": "stu03@student.com",
+            "username": "",
+            "organisation": "",
+            "is_active": true,
+            "is_superuser": false,
+            "is_staff": false,
+            "date_joined": "2024-04-08",
+            "is_tutor": false,
+            "is_student": true,
+            "is_manager": false,
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "accounts.customuser",
+        "pk": 4,
+        "fields": {
+            "password": "pbkdf2_sha256$720000$cp2TzSkZWwFe6Ztj8zU0cu$RnmYUQ1IX7Nr3gZtyvW42sGJNHBHOWttpyUhsZKCE64=",
+            "last_login": null,
+            "email": "stu04@student.com",
+            "username": "",
+            "organisation": "",
+            "is_active": true,
+            "is_superuser": false,
+            "is_staff": false,
+            "date_joined": "2024-04-08",
+            "is_tutor": false,
+            "is_student": true,
+            "is_manager": false,
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "accounts.customuser",
+        "pk": 5,
+        "fields": {
+            "password": "pbkdf2_sha256$720000$cp2TzSkZWwFe6Ztj8zU0cu$RnmYUQ1IX7Nr3gZtyvW42sGJNHBHOWttpyUhsZKCE64=",
+            "last_login": null,
+            "email": "stu05@student.com",
+            "username": "",
+            "organisation": "",
+            "is_active": true,
+            "is_superuser": false,
+            "is_staff": false,
+            "date_joined": "2024-04-08",
+            "is_tutor": false,
+            "is_student": true,
+            "is_manager": false,
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "accounts.customuser",
+        "pk": 6,
+        "fields": {
+            "password": "pbkdf2_sha256$720000$cp2TzSkZWwFe6Ztj8zU0cu$RnmYUQ1IX7Nr3gZtyvW42sGJNHBHOWttpyUhsZKCE64=",
+            "last_login": null,
+            "email": "stu06@student.com",
+            "username": "",
+            "organisation": "",
+            "is_active": true,
+            "is_superuser": false,
+            "is_staff": false,
+            "date_joined": "2024-04-08",
+            "is_tutor": false,
+            "is_student": true,
+            "is_manager": false,
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "accounts.customuser",
+        "pk": 7,
+        "fields": {
+            "password": "pbkdf2_sha256$720000$cp2TzSkZWwFe6Ztj8zU0cu$RnmYUQ1IX7Nr3gZtyvW42sGJNHBHOWttpyUhsZKCE64=",
+            "last_login": null,
+            "email": "stu07@student.com",
+            "username": "",
+            "organisation": "",
+            "is_active": true,
+            "is_superuser": false,
+            "is_staff": false,
+            "date_joined": "2024-04-08",
+            "is_tutor": false,
+            "is_student": true,
+            "is_manager": false,
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "accounts.customuser",
+        "pk": 8,
+        "fields": {
+            "password": "pbkdf2_sha256$720000$cp2TzSkZWwFe6Ztj8zU0cu$RnmYUQ1IX7Nr3gZtyvW42sGJNHBHOWttpyUhsZKCE64=",
+            "last_login": null,
+            "email": "stu08@student.com",
+            "username": "",
+            "organisation": "",
+            "is_active": true,
+            "is_superuser": false,
+            "is_staff": false,
+            "date_joined": "2024-04-08",
+            "is_tutor": false,
+            "is_student": true,
+            "is_manager": false,
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "accounts.customuser",
+        "pk": 9,
+        "fields": {
+            "password": "pbkdf2_sha256$720000$cp2TzSkZWwFe6Ztj8zU0cu$RnmYUQ1IX7Nr3gZtyvW42sGJNHBHOWttpyUhsZKCE64=",
+            "last_login": null,
+            "email": "stu09@student.com",
+            "username": "",
+            "organisation": "",
+            "is_active": true,
+            "is_superuser": false,
+            "is_staff": false,
+            "date_joined": "2024-04-08",
+            "is_tutor": false,
+            "is_student": true,
+            "is_manager": false,
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "accounts.customuser",
+        "pk": 10,
+        "fields": {
+            "password": "pbkdf2_sha256$720000$cp2TzSkZWwFe6Ztj8zU0cu$RnmYUQ1IX7Nr3gZtyvW42sGJNHBHOWttpyUhsZKCE64=",
+            "last_login": null,
+            "email": "stu10@student.com",
+            "username": "",
+            "organisation": "",
+            "is_active": true,
+            "is_superuser": false,
+            "is_staff": false,
+            "date_joined": "2024-04-08",
+            "is_tutor": false,
+            "is_student": true,
+            "is_manager": false,
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "accounts.customuser",
+        "pk": 11,
+        "fields": {
+            "password": "pbkdf2_sha256$720000$cp2TzSkZWwFe6Ztj8zU0cu$RnmYUQ1IX7Nr3gZtyvW42sGJNHBHOWttpyUhsZKCE64=",
+            "last_login": null,
+            "email": "tut11@tutor.com",
+            "username": "",
+            "organisation": "",
+            "is_active": true,
+            "is_superuser": false,
+            "is_staff": false,
+            "date_joined": "2024-04-08",
+            "is_tutor": true,
+            "is_student": false,
+            "is_manager": false,
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "accounts.customuser",
+        "pk": 12,
+        "fields": {
+            "password": "pbkdf2_sha256$720000$cp2TzSkZWwFe6Ztj8zU0cu$RnmYUQ1IX7Nr3gZtyvW42sGJNHBHOWttpyUhsZKCE64=",
+            "last_login": null,
+            "email": "tut12@tutor.com",
+            "username": "",
+            "organisation": "",
+            "is_active": true,
+            "is_superuser": false,
+            "is_staff": false,
+            "date_joined": "2024-04-08",
+            "is_tutor": true,
+            "is_student": false,
+            "is_manager": false,
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "accounts.customuser",
+        "pk": 13,
+        "fields": {
+            "password": "pbkdf2_sha256$720000$cp2TzSkZWwFe6Ztj8zU0cu$RnmYUQ1IX7Nr3gZtyvW42sGJNHBHOWttpyUhsZKCE64=",
+            "last_login": null,
+            "email": "tut13@tutor.com",
+            "username": "",
+            "organisation": "",
+            "is_active": true,
+            "is_superuser": false,
+            "is_staff": false,
+            "date_joined": "2024-04-08",
+            "is_tutor": true,
+            "is_student": false,
+            "is_manager": false,
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "accounts.customuser",
+        "pk": 14,
+        "fields": {
+            "password": "pbkdf2_sha256$720000$cp2TzSkZWwFe6Ztj8zU0cu$RnmYUQ1IX7Nr3gZtyvW42sGJNHBHOWttpyUhsZKCE64=",
+            "last_login": null,
+            "email": "tut14@tutor.com",
+            "username": "",
+            "organisation": "",
+            "is_active": true,
+            "is_superuser": false,
+            "is_staff": false,
+            "date_joined": "2024-04-08",
+            "is_tutor": true,
+            "is_student": false,
+            "is_manager": false,
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "accounts.customuser",
+        "pk": 15,
+        "fields": {
+            "password": "pbkdf2_sha256$720000$cp2TzSkZWwFe6Ztj8zU0cu$RnmYUQ1IX7Nr3gZtyvW42sGJNHBHOWttpyUhsZKCE64=",
+            "last_login": null,
+            "email": "tut15@tutor.com",
+            "username": "",
+            "organisation": "",
+            "is_active": true,
+            "is_superuser": false,
+            "is_staff": false,
+            "date_joined": "2024-04-08",
+            "is_tutor": true,
+            "is_student": false,
+            "is_manager": false,
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "accounts.customuser",
+        "pk": 16,
+        "fields": {
+            "password": "pbkdf2_sha256$720000$cp2TzSkZWwFe6Ztj8zU0cu$RnmYUQ1IX7Nr3gZtyvW42sGJNHBHOWttpyUhsZKCE64=",
+            "last_login": null,
+            "email": "man16@manager.com",
+            "username": "",
+            "organisation": "",
+            "is_active": true,
+            "is_superuser": false,
+            "is_staff": false,
+            "date_joined": "2024-04-08",
+            "is_tutor": false,
+            "is_student": false,
+            "is_manager": true,
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "accounts.teaches",
+        "pk": 1,
+        "fields": {
+            "tutor": 11,
+            "student": 1
+        }
+    },
+    {
+        "model": "accounts.teaches",
+        "pk": 2,
+        "fields": {
+            "tutor": 12,
+            "student": 7
+        }
+    },
+    {
+        "model": "submissions.submissiondata",
+        "pk": 1,
+        "fields": {
+            "qn_id": 1,
+            "language": "python",
+            "submission_number": 1,
+            "submission_date": "2024-03-16T09:28:22.913Z",
+            "program": "def twoSum(nums, target):\n\thashmap = {}\n\tfor i in range(len(nums)):\n\t\thashmap[nums[i]] = i\n\tfor i in range(len(nums)):\n\t\tcomplement = target - nums[i]\n\t\tif complement in hashmap and hashmap[complement] != i:\n\t\t\treturn [i, hashmap[complement]]",
+            "status": "no status yet",
+            "score": 3,
+            "tutor_feedback": "",
+            "its_feedback_hint_student": "{\"hints\": []}",
+            "its_feedback_fix_tutor": "{\"fixes\": []}",
+            "total_score": 3,
+            "submitted_by": 1
+        }
+    },
+    {
+        "model": "submissions.submissiondata",
+        "pk": 2,
+        "fields": {
+            "qn_id": 1,
+            "language": "python",
+            "submission_number": 2,
+            "submission_date": "2024-03-16T09:35:36.663Z",
+            "program": "def twoSum(nums, target):\n\thashmap = {}\n\tfor i in range(len(nums)):\n\t\thashmap[nums[i]] = i\n\tfor i in range(len(nums)):\n\t\tcomplement = target - nums[i]\n\t\tif complement in hashmap and hashmap[complement] != i:\n\t\t\treturn [i, hashmap[complement]]",
+            "status": "no status yet",
+            "score": 3,
+            "tutor_feedback": "",
+            "its_feedback_hint_student": "{\"hints\": []}",
+            "its_feedback_fix_tutor": "{\"fixes\": []}",
+            "total_score": 3,
+            "submitted_by": 1
+        }
+    },
+    {
+        "model": "submissions.submissiondata",
+        "pk": 3,
+        "fields": {
+            "qn_id": 1,
+            "language": "python",
+            "submission_number": 3,
+            "submission_date": "2024-03-16T12:26:33.709Z",
+            "program": "def twoSum(nums, target):\n\thashmap = {}\n\tfor i in range(len(nums)):\n\t\thashmap[nums[i]] = i\n\tfor i in range(len(nums)):\n\t\tcomplement = target - nums[i]\n\t\tif complement in hashmap and hashmap[complement] != i:\n\t\t\treturn [i, hashmap[complement]]",
+            "status": "no status yet",
+            "score": 3,
+            "tutor_feedback": "",
+            "its_feedback_hint_student": "{\"hints\": []}",
+            "its_feedback_fix_tutor": "{\"fixes\": []}",
+            "total_score": 3,
+            "submitted_by": 1
+        }
+    },
+    {
+        "model": "submissions.submissiondata",
+        "pk": 4,
+        "fields": {
+            "qn_id": 1,
+            "language": "python",
+            "submission_number": 4,
+            "submission_date": "2024-03-16T12:28:13.108Z",
+            "program": "def twoSum(nums, target):\n\thashmap = {}\n\tfor i in range(len(nums)):\n\t\thashmap[nums[i]] = i\n\tfor i in range(len(nums)):\n\t\tcomplement = target - nums[i]\n\t\tif complement in hashmap and hashmap[complement] != i:\n\t\t\treturn [i, hashmap[complement]]",
+            "status": "no status yet",
+            "score": 3,
+            "tutor_feedback": "",
+            "its_feedback_hint_student": "{\"hints\": []}",
+            "its_feedback_fix_tutor": "{\"fixes\": []}",
+            "total_score": 3,
+            "submitted_by": 1
+        }
+    },
+    {
+        "model": "submissions.submissiondata",
+        "pk": 5,
+        "fields": {
+            "qn_id": 3,
+            "language": "python",
+            "submission_number": 1,
+            "submission_date": "2024-03-15T14:02:50.594Z",
+            "program": "def intToRoman(num: int) -> str:\n\tRoman = \"\"\n\tstoreIntRoman = [\n\t\t[1000, \"M\"],\n\t\t[900, \"CM\"],\n\t\t[500, \"D\"],\n\t\t[400, \"CD\"],\n\t\t[100, \"C\"],\n\t\t[90, \"XC\"],\n\t\t[50, \"L\"],\n\t\t[40, \"XL\"],\n\t\t[10, \"X\"],\n\t\t[9, \"IX\"],\n\t\t[5, \"V\"],\n\t\t[4, \"IV\"],\n\t\t[1, \"I\"],\n\t]\n\tfor i in range(len(storeIntRoman)):\n\t\twhile num >= storeIntRoman[i][0]:\n\t\t\tRoman += storeIntRoman[i][1]\n\t\t\tnum -= storeIntRoman[i][0]\n\treturn Roman",
+            "status": "no status yet",
+            "score": 0,
+            "tutor_feedback": "",
+            "its_feedback_hint_student": "{\"hints\": [{\"lineNumber\": 3,\"hintStrings\": [\"Incorrect else-block for if ( a > 0 )\"]}]}",
+            "its_feedback_fix_tutor": "{\"fixes\": [{\"lineNumber\": 5,\"oldExpr\": \"b = (b - 1)\",\"newExpr\": \"b = (b + 1)\",\"repairStrings\": [\"Wrong expression. Change b = (b - 1) to b = (b + 1);\"]}]}",
+            "total_score": 3,
+            "submitted_by": 1
+        }
+    },
+    {
+        "model": "submissions.submissiondata",
+        "pk": 6,
+        "fields": {
+            "qn_id": 3,
+            "language": "python",
+            "submission_number": 2,
+            "submission_date": "2024-03-15T14:15:29.379Z",
+            "program": "def intToRoman(num: int) -> str:\n\tRoman = \"\"\n\tstoreIntRoman = [\n\t\t[1000, \"M\"],\n\t\t[900, \"CM\"],\n\t\t[500, \"D\"],\n\t\t[400, \"CD\"],\n\t\t[100, \"C\"],\n\t\t[90, \"XC\"],\n\t\t[50, \"L\"],\n\t\t[40, \"XL\"],\n\t\t[10, \"X\"],\n\t\t[9, \"IX\"],\n\t\t[5, \"V\"],\n\t\t[4, \"IV\"],\n\t\t[1, \"I\"],\n\t]\n\tfor i in range(len(storeIntRoman)):\n\t\twhile num >= storeIntRoman[i][0]:\n\t\t\tRoman += storeIntRoman[i][1]\n\t\t\tnum -= storeIntRoman[i][0]\n\treturn Roman",
+            "status": "no status yet",
+            "score": 0,
+            "tutor_feedback": "",
+            "its_feedback_hint_student": "{\"hints\": [{\"lineNumber\": 3,\"hintStrings\": [\"Incorrect else-block for if ( a > 0 )\"]}]}",
+            "its_feedback_fix_tutor": "{\"fixes\": [{\"lineNumber\": 5,\"oldExpr\": \"b = (b - 1)\",\"newExpr\": \"b = (b + 1)\",\"repairStrings\": [\"Wrong expression. Change b = (b - 1) to b = (b + 1);\"]}]}",
+            "total_score": 3,
+            "submitted_by": 1
+        }
+    },
+    {
+        "model": "submissions.submissiondata",
+        "pk": 7,
+        "fields": {
+            "qn_id": 5,
+            "language": "python",
+            "submission_number": 1,
+            "submission_date": "2024-03-15T14:16:40.151Z",
+            "program": "def main():\n    a = 10\n    b = 0\n    for i in range(0, a):\n        b = b + 1\n    return b",
+            "status": "no status yet",
+            "score": 3,
+            "tutor_feedback": "",
+            "its_feedback_hint_student": "{\"hints\": []}",
+            "its_feedback_fix_tutor": "{\"fixes\": []}",
+            "total_score": 3,
+            "submitted_by": 7
+        }
+    },
+    {
+        "model": "questions.question",
+        "pk": 1,
+        "fields": {
+            "question_title": "Two Sum",
+            "question_statement": "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.\n\nYou may assume that each input would have exactly one solution, and you may not use the same element twice.\n\nYou can return the answer in any order.",
+            "ref_program": "def twoSum(nums, target):\n        numMap = {}\n        n = len(nums)\n\n        for i in range(n):\n            complement = target - nums[i]\n            if complement in numMap:\n                return [numMap[complement], i]\n            numMap[nums[i]] = i\n\n        return []  # No solution found",
+            "language": "python",
+            "pub_date": "2024-03-16T12:44:23.804Z",
+            "pub_by": 11,
+            "due_date": "2024-05-13"
+        }
+    },
+    {
+        "model": "questions.question",
+        "pk": 2,
+        "fields": {
+            "question_title": "Longest Substring Without Repeating Characters",
+            "question_statement": "Given a string s, find the length of the longest substring without repeating characters.",
+            "ref_program": "def lengthOfLongestSubstring(s: str) -> int:\n    n = len(s)\n    maxLength = 0\n    charMap = {}\n    left = 0\n\n    for right in range(n):\n        if s[right] not in charMap or charMap[s[right]] < left:\n            charMap[s[right]] = right\n            maxLength = max(maxLength, right - left + 1)\n        else:\n            left = charMap[s[right]] + 1\n            charMap[s[right]] = right\n\n    return maxLength",
+            "language": "python",
+            "pub_date": "2024-03-16T12:45:31.519Z",
+            "pub_by": 11,
+            "due_date": "2024-04-06"
+        }
+    },
+    {
+        "model": "questions.question",
+        "pk": 3,
+        "fields": {
+            "question_title": "Integer to Roman",
+            "question_statement": "Roman numerals are represented by seven different symbols: I, V, X, L, C, D and M.\n\nSymbol       Value\nI             1\nV             5\nX             10\nL             50\nC             100\nD             500\nM             1000\nFor example, 2 is written as II in Roman numeral, just two one's added together. 12 is written as XII, which is simply X + II. The number 27 is written as XXVII, which is XX + V + II.\n\nRoman numerals are usually written largest to smallest from left to right. However, the numeral for four is not IIII. Instead, the number four is written as IV. Because the one is before the five we subtract it making four. The same principle applies to the number nine, which is written as IX. There are six instances where subtraction is used:\n\nI can be placed before V (5) and X (10) to make 4 and 9. \nX can be placed before L (50) and C (100) to make 40 and 90. \nC can be placed before D (500) and M (1000) to make 400 and 900.\nGiven an integer, convert it to a roman numeral.",
+            "ref_program": "\n    # Paso #1: Listas de valores romanos\n    listado_unidad = [\"\", \"I\", \"II\", \"III\", \"IV\", \"V\", \"VI\", \"VII\", \"VIII\", \"IX\"]\n    listado_decena = [\"\", \"X\", \"XX\", \"XXX\", \"XL\", \"L\", \"LX\", \"LXX\", \"LXXX\", \"XC\"]\n    listado_centena = [\"\", \"C\", \"CC\", \"CCC\", \"CD\", \"D\", \"DC\", \"DCC\", \"DCCC\", \"CM\"]\n    listado_millar = [\"\", \"M\", \"MM\", \"MMM\"]\n\n    # Paso #2: Obtener las unidades, decenas, centenas y millares\n    millar = num // 1000\n    centena = (num % 1000) // 100\n    decena = (num % 100) // 10\n    unidad = num % 10\n\n    # Paso #3: Convertir cada unidad a su valor romano\n    millar_romano = listado_millar[millar]\n    centena_romano = listado_centena[centena]\n    decena_romano = listado_decena[decena]\n    unidad_romano = listado_unidad[unidad]\n\n    # Paso #4: Concatenar las unidades para formar el número romano\n    return millar_romano + centena_romano + decena_romano + unidad_romano",
+            "language": "python",
+            "pub_date": "2024-03-16T12:45:39.557Z",
+            "pub_by": 11,
+            "due_date": "2024-04-06"
+        }
+    },
+    {
+        "model": "questions.question",
+        "pk": 4,
+        "fields": {
+            "question_title": "Permutations",
+            "question_statement": "Given an array nums of distinct integers, return all the possible permutations. You can return the answer in any order.",
+            "ref_program": "def permute(nums):\n    def backtrack(start):\n        if start == len(nums):\n            permutations.append(nums[:])\n        else:\n            for i in range(start, len(nums)):\n                nums[start], nums[i] = nums[i], nums[start]\n                backtrack(start + 1)\n                nums[start], nums[i] = nums[i], nums[start]\n\n    permutations = []\n    backtrack(0)\n    return permutations",
+            "language": "python",
+            "pub_date": "2024-03-16T12:46:15.658Z",
+            "pub_by": 12,
+            "due_date": "2024-04-14"
+        }
+    },
+    {
+        "model": "questions.question",
+        "pk": 5,
+        "fields": {
+            "question_title": "Standard",
+            "question_statement": "The standard test question",
+            "ref_program": "def main():\n    a = 10\n    b = 0\n    for i in range(0, a):\n        b = b + 1\n    return b",
+            "language": "python",
+            "pub_date": "2024-03-16T12:46:26.344Z",
+            "pub_by": 12,
+            "due_date": "2024-04-14"
+        }
+    },
+    {
+        "model": "questions.question",
+        "pk": 6,
+        "fields": {
+            "question_title": "Is Odd",
+            "question_statement": "The standard test question",
+            "ref_program": "def is_odd(x):\n\tif x % 2 == 0:\n\t\treturn False\n\telse:\n\t\treturn True",
+            "language": "python",
+            "pub_date": "2024-03-16T12:46:26.344Z",
+            "pub_by": 11,
+            "due_date": "2024-04-14"
+        }
+    },
+    {
+        "model": "questions.testcase",
+        "pk": 1,
+        "fields": {
+            "question": 1,
+            "input": "[2,7,11,15],9",
+            "output": [
+                0,
+                1
+            ]
+        }
+    },
+    {
+        "model": "questions.testcase",
+        "pk": 2,
+        "fields": {
+            "question": 1,
+            "input": "[3,2,4],6",
+            "output": [
+                1,
+                2
+            ]
+        }
+    },
+    {
+        "model": "questions.testcase",
+        "pk": 3,
+        "fields": {
+            "question": 1,
+            "input": "[3,3],6",
+            "output": [
+                0,
+                1
+            ]
+        }
+    },
+    {
+        "model": "questions.testcase",
+        "pk": 4,
+        "fields": {
+            "question": 2,
+            "input": "s = \"abcabcbb\"",
+            "output": "3"
+        }
+    },
+    {
+        "model": "questions.testcase",
+        "pk": 5,
+        "fields": {
+            "question": 2,
+            "input": "s = \"bbbbb\"",
+            "output": "1"
+        }
+    },
+    {
+        "model": "questions.testcase",
+        "pk": 6,
+        "fields": {
+            "question": 2,
+            "input": "s = \"pwwkew\"",
+            "output": "3"
+        }
+    },
+    {
+        "model": "questions.testcase",
+        "pk": 7,
+        "fields": {
+            "question": 3,
+            "input": "3",
+            "output": "\"III\""
+        }
+    },
+    {
+        "model": "questions.testcase",
+        "pk": 8,
+        "fields": {
+            "question": 3,
+            "input": "58",
+            "output": "\"LVIII\""
+        }
+    },
+    {
+        "model": "questions.testcase",
+        "pk": 9,
+        "fields": {
+            "question": 3,
+            "input": "1994",
+            "output": "\"MCMXCIV\""
+        }
+    },
+    {
+        "model": "questions.testcase",
+        "pk": 10,
+        "fields": {
+            "question": 4,
+            "input": [
+                1,
+                2,
+                3
+            ],
+            "output": [
+                [
+                    1,
+                    2,
+                    3
+                ],
+                [
+                    1,
+                    3,
+                    2
+                ],
+                [
+                    2,
+                    1,
+                    3
+                ],
+                [
+                    2,
+                    3,
+                    1
+                ],
+                [
+                    3,
+                    1,
+                    2
+                ],
+                [
+                    3,
+                    2,
+                    1
+                ]
+            ]
+        }
+    },
+    {
+        "model": "questions.testcase",
+        "pk": 11,
+        "fields": {
+            "question": 6,
+            "input": "1",
+            "output": "True"
+        }
+    },
+    {
+        "model": "questions.testcase",
+        "pk": 12,
+        "fields": {
+            "question": 6,
+            "input": "15",
+            "output": "True"
+        }
+    },
+    {
+        "model": "questions.testcase",
+        "pk": 13,
+        "fields": {
+            "question": 6,
+            "input": "100",
+            "output": "False"
+        }
+    }
+]

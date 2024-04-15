@@ -1,0 +1,6719 @@
+{
+	"info": {
+		"_postman_id": "9c4df604-92cd-4b8f-9756-3d88d36bbb42",
+		"name": "ITS-API-Test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30394855"
+	},
+	"item": [
+		{
+			"name": "[01] Get access tokens",
+			"item": [
+				{
+					"name": "[01] Get access and refresh tokens for student",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse the response body as JSON",
+									"var responseBody = pm.response.json();",
+									"",
+									"// Extract the access token from the response",
+									"var accessToken = responseBody.tokens.access;",
+									"var refreshToken = responseBody.tokens.refresh",
+									"",
+									"// Set the extracted access token as an environment variable",
+									"pm.collectionVariables.set(\"student_bearer\", accessToken);",
+									"pm.collectionVariables.set(\"student_refresh\", refreshToken);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"stu01@student.com\",\n    \"password\": \"CS3213ITS\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[02] Get access and refresh tokens for tutor",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse the response body as JSON",
+									"var responseBody = pm.response.json();",
+									"",
+									"// Extract the access token from the response",
+									"var accessToken = responseBody.tokens.access;",
+									"var refreshToken = responseBody.tokens.refresh",
+									"",
+									"// Set the extracted access token as an environment variable",
+									"pm.collectionVariables.set(\"tutor_bearer\", accessToken);",
+									"pm.collectionVariables.set(\"tutor_refresh\", refreshToken);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"tut11@tutor.com\",\n    \"password\": \"CS3213ITS\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[03] Get access and refresh tokens for manager",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse the response body as JSON",
+									"var responseBody = pm.response.json();",
+									"",
+									"// Extract the access token from the response",
+									"var accessToken = responseBody.tokens.access;",
+									"var refreshToken = responseBody.tokens.refresh",
+									"",
+									"// Set the extracted access token as an environment variable",
+									"pm.collectionVariables.set(\"manager_bearer\", accessToken);",
+									"pm.collectionVariables.set(\"manager_refresh\", refreshToken);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"man16@manager.com\",\n    \"password\": \"CS3213ITS\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "[02] Add teaches relations",
+			"item": [
+				{
+					"name": "[01] Tutor 11 posts new relations - Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse the response body as JSON",
+									"var responseBody = pm.response.json();",
+									"",
+									"// Check if the status code is 200 OK",
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Check if the response contains the expected message",
+									"var expectedResponseMessage = [",
+									"    [11, 2],",
+									"    [11, 3],",
+									"    [11, 4]",
+									"];",
+									"pm.test(\"Response message is correct\", function () {",
+									"    pm.expect(responseBody.success).to.eql(expectedResponseMessage);",
+									"    pm.expect(responseBody).to.not.have.property(\"error\");",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tutor_bearer}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"student_ids\": [2, 3, 4]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/teaches",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"teaches"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[02] Tutor 11 posts new relations - Partial Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse the response body as JSON",
+									"var responseBody = pm.response.json();",
+									"",
+									"// Check if the status code is 200 OK",
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Check if the response contains the expected message",
+									"var expectedResponseMessage = [",
+									"    [11, 5]",
+									"];",
+									"var expectedResponseError = [",
+									"    [11, 1],",
+									"    [11, 2]",
+									"];",
+									"",
+									"let actualResponseError = [];",
+									"responseBody.error.forEach(obj => {",
+									"    actualResponseError.push(obj.pair);",
+									"});",
+									"pm.test(\"Response message is correct\", function () {",
+									"    pm.expect(responseBody.success).to.eql(expectedResponseMessage);",
+									"    pm.expect(actualResponseError).to.eql(expectedResponseError);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tutor_bearer}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"student_ids\": [1, 2, 5]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/teaches",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"teaches"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[03] Manager posts new relations for Tutors 12 and 13 - Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse the response body as JSON",
+									"var responseBody = pm.response.json();",
+									"",
+									"// Check if the status code is 200 OK",
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Check if the response contains the expected message",
+									"var expectedResponseMessage = [",
+									"    [12, 2],",
+									"    [12, 3],",
+									"    [12, 5],",
+									"    [13, 8],",
+									"    [13, 9],",
+									"    [13, 10]",
+									"];",
+									"pm.test(\"Response message is correct\", function () {",
+									"    pm.expect(responseBody.success).to.eql(expectedResponseMessage);",
+									"    pm.expect(responseBody).to.not.have.property(\"error\");",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{manager_bearer}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    {\"tutor_id\": 12, \"student_ids\": [2, 3, 5]},\n    {\"tutor_id\": 13, \"student_ids\": [8, 9, 10]}\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/teaches",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"teaches"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[04] Manager posts new relations for Tutors 14 and 15 - Failure (Wrong Payload Format)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse the response body as JSON",
+									"var responseBody = pm.response.json();",
+									"",
+									"// Check if the status code is 400 Bad Request",
+									"pm.test(\"Status code is 400 OK\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"// Check if the response contains the expected message",
+									"pm.test(\"Response message is correct\", function () {",
+									"    pm.expect(responseBody).to.not.have.property(\"success\");",
+									"    pm.expect(responseBody.error).to.eql(\"Payload in wrong format\");",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{manager_bearer}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"student_ids\": [3, 5, 7]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/teaches",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"teaches"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[05] Post as student - Forbidden",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse the response body as JSON",
+									"var responseBody = pm.response.json();",
+									"",
+									"// Check if the status code is 403 FORBIDDEN",
+									"pm.test(\"Status code is 403 FORBIDDEN\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{student_bearer}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[{\n    \"tutor_id\": 11,\n    \"student_ids\": [1, 2, 3, 4]\n}]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/teaches",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"teaches"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "[03] Test accounts app",
+			"item": [
+				{
+					"name": "[01] Test Sign Up",
+					"item": [
+						{
+							"name": "[01] Sign Up - Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"delete responseBody[\"id\"];",
+											"",
+											"// Check if the status code is 201 CREATED",
+											"pm.test(\"Status code is 201 CREATED\", function () {",
+											"    pm.response.to.have.status(201);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"let expectedResponseBody = {",
+											"    \"email\": \"newuser@its.com\",",
+											"    \"organisation\": \"\",",
+											"    \"username\": \"\",",
+											"    \"is_student\": true,",
+											"    \"is_tutor\": false,",
+											"    \"is_manager\": false",
+											"}",
+											"",
+											"pm.test(\"Successful Signup\", function () {",
+											"    pm.expect(expectedResponseBody).to.eql(responseBody);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"newuser@its.com\",\n    \"password\": \"CS3213ITS\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/auth/signup",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"signup"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[02] Sign Up - Failure (Missing Field)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 400 Bad Request",
+											"pm.test(\"Status code is 400 Bad Request\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Signup failed due to missing password\", function () {",
+											"    pm.expect(responseBody.message).to.have.property(\"password\");",
+											"    pm.expect(responseBody.message.password[0]).to.eql(\"This field is required.\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"email@email.com\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/auth/signup",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"signup"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[03] Sign Up - Failure (Non-Unique Email)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 400 Bad Request",
+											"pm.test(\"Status code is 400 Bad Request\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Signup failed due to UNIQUE constraint failed\", function () {",
+											"    pm.expect(responseBody.message[0]).to.eql(\"UNIQUE constraint failed: accounts_customuser.email\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"newuser@its.com\",\n    \"password\": \"CS3213ITS\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/auth/signup",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"signup"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "[02] Test Login",
+					"item": [
+						{
+							"name": "[01] Login - Failure (Missing Field)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 400 Bad Request",
+											"pm.test(\"Status code is 400 Bad Request\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Login failed due to missing field\", function () {",
+											"    pm.expect(responseBody.message).to.have.property(\"password\");",
+											"    pm.expect(responseBody.message.password[0]).to.eql(\"This field is required.\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"fakeuser@fake.com\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/auth/login",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[02] Login - Failure (Invalid Data)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 400 Bad Request",
+											"pm.test(\"Status code is 400 Bad Request\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Login failed due to missing field\", function () {",
+											"    pm.expect(responseBody.message).to.have.property(\"non_field_errors\");",
+											"    pm.expect(responseBody.message.non_field_errors[0]).to.eql(\"A user with this email and password does not exist.\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"fakeuser@fake.com\",\n    \"password\": \"fakepassword\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/auth/login",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "[03] Test Logout",
+					"item": [
+						{
+							"name": "[01] Logout - Failure (No Refresh Token)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 400 Bad Request",
+											"pm.test(\"Status code is 400 Bad Request\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Logout failed due to missing refresh token\", function () {",
+											"    pm.expect(responseBody.error).to.eql(\"Refresh token is required\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{student_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/auth/logout",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"logout"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[02] Logout - Failure (Invalid Refresh Token)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 500 Internal Server Error",
+											"pm.test(\"Status code is 500 Internal Server Error\", function () {",
+											"    pm.response.to.have.status(500);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Logout failed due to invalid refresh token\", function () {",
+											"    pm.expect(responseBody.error).to.eql(\"Token is invalid or expired\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{student_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"tokens\": {\n        \"access\": \"invalid_access_token\",\n        \"refresh\": \"invalid_refresh_token\"\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/auth/logout",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"logout"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "[04] Test Current User Retrieval",
+					"item": [
+						{
+							"name": "[01] Retrieve Current Student - Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{student_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/auth/user",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"user"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[02] Retrieve Current Tutor - Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tutor_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/auth/user",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"user"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[03] Retrieve Current Manager - Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{manager_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/auth/user",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"user"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "[05] Test change password",
+					"item": [
+						{
+							"name": "[01] Change password - Failure (Wrong Password)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 400 BAD REQUEST",
+											"pm.test(\"Status code is 400 BAD REQUEST\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Response message is correct\", function () {",
+											"    pm.expect(responseBody.error).to.eql(\"Invalid old password\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{student_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"old_password\": \"wrong_password\",\n    \"new_password\": \"newpassword\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/auth/change-password",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"change-password"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[02] Change password - Failure (Missing Fields)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 400 BAD REQUEST",
+											"pm.test(\"Status code is 400 BAD REQUEST\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Response message is correct\", function () {",
+											"    pm.expect(responseBody.error).to.eql(\"Old password and new password are required\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{student_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"old_password\": \"wrong_password\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/auth/change-password",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"change-password"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[03] Change password - Sucess",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Response message is correct\", function () {",
+											"    pm.expect(responseBody.message).to.eql(\"Password updated successfully\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{student_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"old_password\": \"CS3213ITS\",\n    \"new_password\": \"newpassword\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/auth/change-password",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"change-password"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "[06] Test student retrieval",
+					"item": [
+						{
+							"name": "[01] Get one student - Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"var expectedResponseUser = {",
+											"    \"id\": 1,",
+											"    \"email\": \"stu01@student.com\",",
+											"    \"organisation\": \"\",",
+											"    \"username\": \"\",",
+											"    \"is_student\": true,",
+											"    \"is_tutor\": false,",
+											"    \"is_manager\": false",
+											"};",
+											"pm.test(\"Retrieved student is correct\", function () {",
+											"    pm.expect(responseBody.user[0]).to.eql(expectedResponseUser);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/students?student_ids=1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"students"
+									],
+									"query": [
+										{
+											"key": "student_ids",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[02] Get one student - Fail Silently (is tutor)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Retrieved response is correct\", function () {",
+											"    pm.expect(responseBody.user).to.eql([]);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/students?student_ids=11",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"students"
+									],
+									"query": [
+										{
+											"key": "student_ids",
+											"value": "11"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[03] Get one student - Fail Silently (does not exist)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Retrieved response is correct\", function () {",
+											"    pm.expect(responseBody.user).to.eql([]);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/students?student_ids=100",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"students"
+									],
+									"query": [
+										{
+											"key": "student_ids",
+											"value": "100"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[04] Bulk get students - Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"var expectedResponseUsers = [",
+											"    {",
+											"        \"id\": 1,",
+											"        \"email\": \"stu01@student.com\",",
+											"        \"organisation\": \"\",",
+											"        \"username\": \"\",",
+											"        \"is_student\": true,",
+											"        \"is_tutor\": false,",
+											"        \"is_manager\": false",
+											"    },",
+											"    {",
+											"        \"id\": 2,",
+											"        \"email\": \"stu02@student.com\",",
+											"        \"organisation\": \"\",",
+											"        \"username\": \"\",",
+											"        \"is_student\": true,",
+											"        \"is_tutor\": false,",
+											"        \"is_manager\": false",
+											"    },",
+											"    {",
+											"        \"id\": 3,",
+											"        \"email\": \"stu03@student.com\",",
+											"        \"organisation\": \"\",",
+											"        \"username\": \"\",",
+											"        \"is_student\": true,",
+											"        \"is_tutor\": false,",
+											"        \"is_manager\": false",
+											"    }",
+											"];",
+											"pm.test(\"Retrieved students are correct\", function () {",
+											"    pm.expect(responseBody.user).to.eql(expectedResponseUsers);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/students?student_ids=1,2,3",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"students"
+									],
+									"query": [
+										{
+											"key": "student_ids",
+											"value": "1,2,3"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[05] Bulk get students - Partial Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"var expectedResponseUsers = [",
+											"    {",
+											"        \"id\": 1,",
+											"        \"email\": \"stu01@student.com\",",
+											"        \"organisation\": \"\",",
+											"        \"username\": \"\",",
+											"        \"is_student\": true,",
+											"        \"is_tutor\": false,",
+											"        \"is_manager\": false",
+											"    }",
+											"];",
+											"pm.test(\"Retrieved student is correct\", function () {",
+											"    pm.expect(responseBody.user).to.eql(expectedResponseUsers);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/students?student_ids=1,11,100",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"students"
+									],
+									"query": [
+										{
+											"key": "student_ids",
+											"value": "1,11,100"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[06] Bulk get students - Failure (Non-Integer IDs)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 400 Bad Request",
+											"pm.test(\"Status code is 400 Bad Request\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Failure - Non-Integer student IDs\", function () {",
+											"    pm.expect(responseBody.error).to.eql(\"Student ID must be an integer\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/students?student_ids=1,11,abc",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"students"
+									],
+									"query": [
+										{
+											"key": "student_ids",
+											"value": "1,11,abc"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[07] Get students taught by Tutor 11 - Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Check if the response contains the expected emails",
+											"let expectedResponseEmails = [];",
+											"for (let i = 1; i <= 5; i++) {",
+											"    let id = '0' + i;",
+											"    expectedResponseEmails.push('stu' + id + '@student.com');",
+											"}",
+											"",
+											"let actualResponseEmails = [];",
+											"responseBody.user.forEach(obj => {",
+											"    actualResponseEmails.push(obj.email);",
+											"});",
+											"",
+											"pm.test(\"Retrieved students are correct\", function () {",
+											"    pm.expect(expectedResponseEmails).to.eql(actualResponseEmails);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/students?tutor_id=11",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"students"
+									],
+									"query": [
+										{
+											"key": "tutor_id",
+											"value": "11"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[08] Get students NOT taught by Tutor 11 - Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Check if the response contains the expected emails",
+											"let expectedResponseEmails = [];",
+											"for (let i = 6; i <= 10; i++) {",
+											"    let id = i < 10 ? '0' + i : i;",
+											"    expectedResponseEmails.push('stu' + id + '@student.com');",
+											"}",
+											"expectedResponseEmails.push('newuser@its.com');",
+											"",
+											"let actualResponseEmails = [];",
+											"responseBody.user.forEach(obj => {",
+											"    actualResponseEmails.push(obj.email);",
+											"});",
+											"",
+											"pm.test(\"Retrieved students are correct\", function () {",
+											"    pm.expect(expectedResponseEmails).to.eql(actualResponseEmails);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/students?tutor_id=11&invert=true",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"students"
+									],
+									"query": [
+										{
+											"key": "tutor_id",
+											"value": "11"
+										},
+										{
+											"key": "invert",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[09] Get students taught by Tutor - Failure (Non-Integer Tutor ID)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 400 Bad Request",
+											"pm.test(\"Status code is 400 Bad Request\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Failure - Non-Integer tutor ID\", function () {",
+											"    pm.expect(responseBody.error).to.eql(\"Tutor ID must be an integer\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/students?tutor_id=abc",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"students"
+									],
+									"query": [
+										{
+											"key": "tutor_id",
+											"value": "abc"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[10] Get all students - Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"let expectedResponseEmails = [];",
+											"for (let i = 1; i <= 10; i++) {",
+											"    let id = i < 10 ? '0' + i : i;",
+											"    expectedResponseEmails.push('stu' + id + '@student.com');",
+											"}",
+											"expectedResponseEmails.push('newuser@its.com');",
+											"",
+											"let actualResponseEmails = [];",
+											"responseBody.user.forEach(obj => {",
+											"    actualResponseEmails.push(obj.email);",
+											"});",
+											"",
+											"pm.test(\"Retrieved students are correct\", function () {",
+											"    pm.expect(expectedResponseEmails).to.eql(actualResponseEmails);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/students",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"students"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[11] Get student - Failure (Invalid Fields)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 400 Bad Request",
+											"pm.test(\"Status code is 400 Bad Request\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Failure - Missing Fields\", function () {",
+											"    pm.expect(responseBody.error).to.eql(\"No student or tutor ids provided\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/students?invalid=field",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"students"
+									],
+									"query": [
+										{
+											"key": "invalid",
+											"value": "field"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{tutor_bearer}}",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "[07] Test tutor retrieval",
+					"item": [
+						{
+							"name": "[01] Get one tutor - Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"var expectedResponseUser = {",
+											"    \"id\": 11,",
+											"    \"email\": \"tut11@tutor.com\",",
+											"    \"organisation\": \"\",",
+											"    \"username\": \"\",",
+											"    \"is_student\": false,",
+											"    \"is_tutor\": true,",
+											"    \"is_manager\": false",
+											"};",
+											"pm.test(\"Retrieved tutor is correct\", function () {",
+											"    pm.expect(responseBody.user[0]).to.eql(expectedResponseUser);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/tutors?tutor_ids=11",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutors"
+									],
+									"query": [
+										{
+											"key": "tutor_ids",
+											"value": "11"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[02] Get one tutor - Fail (is student)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Retrieved response is correct\", function () {",
+											"    pm.expect(responseBody.user).to.eql([]);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/tutors?tutor_ids=1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutors"
+									],
+									"query": [
+										{
+											"key": "tutor_ids",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[03] Get one tutor - Fail (does not exist)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Retrieved response is correct\", function () {",
+											"    pm.expect(responseBody.user).to.eql([]);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/tutors?tutor_ids=20",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutors"
+									],
+									"query": [
+										{
+											"key": "tutor_ids",
+											"value": "20"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[04] Bulk get tutors - Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"var expectedResponseUsers = [",
+											"    {",
+											"        \"id\": 11,",
+											"        \"email\": \"tut11@tutor.com\",",
+											"        \"organisation\": \"\",",
+											"        \"username\": \"\",",
+											"        \"is_student\": false,",
+											"        \"is_tutor\": true,",
+											"        \"is_manager\": false",
+											"    },",
+											"    {",
+											"        \"id\": 12,",
+											"        \"email\": \"tut12@tutor.com\",",
+											"        \"organisation\": \"\",",
+											"        \"username\": \"\",",
+											"        \"is_student\": false,",
+											"        \"is_tutor\": true,",
+											"        \"is_manager\": false",
+											"    },",
+											"    {",
+											"        \"id\": 13,",
+											"        \"email\": \"tut13@tutor.com\",",
+											"        \"organisation\": \"\",",
+											"        \"username\": \"\",",
+											"        \"is_student\": false,",
+											"        \"is_tutor\": true,",
+											"        \"is_manager\": false",
+											"    }",
+											"];",
+											"pm.test(\"Retrieved tutors are correct\", function () {",
+											"    pm.expect(responseBody.user).to.eql(expectedResponseUsers);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/tutors?tutor_ids=11,12,13",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutors"
+									],
+									"query": [
+										{
+											"key": "tutor_ids",
+											"value": "11,12,13"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[05] Bulk get tutors - Partial Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"var expectedResponseUsers = [",
+											"    {",
+											"        \"id\": 11,",
+											"        \"email\": \"tut11@tutor.com\",",
+											"        \"organisation\": \"\",",
+											"        \"username\": \"\",",
+											"        \"is_student\": false,",
+											"        \"is_tutor\": true,",
+											"        \"is_manager\": false",
+											"    }",
+											"];",
+											"pm.test(\"Retrieved tutor is correct\", function () {",
+											"    pm.expect(responseBody.user).to.eql(expectedResponseUsers);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/tutors?tutor_ids=1,11,20",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutors"
+									],
+									"query": [
+										{
+											"key": "tutor_ids",
+											"value": "1,11,20"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[06] Bulk get tutors - Failure (Non-Integer IDs)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 400 Bad Request",
+											"pm.test(\"Status code is 400 Bad Request\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Failure - Non-Integer tutor IDs\", function () {",
+											"    pm.expect(responseBody.error).to.eql(\"Tutor ID must be an integer\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/tutors?tutor_ids=1,11,abc",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutors"
+									],
+									"query": [
+										{
+											"key": "tutor_ids",
+											"value": "1,11,abc"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[07] Get tutors that teach Student 3 - Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"var expectedResponseUsers = [",
+											"    {",
+											"        \"id\": 11,",
+											"        \"email\": \"tut11@tutor.com\",",
+											"        \"organisation\": \"\",",
+											"        \"username\": \"\",",
+											"        \"is_student\": false,",
+											"        \"is_tutor\": true,",
+											"        \"is_manager\": false",
+											"    },",
+											"    {",
+											"        \"id\": 12,",
+											"        \"email\": \"tut12@tutor.com\",",
+											"        \"organisation\": \"\",",
+											"        \"username\": \"\",",
+											"        \"is_student\": false,",
+											"        \"is_tutor\": true,",
+											"        \"is_manager\": false",
+											"    }",
+											"];",
+											"pm.test(\"Retrieved tutors are correct\", function () {",
+											"    pm.expect(responseBody.user).to.eql(expectedResponseUsers);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/tutors?student_id=3",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutors"
+									],
+									"query": [
+										{
+											"key": "student_id",
+											"value": "3"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[08] Get all tutors - Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"let expectedResponseEmails = [];",
+											"for (let id = 11; id <= 15; id++) {",
+											"    expectedResponseEmails.push('tut' + id + '@tutor.com');",
+											"}",
+											"",
+											"let actualResponseEmails = [];",
+											"responseBody.user.forEach(obj => {",
+											"    actualResponseEmails.push(obj.email);",
+											"});",
+											"",
+											"pm.test(\"Retrieved tutors are correct\", function () {",
+											"    pm.expect(expectedResponseEmails).to.eql(actualResponseEmails);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/tutors",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutors"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[09] Get tutors that teach Student - Failure (Non-Integer Student ID)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 400 Bad Request",
+											"pm.test(\"Status code is 400 Bad Request\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Failure - Non-Integer student ID\", function () {",
+											"    pm.expect(responseBody.error).to.eql(\"Student ID must be an integer\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/tutors?student_id=abc",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutors"
+									],
+									"query": [
+										{
+											"key": "student_id",
+											"value": "abc"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[10] Get tutor - Failure (Invalid Fields)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 400 Bad Request",
+											"pm.test(\"Status code is 400 Bad Request\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Failure - Missing Fields\", function () {",
+											"    pm.expect(responseBody.error).to.eql(\"No student or tutor ids provided\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/tutors?invalid=field",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutors"
+									],
+									"query": [
+										{
+											"key": "invalid",
+											"value": "field"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{tutor_bearer}}",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "[08] Test Teaches CRUD",
+					"item": [
+						{
+							"name": "[01] Create Teaches relation - Silent Failure (Invalid Tutor ID)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 400 Bad Request",
+											"pm.test(\"Status code is 400 OK\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Response message is correct\", function () {",
+											"    pm.expect(responseBody).to.not.have.property(\"success\");",
+											"    pm.expect(responseBody.error).to.eql(\"Payload in wrong format\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"tutor_id\": \"abc\",\n    \"student_ids\": [1, 2, 3]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/teaches",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"teaches"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[02] Create Teaches relation - Silent Failure (Invalid Student ID)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 400 Bad Request",
+											"pm.test(\"Status code is 400 OK\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Response message is correct\", function () {",
+											"    pm.expect(responseBody).to.not.have.property(\"success\");",
+											"    pm.expect(responseBody.error).to.eql(\"Payload in wrong format\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"tutor_id\": 11,\n    \"student_ids\": [\"1\", \"2\", \"3\"]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/teaches",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"teaches"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[03] Create Teaches relation - Failure (Tutor is Student)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Response contains expected error message\", function () {",
+											"    pm.expect(responseBody.error[0]).to.eql({",
+											"        \"pair\": [1, 2],",
+											"        \"reason\": \"Tutor is not a tutor\"",
+											"    });",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"tutor_id\": 1,\n    \"student_ids\": [2]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/teaches",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"teaches"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[04] Create Teaches relation - Failure (Student is Tutor)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Response contains expected error message\", function () {",
+											"    pm.expect(responseBody.error[0]).to.eql({",
+											"        \"pair\": [11, 12],",
+											"        \"reason\": \"Student is not a student\"",
+											"    });",
+											"});",
+											"",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"tutor_id\": 11,\n    \"student_ids\": [12]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/teaches",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"teaches"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[05] Create Teaches relation - Failure (Tutor Does Not Exist)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Response contains expected error message\", function () {",
+											"    pm.expect(responseBody.error[0]).to.eql({",
+											"        \"pair\": [111, 1],",
+											"        \"reason\": \"CustomUser matching query does not exist.\"",
+											"    });",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"tutor_id\": 111,\n    \"student_ids\": [1]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/teaches",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"teaches"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[06] Create Teaches relation - Failure (Student Does Not Exist)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Response contains expected error message\", function () {",
+											"    pm.expect(responseBody.error[0]).to.eql({",
+											"        \"pair\": [11, 111],",
+											"        \"reason\": \"CustomUser matching query does not exist.\"",
+											"    });",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"tutor_id\": 11,\n    \"student_ids\": [111]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/teaches",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"teaches"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{manager_bearer}}",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "[09] Test Promote Students to Tutors",
+					"item": [
+						{
+							"name": "[01] Create Test Students to Promote",
+							"item": [
+								{
+									"name": "[01] Create Student 18",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"email\": \"tut18@promoted.com\",\n    \"password\": \"CS3213ITS\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/auth/signup",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"auth",
+												"signup"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[02] Create Student 19",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"email\": \"tut19@promoted.com\",\n    \"password\": \"CS3213ITS\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/auth/signup",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"auth",
+												"signup"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[03] Create Student 20",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"email\": \"tut20@promoted.com\",\n    \"password\": \"CS3213ITS\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/auth/signup",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"auth",
+												"signup"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "[02] Promote Student - Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Successful Promotion\", function () {",
+											"    pm.expect(responseBody.message).to.eql(\"Successfully promoted students to tutors\");",
+											"    pm.expect(responseBody).to.not.have.property(\"warning\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"student_ids\": [18, 19, 20]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/students/promote",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"students",
+										"promote"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[03] Promote Students - Fail Silently (Student Not Student)",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Response body contains expected warning message\", function () {",
+											"    pm.expect(responseBody.message).to.eql(\"Successfully promoted students to tutors\");",
+											"    pm.expect(responseBody.warning).to.eql({",
+											"        \"message\": \"These users were not promoted as they do not exist or are not students\",",
+											"        \"ids\": [11, 12, 13]",
+											"    });",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"student_ids\": [11, 12, 13]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/students/promote",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"students",
+										"promote"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[04] Promote Students - Failure (Invalid Payload)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 400 Bad Request",
+											"pm.test(\"Status code is 400 Bad Request\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Response body contains expected error message\", function () {",
+											"    pm.expect(responseBody.error).to.eql(\"Missing 'student_ids' key in payload\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/students/promote",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"students",
+										"promote"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[05] Promote Students - Failure (Invalid Student IDs)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 400 Bad Request",
+											"pm.test(\"Status code is 400 Bad Request\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Response body contains expected error message\", function () {",
+											"    pm.expect(responseBody.error).to.eql(\"Value of 'student_ids' must be an array of integers\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"student_ids\": 1\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/students/promote",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"students",
+										"promote"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[06] Tutor Promotes Students - Failure (Unauthorized)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 403 Forbidden",
+											"pm.test(\"Status code is 403 Forbidden\", function () {",
+											"    pm.response.to.have.status(403);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Response body contains expected error message\", function () {",
+											"    pm.expect(responseBody.detail).to.eql(\"Only administrators are authorized to access this resource\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tutor_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"student_ids\": [1,2,3]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/students/promote",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"students",
+										"promote"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[07] Student Promotes Students - Failure (Unauthorized)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 403 Forbidden",
+											"pm.test(\"Status code is 403 Forbidden\", function () {",
+											"    pm.response.to.have.status(403);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Response body contains expected error message\", function () {",
+											"    pm.expect(responseBody.detail).to.eql(\"Only administrators are authorized to access this resource\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tutor_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"student_ids\": [1,2,3]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/students/promote",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"students",
+										"promote"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[08] Test User Status",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Check if the response contains the expected emails",
+											"let expectedResponseEmails = [];",
+											"for (let id = 18; id <= 20; id++) {",
+											"    expectedResponseEmails.push('tut' + id + '@promoted.com');",
+											"}",
+											"",
+											"pm.test(\"Students are correctly promoted to tutors\", function () {",
+											"    let actualResponseEmails = [];",
+											"    responseBody.user.forEach(obj => {",
+											"        actualResponseEmails.push(obj.email);",
+											"        pm.expect(obj.is_student).to.eql(false);",
+											"        pm.expect(obj.is_tutor).to.eql(true);",
+											"    });",
+											"    pm.expect(expectedResponseEmails).to.eql(actualResponseEmails);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/tutors?tutor_ids=18,19,20",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutors"
+									],
+									"query": [
+										{
+											"key": "tutor_ids",
+											"value": "18,19,20"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{manager_bearer}}",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "[10] Test Demote Tutors to Students",
+					"item": [
+						{
+							"name": "[01] Demote Tutor - Success",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Successful Promotion\", function () {",
+											"    pm.expect(responseBody.message).to.eql(\"Successfully demoted tutors to students\");",
+											"    pm.expect(responseBody).to.not.have.property(\"warning\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"tutor_ids\": [18, 19, 20]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/tutors/demote",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutors",
+										"demote"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[02] Demote Tutors - Fail Silently (Tutor Not Tutor)",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Response body contains expected warning message\", function () {",
+											"    pm.expect(responseBody.message).to.eql(\"Successfully demoted tutors to students\");",
+											"    pm.expect(responseBody.warning).to.eql({",
+											"        \"message\": \"These users were not demoted as they do not exist or are not tutors\",",
+											"        \"ids\": [1, 2, 3]",
+											"    });",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"tutor_ids\": [1, 2, 3]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/tutors/demote",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutors",
+										"demote"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[03] Demote Tutors - Failure (Invalid Payload)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 400 Bad Request",
+											"pm.test(\"Status code is 400 Bad Request\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Response body contains expected error message\", function () {",
+											"    pm.expect(responseBody.error).to.eql(\"Missing 'tutor_ids' key in payload\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/tutors/demote",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutors",
+										"demote"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[04] Demote Tutors - Failure (Invalid Tutor IDs)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 400 Bad Request",
+											"pm.test(\"Status code is 400 Bad Request\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Response body contains expected error message\", function () {",
+											"    pm.expect(responseBody.error).to.eql(\"Value of 'tutor_ids' must be an array of integers\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"tutor_ids\": 1\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/tutors/demote",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutors",
+										"demote"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[05] Tutor Demotes Tutors - Failure (Unauthorized)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 403 Forbidden",
+											"pm.test(\"Status code is 403 Forbidden\", function () {",
+											"    pm.response.to.have.status(403);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Response body contains expected error message\", function () {",
+											"    pm.expect(responseBody.detail).to.eql(\"Only administrators are authorized to access this resource\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tutor_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"tutor_ids\": [11,12,13]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/tutors/demote",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutors",
+										"demote"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[06] Student Demotes Tutors - Failure (Unauthorized)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 403 Forbidden",
+											"pm.test(\"Status code is 403 Forbidden\", function () {",
+											"    pm.response.to.have.status(403);",
+											"});",
+											"",
+											"// Check if the response contains the expected message",
+											"pm.test(\"Response body contains expected error message\", function () {",
+											"    pm.expect(responseBody.detail).to.eql(\"Only administrators are authorized to access this resource\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tutor_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"tutor_ids\": [11,12,13]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/tutors/demote",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutors",
+										"demote"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[07] Test User Status",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Check if the response contains the expected emails",
+											"let expectedResponseEmails = [];",
+											"for (let id = 18; id <= 20; id++) {",
+											"    expectedResponseEmails.push('tut' + id + '@promoted.com');",
+											"}",
+											"",
+											"pm.test(\"Students are correctly promoted to tutors\", function () {",
+											"    let actualResponseEmails = [];",
+											"    responseBody.user.forEach(obj => {",
+											"        actualResponseEmails.push(obj.email);",
+											"        pm.expect(obj.is_student).to.eql(true);",
+											"        pm.expect(obj.is_tutor).to.eql(false);",
+											"    });",
+											"    pm.expect(expectedResponseEmails).to.eql(actualResponseEmails);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/students?student_ids=18,19,20",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"students"
+									],
+									"query": [
+										{
+											"key": "student_ids",
+											"value": "18,19,20"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{manager_bearer}}",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "[04] Test questions app",
+			"item": [
+				{
+					"name": "[01] Test Tutor Question CRUD",
+					"item": [
+						{
+							"name": "[01] Tutor Add Question",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 201 CREATED",
+											"pm.test(\"Status code is 201 CREATED\", function () {",
+											"    pm.response.to.have.status(201);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tutor_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"language\": \"python\",\n    \"question_title\": \"Reverse Integer\",\n    \"question_statement\": \"Given a signed 32-bit integer x, return x with its digits reversed. If reversing x causes the value to go outside the signed 32-bit integer range [-231, 231 - 1], then return 0. Assume the environment does not allow you to store 64-bit integers (signed or unsigned).\",\n    \"ref_program\": \"def reverse(x):\\n\\tans = 0\\n\\twhile x != 0:\\n\\t\\tans = ans * 10 + x % 10\\n\\t\\tx //= 10\\n\\n\\tif ans > 2**31 - 1 or ans < -(2**31):\\n\\t\\treturn 0\\n\\n\\treturn ans\",\n    \"due_date\": \"2024-04-27\",\n    \"test_cases\": [\n        {\"input\": \"123\",\n        \"output\": \"321\"},\n        {\"input\": \"-123\",\n        \"output\": \"-321\"},\n        {\"input\": \"120\",\n        \"output\": \"21\"},\n        {\"input\": \"9990\",\n        \"output\": \"999\"}\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/tutor/question",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutor",
+										"question"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[02] Tutor Add Question Default Due Date",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 201 CREATED",
+											"pm.test(\"Status code is 201 CREATED\", function () {",
+											"    pm.response.to.have.status(201);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tutor_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"language\": \"python\",\n    \"question_title\": \"Reverse Integer\",\n    \"question_statement\": \"Given a signed 32-bit integer x, return x with its digits reversed. If reversing x causes the value to go outside the signed 32-bit integer range [-231, 231 - 1], then return 0. Assume the environment does not allow you to store 64-bit integers (signed or unsigned).\",\n    \"ref_program\": \"def reverse(x):\\n\\tans = 0\\n\\twhile x != 0:\\n\\t\\tans = ans * 10 + x % 10\\n\\t\\tx //= 10\\n\\n\\tif ans > 2**31 - 1 or ans < -(2**31):\\n\\t\\treturn 0\\n\\n\\treturn ans\",\n    \"test_cases\": [\n        {\"input\": \"123\",\n        \"output\": \"321\"},\n        {\"input\": \"-123\",\n        \"output\": \"-321\"},\n        {\"input\": \"120\",\n        \"output\": \"21\"},\n        {\"input\": \"9990\",\n        \"output\": \"999\"}\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/tutor/question",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutor",
+										"question"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[03]Tutor Add Question Missing Field",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 400 BAD REQUEST",
+											"pm.test(\"Status code is 400 BAD REQUEST\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tutor_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"language\": \"python\",\n    \"question_statement\": \"Given a signed 32-bit integer x, return x with its digits reversed. If reversing x causes the value to go outside the signed 32-bit integer range [-231, 231 - 1], then return 0. Assume the environment does not allow you to store 64-bit integers (signed or unsigned).\",\n    \"ref_program\": \"def reverse(x):\\n\\tans = 0\\n\\twhile x != 0:\\n\\t\\tans = ans * 10 + x % 10\\n\\t\\tx //= 10\\n\\n\\tif ans > 2**31 - 1 or ans < -(2**31):\\n\\t\\treturn 0\\n\\n\\treturn ans\",\n    \"due_date\": \"2024-04-27\",\n    \"test_cases\": [\n        {\"input\": \"123\",\n        \"output\": \"321\"},\n        {\"input\": \"-123\",\n        \"output\": \"-321\"},\n        {\"input\": \"120\",\n        \"output\": \"21\"},\n        {\"input\": \"9990\",\n        \"output\": \"999\"}\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/tutor/question",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutor",
+										"question"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[04] Tutor Update Question",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tutor_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"due_date\": \"2024-06-27\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/tutor/question/6",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutor",
+										"question",
+										"6"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[05] Tutor Update Question Wrong Data Format",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 400 Bad Request",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"// Check if the response contains the expected JSON message",
+											"pm.test(\"Error message is correct\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.message.due_date[0]).to.eql(\"Date has wrong format. Use one of these formats instead: YYYY-MM-DD.\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tutor_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"due_date\": \"2024-06\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/tutor/question/6",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutor",
+										"question",
+										"6"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[06] Tutor List All Questions",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tutor_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/tutor/question",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutor",
+										"question"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[07] Tutor Retrieve Question",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tutor_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/tutor/question/6",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutor",
+										"question",
+										"6"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[08] Tutor Retrieve Missing Question",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 404 NOT FOUND",
+											"pm.test(\"Status code is 404 NOT FOUND\", function () {",
+											"    pm.response.to.have.status(404);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tutor_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/tutor/question/2000",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutor",
+										"question",
+										"2000"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[09] Tutor Delete Question",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Check if the status code is 204 NO CONTENT",
+											"pm.test(\"Status code is 204 NO CONTENT\", function () {",
+											"    pm.response.to.have.status(204);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tutor_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/tutor/question/6",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutor",
+										"question",
+										"6"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[10] Tutor Delete Missing Question",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Check if the status code is 404 NOT FOUND",
+											"pm.test(\"Status code is 404 NOT FOUND\", function () {",
+											"    pm.response.to.have.status(404);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tutor_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/tutor/question/6000",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tutor",
+										"question",
+										"6000"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "[02] Test Student Question",
+					"item": [
+						{
+							"name": "[01] Student List All Questions",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{student_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/student/question",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"student",
+										"question"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[02] Student List All Question Pagination",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{student_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/student/question?limit=2&offset=1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"student",
+										"question"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "2"
+										},
+										{
+											"key": "offset",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[03] Student Retrieve Question",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{student_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/student/question/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"student",
+										"question",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[04] Student Retrieve Missing Question",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 404 NOT FOUND",
+											"pm.test(\"Status code is 404 NOT FOUND\", function () {",
+											"    pm.response.to.have.status(404);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{student_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/student/question/2000",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"student",
+										"question",
+										"2000"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[05] Student Retrieve Dashboard Stats",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Parse the response body as JSON",
+											"var responseBody = pm.response.json();",
+											"",
+											"// Check if the status code is 200 OK",
+											"pm.test(\"Status code is 200 OK\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Check existence of data fields\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData).to.have.property(\"personal_info\");",
+											"    pm.expect(jsonData).to.have.property(\"tutors\");",
+											"    pm.expect(jsonData).to.have.property(\"total_question_assigned\");",
+											"    pm.expect(jsonData).to.have.property(\"attempted_questions\");",
+											"    pm.expect(jsonData).to.have.property(\"questions_due_in_a_week\");",
+											"    pm.expect(jsonData).to.have.property(\"questions_due_in_a_month\");",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{student_bearer}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/student/dashboard-stats",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"student",
+										"dashboard-stats"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "[05] Test Submission app",
+			"item": [
+				{
+					"name": "[01] Student Submission CRUD",
+					"item": [
+						{
+							"name": "[01] Create Student Submission",
+							"item": [
+								{
+									"name": "[01] Student Add Submission (All Testcases passed))",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var responseBody = pm.response.json();",
+													"",
+													"pm.test('Status code is 200 OK', function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"Submission Creation Response is correct\", function () {",
+													"    pm.expect(responseBody.message).to.eql(\"Submission pending judgment\");",
+													"});",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{student_bearer}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "qn_id",
+													"value": "1",
+													"type": "text"
+												},
+												{
+													"key": "language",
+													"value": "python",
+													"type": "text"
+												},
+												{
+													"key": "program",
+													"value": "def twoSum(nums, target):\n        numMap = {}\n        n = len(nums)\n        for i in range(n):\n            complement = target - nums[i]\n            if complement in numMap:\n                return [numMap[complement], i]\n            numMap[nums[i]] = i\n        return [] ",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{base_url}}/student/submission",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"student",
+												"submission"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[02] Student Add Submission (Some Testcases failed)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Parse the response body as JSON\r",
+													"var responseBody = pm.response.json();\r",
+													"\r",
+													"pm.test('Status code is 200 OK', function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Submission Creation Response is correct\", function () {\r",
+													"    pm.expect(responseBody.message).to.eql(\"Submission pending judgment\");\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{student_bearer}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "qn_id",
+													"value": "8",
+													"type": "text"
+												},
+												{
+													"key": "language",
+													"value": "python",
+													"type": "text"
+												},
+												{
+													"key": "program",
+													"value": "def is_odd(x):\\n\\tif x % 2 == 0:\\n\\t\\treturn False\\n\\telse:\\n\\t\\treturn False",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{base_url}}/student/submission",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"student",
+												"submission"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[03] Student Add Submission (All Testcases failed)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Parse the response body as JSON\r",
+													"var responseBody = pm.response.json();\r",
+													"\r",
+													"pm.test('Status code is 200 OK', function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Submission Creation Response is correct\", function () {\r",
+													"    pm.expect(responseBody.message).to.eql(\"Submission pending judgment\");\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{student_bearer}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "qn_id",
+													"value": "8",
+													"type": "text"
+												},
+												{
+													"key": "language",
+													"value": "python",
+													"type": "text"
+												},
+												{
+													"key": "program",
+													"value": "def is_odd(x):",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{base_url}}/student/submission",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"student",
+												"submission"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[04] Student Add Submission (ITS Parser Generates Empty Parsed Result)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var responseBody = pm.response.json();",
+													"",
+													"",
+													"pm.test('Status code is 200 OK', function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"",
+													"pm.test(\"Submission Creation Response is correct\", function () {",
+													"    pm.expect(responseBody.message).to.eql(\"Submission pending judgment\");",
+													"});",
+													"",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{student_bearer}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "qn_id",
+													"value": "1",
+													"type": "text"
+												},
+												{
+													"key": "language",
+													"value": "python",
+													"type": "text"
+												},
+												{
+													"key": "program",
+													"value": "d",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{base_url}}/student/submission",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"student",
+												"submission"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[05] Student Add Submission (ITS Failed in Parsing Student Program)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Parse the response body as JSON\r",
+													"var responseBody = pm.response.json();\r",
+													"\r",
+													"\r",
+													"pm.test('Status code is 200 OK', function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Submission Creation Response is correct\", function () {\r",
+													"    pm.expect(responseBody.message).to.eql(\"Submission pending judgment\");\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{student_bearer}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "qn_id",
+													"value": "1",
+													"type": "text"
+												},
+												{
+													"key": "language",
+													"value": "python",
+													"type": "text"
+												},
+												{
+													"key": "program",
+													"value": "        numMap = {}\n        n = len(nums)\n        for i in range(n):\n            complement = target - nums[i]\n            if complement in numMap:\n                return [numMap[complement], i]\n            numMap[nums[i]] = i\n        return [] ",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{base_url}}/student/submission",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"student",
+												"submission"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[06] Student Add Submission (ITS Failed in Parsing Reference Program)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Parse the response body as JSON\r",
+													"var responseBody = pm.response.json();\r",
+													"\r",
+													"\r",
+													"pm.test('Status code is 200 OK', function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Submission Creation Response is correct\", function () {\r",
+													"    pm.expect(responseBody.message).to.eql(\"Submission pending judgment\");\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{student_bearer}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "qn_id",
+													"value": "3",
+													"type": "text"
+												},
+												{
+													"key": "language",
+													"value": "python",
+													"type": "text"
+												},
+												{
+													"key": "program",
+													"value": "def intToRoman(num):\n    listado_unidad = [\"\", \"I\", \"II\", \"III\", \"IV\", \"V\", \"VI\", \"VII\", \"VIII\", \"IX\"]\n    listado_decena = [\"\", \"X\", \"XX\", \"XXX\", \"XL\", \"L\", \"LX\", \"LXX\", \"LXXX\", \"XC\"]\n    listado_centena = [\"\", \"C\", \"CC\", \"CCC\", \"CD\", \"D\", \"DC\", \"DCC\", \"DCCC\", \"CM\"]\n    listado_millar = [\"\", \"M\", \"MM\", \"MMM\"]\n\n    millar = num // 1000\n    centena = (num % 1000) // 100\n    decena = (num % 100) // 10\n    unidad = num % 10\n\n    millar_romano = listado_millar[millar]\n    centena_romano = listado_centena[centena]\n    decena_romano = listado_decena[decena]\n    unidad_romano = listado_unidad[unidad]\n\n    return millar_romano + centena_romano + decena_romano + unidad_romano",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{base_url}}/student/submission",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"student",
+												"submission"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[07] Student Add Submission (ITS Failed in Intepreter)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Parse the response body as JSON\r",
+													"var responseBody = pm.response.json();\r",
+													"\r",
+													"\r",
+													"pm.test('Status code is 200 OK', function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Submission Creation Response is correct\", function () {\r",
+													"    pm.expect(responseBody.message).to.eql(\"Submission pending judgment\");\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{student_bearer}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "qn_id",
+													"value": "2",
+													"type": "text"
+												},
+												{
+													"key": "language",
+													"value": "python",
+													"type": "text"
+												},
+												{
+													"key": "program",
+													"value": "def lengthOfLongestSubstring(s: str) -> int:\n    n = len(s)\n    maxLength = 0\n    charMap = {}\n    left = 0\n\n    for right in range(n):\n        if s[right] not in charMap or charMap[s[right]] < left:\n            charMap[s[right]] = right\n            maxLength = max(maxLength, right - left + 1)\n        else:\n            left = charMap[s[right]] + 1\n            charMap[s[right]] = right\n\n    return maxLength",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{base_url}}/student/submission",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"student",
+												"submission"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[08] Student Add Submission (ITS Failed in Feedback Generation)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Parse the response body as JSON\r",
+													"var responseBody = pm.response.json();\r",
+													"\r",
+													"\r",
+													"pm.test('Status code is 200 OK', function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Submission Creation Response is correct\", function () {\r",
+													"    pm.expect(responseBody.message).to.eql(\"Submission pending judgment\");\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{student_bearer}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "qn_id",
+													"value": "1",
+													"type": "text"
+												},
+												{
+													"key": "language",
+													"value": "python",
+													"type": "text"
+												},
+												{
+													"key": "program",
+													"value": "def twoSum(nums, target):\n        numMap = {}\n        n = len(nums)\n        for i in range(n - 1):\n            complement = target - nums[i]\n            if complement in numMap:\n                return [numMap[complement], i]\n            numMap[nums[i]] = i\n        return [] ",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{base_url}}/student/submission",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"student",
+												"submission"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[09] Student Add Submission to not Accessible Question",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Parse the response body as JSON\r",
+													"var responseBody = pm.response.json();\r",
+													"\r",
+													"pm.test(\"Status code is BAD Request\", function () {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Response message is correct\", function () {\r",
+													"    pm.expect(responseBody.message).to.eql(\"Question with qn_id 5 is not available to the student\");\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{student_bearer}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "qn_id",
+													"value": "5",
+													"type": "text"
+												},
+												{
+													"key": "language",
+													"value": "python",
+													"type": "text"
+												},
+												{
+													"key": "program",
+													"value": "def main():\n    a = 10\n    b = 0\n    for i in range(0, a):\n        b = b + 1\n    return b",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{base_url}}/student/submission",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"student",
+												"submission"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[10] Student Add Submission to Missing Question",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Parse the response body as JSON\r",
+													"var responseBody = pm.response.json();\r",
+													"\r",
+													"pm.test(\"Status code is 400 Bad Request\", function () {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Response message is correct\", function () {\r",
+													"    pm.expect(responseBody.message).to.eql(\"Question with qn_id 10000 not found\");\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{student_bearer}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "qn_id",
+													"value": "10000",
+													"type": "text"
+												},
+												{
+													"key": "language",
+													"value": "python",
+													"type": "text"
+												},
+												{
+													"key": "program",
+													"value": "def main():\n    a = 10\n    b = 0\n    for i in range(0, a):\n        b = b + 1\n    return b",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{base_url}}/student/submission",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"student",
+												"submission"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[11] Student Add Submission (Missing qn_id Field)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Parse the response body as JSON\r",
+													"var responseBody = pm.response.json();\r",
+													"\r",
+													"// Check if the status code is 400 BAD REQUEST\r",
+													"pm.test(\"Status code is 400 BAD REQUEST\", function () {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Response message is correct\", function () {\r",
+													"    pm.expect(responseBody.message).to.eql(\"{'qn_id': [ErrorDetail(string='This field is required.', code='required')]}\");\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{student_bearer}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "language",
+													"value": "python",
+													"type": "text"
+												},
+												{
+													"key": "program",
+													"value": "def main():\n    a = 10\n    b = 0\n    for i in range(0, a):\n        b = b + 1\n    return b",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{base_url}}/student/submission",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"student",
+												"submission"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[12] Student Add Submission (Missing language Field)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Parse the response body as JSON\r",
+													"var responseBody = pm.response.json();\r",
+													"\r",
+													"// Check if the status code is 400 BAD REQUEST\r",
+													"pm.test(\"Status code is 400 BAD REQUEST\", function () {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Response message is correct\", function () {\r",
+													"    pm.expect(responseBody.message).to.eql(\"{'language': [ErrorDetail(string='This field is required.', code='required')]}\");\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{student_bearer}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "qn_id",
+													"value": "10000",
+													"type": "text"
+												},
+												{
+													"key": "program",
+													"value": "def main():\n    a = 10\n    b = 0\n    for i in range(0, a):\n        b = b + 1\n    return b",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{base_url}}/student/submission",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"student",
+												"submission"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[13] Student Add Submission (Missing Program Field)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Parse the response body as JSON\r",
+													"var responseBody = pm.response.json();\r",
+													"\r",
+													"// Check if the status code is 400 BAD REQUEST\r",
+													"pm.test(\"Status code is 400 BAD REQUEST\", function () {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Response message is correct\", function () {\r",
+													"    pm.expect(responseBody.message).to.eql(\"{'program': [ErrorDetail(string='This field is required.', code='required')]}\");\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{student_bearer}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "qn_id",
+													"value": "10000",
+													"type": "text"
+												},
+												{
+													"key": "language",
+													"value": "python",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{base_url}}/student/submission",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"student",
+												"submission"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "[02] List Student Submission",
+							"item": [
+								{
+									"name": "[01] Student List Past Submissions of a Question",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Parse the response body as JSON\r",
+													"var responseBody = pm.response.json();\r",
+													"\r",
+													"// Check if the status code is 200 OK\r",
+													"pm.test(\"Status code is 200 OK\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Check if 'submissions' array is not empty\", function () {\r",
+													"    pm.expect(responseBody.submissions.length).to.be.above(0, \"The 'submissions' array should not be empty\");\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{student_bearer}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": ""
+										},
+										"url": {
+											"raw": "{{base_url}}/student/submission?qn_id=3",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"student",
+												"submission"
+											],
+											"query": [
+												{
+													"key": "qn_id",
+													"value": "3"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[02] Student List Past Submissions of a Question without Past Submission",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Parse the response body as JSON\r",
+													"var responseBody = pm.response.json();\r",
+													"\r",
+													"// Check if the status code is 200 OK\r",
+													"pm.test(\"Status code is 200 OK\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Response to list submission is correct\", function () {\r",
+													"    pm.expect(responseBody.submissions).to.eql([]);\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{student_bearer}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/student/submission?qn_id=7",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"student",
+												"submission"
+											],
+											"query": [
+												{
+													"key": "qn_id",
+													"value": "7"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[03] Student List Past Submissions of Missing Question",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Parse the response body as JSON\r",
+													"var responseBody = pm.response.json();\r",
+													"\r",
+													"// Check if the status code is 404 NOT FOUND\r",
+													"pm.test(\"Status code is 404 NOT FOUND\", function () {\r",
+													"    pm.response.to.have.status(404);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Response message is correct\", function () {\r",
+													"    pm.expect(responseBody.message).to.eql(\"Question with qn_id 100000 not found\");\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{student_bearer}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "qn_id",
+													"value": "10000",
+													"type": "text",
+													"disabled": true
+												}
+											]
+										},
+										"url": {
+											"raw": "{{base_url}}/student/submission?qn_id=100000",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"student",
+												"submission"
+											],
+											"query": [
+												{
+													"key": "qn_id",
+													"value": "100000"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[04] Student List Past Submissions of Not accessible Question",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Parse the response body as JSON\r",
+													"var responseBody = pm.response.json();\r",
+													"\r",
+													"// Check if the status code is 404 NOT FOUND\r",
+													"pm.test(\"Status code is 403 Forbidden\", function () {\r",
+													"    pm.response.to.have.status(403);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Response message is correct\", function () {\r",
+													"    pm.expect(responseBody.message).to.eql(\"Student does not have access to Question with qn_id 5\");\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{student_bearer}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": []
+										},
+										"url": {
+											"raw": "{{base_url}}/student/submission?qn_id=5",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"student",
+												"submission"
+											],
+											"query": [
+												{
+													"key": "qn_id",
+													"value": "5"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[05] Student List Past Submissions (Missing qn_id)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Parse the response body as JSON\r",
+													"var responseBody = pm.response.json();\r",
+													"\r",
+													"// Check if the status code is 400 BAD REQUEST\r",
+													"pm.test(\"Status code is 400 BAD REQUEST\", function () {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Response message is correct\", function () {\r",
+													"    pm.expect(responseBody.message).to.eql(\"You need to supply a question id\");\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{student_bearer}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": []
+										},
+										"url": {
+											"raw": "{{base_url}}/student/submission?",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"student",
+												"submission"
+											],
+											"query": [
+												{
+													"key": "",
+													"value": null
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "[03] Retrieve Student Submission",
+							"item": [
+								{
+									"name": "[01] Student Retrieve Submission Feedback and Details",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Parse the response body as JSON\r",
+													"var responseBody = pm.response.json();\r",
+													"\r",
+													"// Check if the status code is 200 OK\r",
+													"pm.test(\"Status code is 200 OK\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"setTimeout(function(){}, 10000);"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{student_bearer}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/student/submission/8",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"student",
+												"submission",
+												"8"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[02] Student Retrieve Missing Submission's Details",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Parse the response body as JSON\r",
+													"var responseBody = pm.response.json();\r",
+													"\r",
+													"// Check if the status code is 404 NOT FOUND\r",
+													"pm.test(\"Status code is 404 NOT FOUND\", function () {\r",
+													"    pm.response.to.have.status(404);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Response detail is correct\", function () {\r",
+													"    pm.expect(responseBody.detail).to.eql(\"Not found.\");\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{student_bearer}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/student/submission/200",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"student",
+												"submission",
+												"200"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "[02] Tutor View Submission CRUD",
+					"item": [
+						{
+							"name": "[01] List Submission",
+							"item": [
+								{
+									"name": "[01] Tutor List all Student Submissions from one Question",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Parse the response body as JSON\r",
+													"var responseBody = pm.response.json();\r",
+													"\r",
+													"// Check if the status code is 201 CREATED\r",
+													"pm.test(\"Status code is 200 OK\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Check if 'submissions' array is not empty\", function () {\r",
+													"    pm.expect(responseBody.submissions.length).to.be.above(0, \"The 'submissions' array should not be empty\");\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{tutor_bearer}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": []
+										},
+										"url": {
+											"raw": "{{base_url}}/tutor/submission?qn_id=1&offset=0&limit=10",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"tutor",
+												"submission"
+											],
+											"query": [
+												{
+													"key": "qn_id",
+													"value": "1"
+												},
+												{
+													"key": "offset",
+													"value": "0"
+												},
+												{
+													"key": "limit",
+													"value": "10"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[02] Tutor List all Student Submissions (Missing qn_id)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Parse the response body as JSON\r",
+													"var responseBody = pm.response.json();\r",
+													"\r",
+													"// Check if the status code is 400 BAD REQUEST\r",
+													"pm.test(\"Status code is 400 BAD REQUEST\", function () {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Response message is correct\", function () {\r",
+													"    pm.expect(responseBody.message).to.eql(\"You need to supply a question id\");\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{tutor_bearer}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": []
+										},
+										"url": {
+											"raw": "{{base_url}}/tutor/submission?",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"tutor",
+												"submission"
+											],
+											"query": [
+												{
+													"key": "",
+													"value": null
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[03] Tutor List all Student Submissions from a Question(not Owned by the Tutor)",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Parse the response body as JSON\r",
+													"var responseBody = pm.response.json();\r",
+													"\r",
+													"// Check if the status code is 404 NOT FOUND\r",
+													"pm.test(\"Status code is 403 Forbidden\", function () {\r",
+													"    pm.response.to.have.status(403);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Response message is correct\", function () {\r",
+													"    pm.expect(responseBody.message).to.eql(\"You do not have the permission to access information for question 5\");\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{tutor_bearer}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": []
+										},
+										"url": {
+											"raw": "{{base_url}}/tutor/submission?qn_id=5&offset=0&limit=10",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"tutor",
+												"submission"
+											],
+											"query": [
+												{
+													"key": "qn_id",
+													"value": "5"
+												},
+												{
+													"key": "offset",
+													"value": "0"
+												},
+												{
+													"key": "limit",
+													"value": "10"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[04] Tutor List all Student Submissions from a Missing Question",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Parse the response body as JSON\r",
+													"var responseBody = pm.response.json();\r",
+													"\r",
+													"// Check if the status code is 404 NOT FOUND\r",
+													"pm.test(\"Status code is 403 Forbidden\", function () {\r",
+													"    pm.response.to.have.status(403);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Response message is correct\", function () {\r",
+													"    pm.expect(responseBody.message).to.eql(\"You do not have the permission to access information for question 10000\");\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{tutor_bearer}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": []
+										},
+										"url": {
+											"raw": "{{base_url}}/tutor/submission?qn_id=10000",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"tutor",
+												"submission"
+											],
+											"query": [
+												{
+													"key": "qn_id",
+													"value": "10000"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "[02] Retrieve Submission",
+							"item": [
+								{
+									"name": "[01] Tutor Retrieve Submission Details",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Parse the response body as JSON\r",
+													"var responseBody = pm.response.json();\r",
+													"\r",
+													"// Check if the status code is 200 OK\r",
+													"pm.test(\"Status code is 200 OK\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{tutor_bearer}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/tutor/submission/8",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"tutor",
+												"submission",
+												"8"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[02] Tutor Retrieve Missing Submission Details",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Parse the response body as JSON\r",
+													"var responseBody = pm.response.json();\r",
+													"\r",
+													"// Check if the status code is 404 NOT FOUND\r",
+													"pm.test(\"Status code is 404 NOT FOUND\", function () {\r",
+													"    pm.response.to.have.status(404);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Response message is correct\", function () {\r",
+													"    pm.expect(responseBody.message).to.eql(\"The submission requested does not exist\");\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{tutor_bearer}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/tutor/submission/1000",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"tutor",
+												"submission",
+												"1000"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[03] Tutor Retrieve not Accessible Submission Details",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Parse the response body as JSON\r",
+													"var responseBody = pm.response.json();\r",
+													"\r",
+													"// Check if the status code is 403 Forbidden\r",
+													"pm.test(\"Status code is 403 Forbidden\", function () {\r",
+													"    pm.response.to.have.status(403);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Response message is correct\", function () {\r",
+													"    pm.expect(responseBody.message).to.eql(\"You do not have the permission to access information for submission 7\");\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{tutor_bearer}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/tutor/submission/7",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"tutor",
+												"submission",
+												"7"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "[03] Update Feedback to Submission",
+							"item": [
+								{
+									"name": "[01] Tutor Add/Update feedback to a  Student Submission",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Parse the response body as JSON\r",
+													"var responseBody = pm.response.json();\r",
+													"\r",
+													"// Check if the status code is 200 OK\r",
+													"pm.test(\"Status code is 200 OK\", function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Feedback Creation Response is correct\", function () {\r",
+													"    pm.expect(responseBody.tutor_feedback).to.eql(\"Great Job!\");\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{tutor_bearer}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "tutor_feedback",
+													"value": "Great Job!",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{base_url}}/tutor/submission/8",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"tutor",
+												"submission",
+												"8"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[02] Tutor Add/Update feedback to a  not Accessible Student Submission",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Parse the response body as JSON\r",
+													"var responseBody = pm.response.json();\r",
+													"\r",
+													"// Check if the status code is 403 Forbidden\r",
+													"pm.test(\"Status code is 403 Forbidden\", function () {\r",
+													"    pm.response.to.have.status(403);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Response message is correct\", function () {\r",
+													"    pm.expect(responseBody.message).to.eql(\"You do not have the permission to access information for submission 7\");\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{tutor_bearer}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "tutor_feedback",
+													"value": "Great Job!",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{base_url}}/tutor/submission/7",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"tutor",
+												"submission",
+												"7"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[03] Tutor Add/Update feedback to a  Missing Student Submission",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"// Parse the response body as JSON\r",
+													"var responseBody = pm.response.json();\r",
+													"\r",
+													"// Check if the status code is 404 NOT FOUND\r",
+													"pm.test(\"Status code is 404 NOT FOUND\", function () {\r",
+													"    pm.response.to.have.status(404);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Response message is correct\", function () {\r",
+													"    pm.expect(responseBody.message).to.eql(\"The submission requested does not exist\");\r",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{tutor_bearer}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "tutor_feedback",
+													"value": "Great Job!",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{base_url}}/tutor/submission/1000",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"tutor",
+												"submission",
+												"1000"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "[99] Logout users",
+			"item": [
+				{
+					"name": "[01] Logout student",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{student_bearer}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"tokens\": {\n        \"access\": \"{{student_bearer}}\",\n        \"refresh\": \"{{student_refresh}}\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/logout",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[02] Logout tutor",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tutor_bearer}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"tokens\": {\n        \"access\": \"{{tutor_bearer}}\",\n        \"refresh\": \"{{tutor_refresh}}\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/logout",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[03] Logout manager",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function(){}, 10000);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tutor_bearer}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"tokens\": {\n        \"access\": \"{{manager_bearer}}\",\n        \"refresh\": \"{{manager_refresh}}\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/logout",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://127.0.0.1:8000",
+			"type": "string"
+		},
+		{
+			"key": "student_bearer",
+			"value": "student_bearer",
+			"type": "string"
+		},
+		{
+			"key": "student_refresh",
+			"value": "student_refresh",
+			"type": "string"
+		},
+		{
+			"key": "tutor_bearer",
+			"value": "tutor_bearer",
+			"type": "string"
+		},
+		{
+			"key": "tutor_refresh",
+			"value": "tutor_refresh",
+			"type": "string"
+		},
+		{
+			"key": "manager_bearer",
+			"value": "manager_bearer",
+			"type": "string"
+		},
+		{
+			"key": "manager_refresh",
+			"value": "manager_refresh",
+			"type": "string"
+		}
+	]
+}

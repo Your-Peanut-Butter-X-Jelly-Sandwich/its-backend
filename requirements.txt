@@ -1,1 +1,14 @@
+coverage==7.4.4
+cryptography==42.0.5
 Django==5.0.2
+django-allauth==0.61.1
+django-cors-headers==4.3.1
+django-extensions==3.2.3
+djangorestframework==3.14.0
+djangorestframework-simplejwt==5.3.1
+drf-nested-routers==0.93.5
+drf-yasg==1.21.7
+python-dateutil==2.9.0.post0
+ruff==0.3.2
+celery==5.3.6
+redis==5.0.3

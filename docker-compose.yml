@@ -1,0 +1,97 @@
+version: '3.8'
+services:
+  redis:
+    image: "redis:7.2.4-alpine"
+    restart: always
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  celery:
+    build: .
+    container_name: celery
+    command: sh -c "celery -A its_backend worker --loglevel=info"
+    restart: always
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    volumes:
+      - db_data:/app
+    depends_on:
+      - redis
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: backend
+    command: >
+      sh -c "python3 manage.py migrate --noinput &&
+             python3 manage.py createsuperuser --no-input &&
+             python3 manage.py collectstatic --noinput &&
+             python manage.py runserver 0.0.0.0:8000"
+    restart: always
+    environment:
+      - DJANGO_SUPERUSER_EMAIL=admin0@system.com
+      - DJANGO_SUPERUSER_PASSWORD=CS3213ITS
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+      - celery
+    volumes:
+      - db_data:/app
+
+  redis-test:
+      image: "redis:7.2.4-alpine"
+      restart: always
+      container_name: redis-test
+      ports:
+        - "6379:6379"
+      volumes:
+        - redis_test_data:/data
+
+  celery-test:
+    build: .
+    container_name: celery-test
+    command: sh -c "celery -A its_backend worker --loglevel=info"
+    restart: always
+    environment:
+      - CELERY_BROKER_URL=redis://redis-test:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis-test:6379/0
+    volumes:
+      - db_test_data:/app
+    depends_on:
+      - redis-test
+  
+  backend-test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: backend-test
+    command: >
+      sh -c "python3 manage.py migrate --noinput &&
+             python3 manage.py loaddata test/test_data.json &&
+             python3 manage.py collectstatic --noinput &&
+             python manage.py runserver 0.0.0.0:8000"
+    restart: always
+    environment:
+      - CELERY_BROKER_URL=redis://redis-test:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis-test:6379/0
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis-test
+      - celery-test
+    volumes:
+      - db_test_data:/app
+
+volumes:
+  redis_data:
+  db_data:
+  redis_test_data:
+  db_test_data:
