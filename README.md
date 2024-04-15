@@ -153,6 +153,26 @@ celery -A its_backend worker -l info &
 python manage.py runserver
 ```
 
+## Things to Note Before Testing by CS3213 TAs
+
+If you start a fresh Django server (not in test environment) using any of the [methods above](#start-application), there will not be any prepopulated entities, including superusers and managers. To load sample data to test/assess our service, run the following before starting the Django server:
+
+```shell
+# Create a db.sqlite3 file
+python manage.py migrate
+# Load sample data for testing/tinkering (also loads manager)
+python manage.py loaddata test/test_data.json
+# Create superuser to access "/admin" site
+python manage.py createsuperuser
+
+# Start server
+docker compose up --build backend
+```
+
+See [this section](#populate-db-with-test-data) to see the entities preloaded by [`test_data.json`](./test/test_data.json).
+
+You can also manually add/delete entities from the database by navigating to the [Django admin site](http://127.0.0.1:8000/admin) (after starting the server). Just create a superuser using the aforementioned command to access the admin site.
+
 ## View all urls created
 
 run `python manage.py show_urls`
@@ -274,11 +294,13 @@ Currently, the `db.sqlite3` file is pre-populated with the following test data:
 
 - 10 students
 - 5 tutors
+- 1 manager
+- 2 `Teaches` relation
 - 6 questions
 - 13 test cases
 - 7 submissions
 
-> `teaches` relations are added through Postman collection (see `[02] Add teaches relations` in our [collection](./test/ITS-API-Test.postman_collection.json)).
+> More `teaches` relations are added through Postman collection (see `[02] Add teaches relations` in our [collection](./test/ITS-API-Test.postman_collection.json)).
 
 If you need to populate more test data to the DB (e.g., sample questions and submissions), write more `INSERT INTO` SQL statements inside the [script](./test/populate_db.sql).
 
