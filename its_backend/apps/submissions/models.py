@@ -3,7 +3,6 @@ from django.db import models
 from ..questions.models import Question
 
 
-# from django.contrib.postgres.fields import ArrayField
 class Submissiondata(models.Model):
     LANGUAGE_CHOICES = [
         ("python", "python"),

@@ -20,10 +20,6 @@ from .serializers import (
     TutorQuestionListSerializer,
 )
 
-# Comment unused imports for now
-# from .models import TestCase
-# from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
-
 
 class TutorQuestionViewSet(
     mixins.CreateModelMixin,

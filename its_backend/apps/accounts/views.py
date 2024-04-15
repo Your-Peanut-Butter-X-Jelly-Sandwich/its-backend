@@ -17,8 +17,6 @@ from .serializers import (
     UpdateUserInfoSerializer,
 )
 
-# from .serializers import (SocialCallbackSerializer)
-
 
 def generate_tokens_for_user(user):
     refresh = RefreshToken.for_user(user)

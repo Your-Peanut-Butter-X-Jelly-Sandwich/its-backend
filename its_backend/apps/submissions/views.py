@@ -13,8 +13,6 @@ from .serializers import (
     StudentRetrieveSubmissionDetailsSerializer,
     TutorRetrieveSubmissionDetailsSerializer,
 )
-
-# process_submission_request,
 from .tasks import process_submission_request_async
 
 
@@ -135,7 +133,6 @@ class TutorSubmissionViewSet(
         return self.serializer_class.get(self.action)
 
     def get_queryset(self):
-
         # Filter for submissions to questions created by the authenticated user
         qn_id = self.request.query_params.get("qn_id")
         try:
